@@ -1,0 +1,18 @@
+# Python / Django
+venv/
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+*.sqlite3
+media/
+.env
+
+# Node
+node_modules/
+nexus-frontend/dist/
+nexus-frontend/.env
+
+# OS
+.DS_Store
+Thumbs.db

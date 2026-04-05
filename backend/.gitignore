@@ -1,0 +1,22 @@
+# Dependencies
+node_modules/
+venv/
+env/
+.env
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+
+# Django
+*.sqlite3
+media/
+
+# Vite build
+frontend/dist/
+
+# OS
+.DS_Store
+Thumbs.db
