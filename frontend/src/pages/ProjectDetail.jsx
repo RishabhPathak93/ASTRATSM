@@ -119,6 +119,8 @@ export default function ProjectDetailPage() {
       await projectsApi.update(id, payload)
       await qc.invalidateQueries(['project', id])
       await qc.invalidateQueries(['projects'])
+      await qc.invalidateQueries(['dashboard-projects'])
+      await qc.invalidateQueries(['dashboard-timelines'])
       setEditing(false)
       setForm(null)
     } catch (err) {
@@ -132,6 +134,7 @@ export default function ProjectDetailPage() {
     try {
       await projectsApi.delete(id)
       qc.invalidateQueries(['projects'])
+      qc.invalidateQueries(['dashboard-projects'])
       navigate('/projects')
     } catch (err) {
       setError(extractError(err))
@@ -344,7 +347,7 @@ export default function ProjectDetailPage() {
           {tab === 'overview'   && <OverviewTab project={p} />}
           {tab === 'timelines'  && <TimelinesTab projectId={p.id} canEdit={canEdit} />}
           {tab === 'updates'    && <UpdatesTab updates={p.updates || []} />}
-          {tab === 'team'       && <TeamTab resources={p.resource_details || []} manager={p.manager_detail} projectId={p.id} canEdit={canEdit} onRefresh={() => { qc.invalidateQueries(['project', id]); qc.invalidateQueries(['resources']) }} />}
+          {tab === 'team'       && <TeamTab resources={p.resource_details || []} manager={p.manager_detail} projectId={p.id} canEdit={canEdit} onRefresh={() => { qc.invalidateQueries(['project', id]); qc.invalidateQueries(['resources']); qc.invalidateQueries(['projects']); qc.invalidateQueries(['dashboard-projects']); qc.invalidateQueries(['dashboard-resources']) }} />}
         </div>
       </div>
 
@@ -391,7 +394,7 @@ export default function ProjectDetailPage() {
       )}
 
       {showUpdate && (
-        <AddUpdateModal projectId={p.id} onClose={() => setShowUpdate(false)} onDone={() => { setShowUpdate(false); qc.invalidateQueries(['project', id]) }} />
+        <AddUpdateModal projectId={p.id} onClose={() => setShowUpdate(false)} onDone={() => { setShowUpdate(false); qc.invalidateQueries(['project', id]); qc.invalidateQueries(['dashboard-notifications']) }} />
       )}
     </div>
   )
@@ -778,6 +781,8 @@ function TimelinesTab({ projectId, canEdit }) {
       setEditPhase(null)
       qc.invalidateQueries(['timelines-project', projectId])
       qc.invalidateQueries(['project', String(projectId)])
+      qc.invalidateQueries(['dashboard-timelines'])
+      qc.invalidateQueries(['dashboard-projects'])
     } finally { setSaving(false) }
   }
 
@@ -910,7 +915,7 @@ function TimelinesTab({ projectId, canEdit }) {
 
       {showCreate && (
         <CreatePhaseModal projectId={projectId} onClose={() => setShowCreate(false)}
-          onCreated={() => { setShowCreate(false); qc.invalidateQueries(['timelines-project', projectId]) }} />
+          onCreated={() => { setShowCreate(false); qc.invalidateQueries(['timelines-project', projectId]); qc.invalidateQueries(['dashboard-timelines']); qc.invalidateQueries(['dashboard-projects']) }} />
       )}
     </div>
   )

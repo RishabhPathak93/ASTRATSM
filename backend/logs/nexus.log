@@ -32788,3 +32788,6 @@ WARNING 2026-04-07 10:52:51,967 basehttp 17192 5512 "POST /api/v1/auth/token/ref
 WARNING 2026-04-07 10:56:49,083 log 7348 27404 Bad Request: /api/v1/auth/login/
 WARNING 2026-04-07 10:56:49,084 basehttp 7348 27404 "POST /api/v1/auth/login/ HTTP/1.1" 400 120
 WARNING 2026-04-07 11:44:26,522 views 30612 32176 Resource "resource1@astracybertech.com" deleted by rishabh.p@astracybertech.com
+WARNING 2026-04-07 15:45:08,316 log 22380 19972 Bad Request: /api/v1/resources/
+WARNING 2026-04-07 15:45:08,317 basehttp 22380 19972 "POST /api/v1/resources/ HTTP/1.1" 400 111
+WARNING 2026-04-07 15:47:01,246 views 22380 31032 Admin rishabh.p@astracybertech.com changed role of sonia.p@astracybertech.com: resource -> manager

@@ -455,7 +455,6 @@ class TimelineApprovalViewSet(viewsets.ModelViewSet):
             message=(f'{user.name} wants to {req.request_type} timeline "{timeline_name}". Reason: {req.reason or "No reason given."}'),
             action_url='/approvals',
         )
-        _email_timeline_approval_request(req)
 
     @action(detail=True, methods=['post'], permission_classes=[IsAdmin])
     def approve(self, request, pk=None):

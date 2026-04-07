@@ -14,7 +14,7 @@ from rest_framework.response import Response
 from accounts.models import User
 from accounts.permissions import IsAdmin, IsAdminOrManager
 from nexus.excel import workbook_response
-from notifications.utils import email_no_reply, notify_project_team
+from notifications.utils import email_no_reply, email_users, notify_project_team
 from .models import Project, ProjectApprovalRequest
 from .serializers import (
     ProjectApprovalRequestSerializer,
@@ -108,6 +108,28 @@ def _email_project_assignment(project, user, actor):
         'Please review the project details in AstraTSM.\n'
     )
     email_users([user], subject, body)
+
+
+def _email_manager_assignment(project, manager_user, actor, reason='assigned'):
+    subject = f'Project manager assignment: {project.name}'
+    email_no_reply(
+        [manager_user],
+        subject=subject,
+        heading='You have been assigned as the project manager.',
+        intro='AstraTSM assigned you as the manager for this project. Please review ownership, dates, and assigned resources.',
+        details=[
+            ('Project', project.name),
+            ('Assigned by', actor.name),
+            ('Reason', reason.title()),
+            ('Client', project.client.name if project.client else 'Not assigned'),
+            ('Status', project.get_status_display()),
+            ('Priority', project.get_priority_display()),
+            ('Start Date', project.start_date.isoformat() if project.start_date else 'Not set'),
+            ('End Date', project.end_date.isoformat() if project.end_date else 'Not set'),
+            ('Assigned Resources', ', '.join(project.resources.values_list('name', flat=True)) or 'None yet'),
+        ],
+        footer_note='This is an automated no-reply notification from AstraTSM.',
+    )
 
 
 def _email_project_change(project, recipients, actor, changes, intro='The project details were updated.'):
@@ -236,14 +258,21 @@ class ProjectViewSet(viewsets.ModelViewSet):
         )
         for resource in assigned_resources:
             _email_project_assignment(project, resource, self.request.user)
+        if project.manager and project.manager.is_active and project.manager.role == User.Role.MANAGER:
+            _email_manager_assignment(project, project.manager, self.request.user, reason='initial assignment')
 
     def perform_update(self, serializer):
         current = self.get_object()
         previous = Project.objects.select_related('client', 'manager').get(pk=current.pk)
+        previous_resource_ids = set(current.resources.values_list('id', flat=True))
+        previous_manager_id = current.manager_id
         old_status = previous.status
         old_progress = previous.progress
         project = serializer.save()
         changes = _project_change_summary(previous, project)
+        current_resource_ids = set(project.resources.values_list('id', flat=True))
+        newly_assigned_ids = current_resource_ids - previous_resource_ids
+        manager_changed = project.manager_id and project.manager_id != previous_manager_id
 
         if changes:
             notify_project_team(
@@ -255,6 +284,23 @@ class ProjectViewSet(viewsets.ModelViewSet):
                 action_url=f'/projects/{project.id}',
             )
             _email_project_change(project, _project_team(project), self.request.user, changes)
+
+        if newly_assigned_ids:
+            new_resources = list(User.objects.filter(pk__in=newly_assigned_ids, role=User.Role.RESOURCE, is_active=True))
+            if new_resources:
+                notify_project_team(
+                    users=new_resources,
+                    notif_type='project_assigned',
+                    title=f'Added to project: {project.name}',
+                    message=f'You have been assigned to "{project.name}".',
+                    project=project,
+                    action_url=f'/projects/{project.id}',
+                )
+                for resource in new_resources:
+                    _email_project_assignment(project, resource, self.request.user)
+
+        if manager_changed and project.manager and project.manager.is_active and project.manager.role == User.Role.MANAGER:
+            _email_manager_assignment(project, project.manager, self.request.user, reason='manager reassignment')
 
         if old_status != project.status:
             notify_project_team(
@@ -433,7 +479,6 @@ class ProjectApprovalViewSet(viewsets.ModelViewSet):
             message=f'{user.name} wants to {req.request_type} "{project_name}". Reason: {req.reason or "No reason given."}',
             action_url='/approvals',
         )
-        _email_project_approval_request(req)
 
     @action(detail=True, methods=['post'], permission_classes=[IsAdmin])
     def approve(self, request, pk=None):

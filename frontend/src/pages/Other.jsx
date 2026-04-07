@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import {
   Bell, Trash2, FolderKanban, MessageSquare, AlertTriangle,
-  CheckCircle, User, Calendar, Wrench, Shield, Users,
+  CheckCircle, User, Calendar, Wrench, Shield, Users, Mail,
 } from 'lucide-react'
 import { notificationsApi, resourcesApi, authApi } from '@/api/index.js'
 import { Btn, Badge, EmptyState, Spinner, Avatar, Input, Textarea, Modal } from '@/components/ui/index.jsx'
@@ -193,7 +193,7 @@ export function ResourcesPage() {
   const { data: pendingEntriesData, isLoading: pendingEntriesLoading } = useQuery({
     queryKey: ['pending-time-entries', user?.role],
     queryFn: () => resourcesApi.timeEntries({ approved: false, page_size: 200 }).then(r => r.data.results || r.data),
-    enabled: isAdmin || isManager,
+    enabled: isManager,
   })
 
   const resources = data?.results || data || []
@@ -239,6 +239,8 @@ export function ResourcesPage() {
       qc.invalidateQueries(['dashboard-time-entries'])
       qc.invalidateQueries(['dashboard-projects'])
       qc.invalidateQueries(['dashboard-timelines'])
+      qc.invalidateQueries(['dashboard-resources'])
+      qc.invalidateQueries(['dashboard-notifications'])
     } finally {
       setApprovingId(null)
     }
@@ -278,7 +280,7 @@ export function ResourcesPage() {
         </div>
       </div>
 
-      {(isAdmin || isManager) && (
+      {isManager && (
         <PendingTimeApprovalTable
           entries={pendingEntries}
           isLoading={pendingEntriesLoading}
@@ -319,7 +321,7 @@ export function ResourcesPage() {
         <ResourceFormModal
           managers={managers}
           onClose={() => setShowCreate(false)}
-          onSaved={() => { setShowCreate(false); qc.invalidateQueries(['resources']) }}
+          onSaved={() => { setShowCreate(false); qc.invalidateQueries(['resources']); qc.invalidateQueries(['dashboard-resources']) }}
         />
       )}
 
@@ -328,7 +330,7 @@ export function ResourcesPage() {
           resource={editingResource}
           managers={managers}
           onClose={() => setEditingResource(null)}
-          onSaved={() => { setEditingResource(null); qc.invalidateQueries(['resources']) }}
+          onSaved={() => { setEditingResource(null); qc.invalidateQueries(['resources']); qc.invalidateQueries(['dashboard-resources']) }}
         />
       )}
 
@@ -977,6 +979,8 @@ export function SettingsPage() {
 
       <NotificationPreferencesSection />
 
+      <EmailRoutingSection />
+
       {/* ── Role Permissions ─────────────────────────────── */}
       <div style={{ background: 'var(--bg-1)', border: '1px solid var(--border)', borderRadius: 'var(--r-lg)', overflow: 'hidden' }}>
         <div style={{ padding: 'var(--sp-4) var(--sp-5)', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', gap: 'var(--sp-3)' }}>
@@ -1028,6 +1032,120 @@ const NOTIF_TYPES = [
   { value: 'update',           label: 'Project Update' },
   { value: 'mention',          label: 'Mention' },
 ]
+
+
+const EMAIL_EVENT_MATRIX = [
+  {
+    event: 'Login OTP',
+    admin: true,
+    manager: true,
+    resource: true,
+    client: true,
+    rule: 'Sent only to the user who is logging in. Valid for 90 seconds.',
+  },
+  {
+    event: 'Project Assigned',
+    admin: false,
+    manager: false,
+    resource: true,
+    client: false,
+    rule: 'Sent to the assigned resource when added from assign action or project edit.',
+  },
+  {
+    event: 'Project Updated',
+    admin: false,
+    manager: true,
+    resource: true,
+    client: false,
+    rule: 'Sent to the visible project team currently assigned on that project.',
+  },
+  {
+    event: 'Project Update Note',
+    admin: false,
+    manager: true,
+    resource: true,
+    client: false,
+    rule: 'Sent to the same project team whenever an update/note is posted.',
+  },
+  {
+    event: 'Timesheet Submitted',
+    admin: false,
+    manager: true,
+    resource: false,
+    client: false,
+    rule: "Sent only to the resource's assigned manager for approval.",
+  },
+  {
+    event: 'Timesheet Approved',
+    admin: false,
+    manager: false,
+    resource: true,
+    client: false,
+    rule: 'Sent to the resource after their assigned manager approves the entry.',
+  },
+  {
+    event: 'Project Approval Resolved',
+    admin: false,
+    manager: true,
+    resource: false,
+    client: false,
+    rule: 'Sent to the manager/requester after approve or reject.',
+  },
+  {
+    event: 'Timeline Approval Resolved',
+    admin: false,
+    manager: true,
+    resource: true,
+    client: false,
+    rule: 'Sent to the user who created the timeline approval request.',
+  },
+]
+
+function EmailRoutingSection() {
+  return (
+    <div style={{ background: 'var(--bg-1)', border: '1px solid var(--border)', borderRadius: 'var(--r-lg)', overflow: 'hidden' }}>
+      <div style={{ padding: 'var(--sp-4) var(--sp-5)', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 'var(--sp-3)', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--sp-3)' }}>
+          <Mail size={16} color="var(--text-2)" />
+          <div>
+            <h3 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '1rem' }}>Email Delivery Matrix</h3>
+            <p style={{ fontSize: '11px', color: 'var(--text-3)', marginTop: 2 }}>Read-only map of which workflow sends email to which role.</p>
+          </div>
+        </div>
+        <span style={{ fontSize: '11px', color: 'var(--text-3)', background: 'var(--bg-3)', padding: '2px 8px', borderRadius: 'var(--r-full)', fontFamily: 'var(--font-mono)' }}>live rules</span>
+      </div>
+
+      <div style={{ overflowX: 'auto' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+          <thead>
+            <tr>
+              {['Email Event', 'Admin', 'Manager', 'Resource', 'Client', 'Rule'].map(h => (
+                <th key={h} style={{ textAlign: 'left', padding: '10px 16px', fontSize: '11px', fontWeight: 700, color: 'var(--text-3)', textTransform: 'uppercase', letterSpacing: '0.08em', borderBottom: '1px solid var(--border)' }}>{h}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {EMAIL_EVENT_MATRIX.map((row, index) => (
+              <tr key={row.event} style={{ borderBottom: index < EMAIL_EVENT_MATRIX.length - 1 ? '1px solid var(--border)' : 'none' }}>
+                <td style={{ padding: '14px 16px', fontWeight: 700, fontSize: '13px', color: 'var(--text-0)' }}>{row.event}</td>
+                {['admin', 'manager', 'resource', 'client'].map(role => (
+                  <td key={role} style={{ padding: '14px 16px' }}>
+                    <label style={{ display: 'inline-flex', alignItems: 'center', gap: 8, color: row[role] ? 'var(--success)' : 'var(--text-3)', fontSize: '12px', fontWeight: 600 }}>
+                      <input type="checkbox" checked={row[role]} readOnly disabled style={{ width: 14, height: 14, accentColor: 'var(--accent)' }} />
+                      {row[role] ? 'Yes' : 'No'}
+                    </label>
+                  </td>
+                ))}
+                <td style={{ padding: '14px 16px', fontSize: '12px', color: 'var(--text-2)', lineHeight: 1.6, minWidth: 280 }}>{row.rule}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  )
+}
+
 
 export function NotificationPreferencesSection() {
   const qc = useQueryClient()

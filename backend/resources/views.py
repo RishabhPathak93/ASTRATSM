@@ -14,7 +14,7 @@ from rest_framework.response import Response
 from accounts.models import User
 from accounts.permissions import IsAdmin, IsAdminOrManager
 from nexus.excel import workbook_response
-from notifications.utils import email_no_reply, notify_admins_and_managers, notify_project_team, notify_user
+from notifications.utils import email_no_reply, notify_project_team, notify_user
 from timelines.models import Timeline
 from .models import ResourceProfile, TimeEntry
 from .serializers import ResourceProfileSerializer, TimeEntrySerializer
@@ -37,16 +37,13 @@ def _sync_timeline_hours(timeline_id):
 
 def _timesheet_approvers(entry):
     recipients = []
-    if entry.resource.manager and entry.resource.manager.is_active:
+    if entry.resource.manager and entry.resource.manager.is_active and entry.resource.manager.role == User.Role.MANAGER:
         recipients.append(entry.resource.manager)
-    if entry.project.manager and entry.project.manager.is_active and entry.project.manager not in recipients:
-        recipients.append(entry.project.manager)
     return recipients
 
 
 def _timesheet_stakeholders(entry):
-    admins = list(User.objects.filter(role=User.Role.ADMIN, is_active=True))
-    recipients = [entry.resource.user, *_timesheet_approvers(entry), *admins]
+    recipients = [entry.resource.user, *_timesheet_approvers(entry)]
     deduped = []
     seen = set()
     for user in recipients:
@@ -58,7 +55,9 @@ def _timesheet_stakeholders(entry):
 
 
 def _send_timesheet_submission_email(entry):
-    recipients = _timesheet_stakeholders(entry)
+    recipients = _timesheet_approvers(entry)
+    if not recipients:
+        return
     scope = entry.timeline.name if entry.timeline else entry.project.name
     subject = f'Work log submitted: {entry.resource.user.name} on {entry.project.name}'
     email_no_reply(
@@ -72,7 +71,7 @@ def _send_timesheet_submission_email(entry):
             ('Phase', scope),
             ('Date', entry.date.isoformat()),
             ('Hours logged', entry.hours),
-            ('Approval status', 'Pending manager/admin review'),
+            ('Approval status', 'Pending manager review'),
             ('Remaining phase hours', f"{max((entry.timeline.hours_allocated if entry.timeline else 0) - float(entry.timeline.hours_consumed if entry.timeline else 0), 0):.2f}h" if entry.timeline else 'See dashboard'),
         ],
         footer_note='This is an automated no-reply notification from AstraTSM. Please review the work log in the application.',
@@ -210,8 +209,7 @@ class TimeEntryViewSet(viewsets.ModelViewSet):
         if user.role == User.Role.ADMIN:
             return qs
         if user.role == User.Role.MANAGER:
-            managed_projects = user.managed_projects.values_list('id', flat=True)
-            return qs.filter(project_id__in=managed_projects)
+            return qs.filter(resource__manager=user)
         try:
             return qs.filter(resource=user.resource_profile)
         except ResourceProfile.DoesNotExist as exc:
@@ -227,13 +225,16 @@ class TimeEntryViewSet(viewsets.ModelViewSet):
         else:
             entry = serializer.save()
         _sync_timeline_hours(entry.timeline_id)
-        notify_admins_and_managers(
-            notif_type='update',
-            title=f'Time entry submitted by {entry.resource.user.name}',
-            message=f'{entry.resource.user.name} logged {entry.hours}h on "{entry.project.name}"' + (f' for phase "{entry.timeline.name}"' if entry.timeline else '') + f' on {entry.date}.',
-            project=entry.project,
-            action_url='/resources',
-        )
+        approver = entry.resource.manager
+        if approver and approver.is_active and approver.role == User.Role.MANAGER:
+            notify_user(
+                user=approver,
+                notif_type='update',
+                title=f'Time entry submitted by {entry.resource.user.name}',
+                message=f'{entry.resource.user.name} logged {entry.hours}h on "{entry.project.name}"' + (f' for phase "{entry.timeline.name}"' if entry.timeline else '') + f' on {entry.date}.',
+                project=entry.project,
+                action_url='/resources',
+            )
         notify_user(
             user=entry.resource.user,
             notif_type='update',
@@ -257,9 +258,13 @@ class TimeEntryViewSet(viewsets.ModelViewSet):
         instance.delete()
         _sync_timeline_hours(timeline_id)
 
-    @action(detail=True, methods=['patch'], permission_classes=[IsAdminOrManager])
+    @action(detail=True, methods=['patch'], permission_classes=[IsAuthenticated])
     def approve(self, request, pk=None):
         entry = self.get_object()
+        if request.user.role != User.Role.MANAGER:
+            return Response({'detail': 'Only managers can approve time entries.'}, status=status.HTTP_403_FORBIDDEN)
+        if entry.resource.manager_id != request.user.id:
+            return Response({'detail': 'You can only approve time entries for resources assigned to you.'}, status=status.HTTP_403_FORBIDDEN)
         if entry.approved:
             return Response({'detail': 'Already approved.'}, status=status.HTTP_400_BAD_REQUEST)
         entry.approved = True

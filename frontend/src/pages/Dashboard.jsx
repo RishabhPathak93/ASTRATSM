@@ -2,16 +2,24 @@ import React from 'react'
 import { useQueries } from '@tanstack/react-query'
 import {
   Activity, AlertTriangle, Bell, BriefcaseBusiness, CheckCircle2, Clock3,
-  FolderKanban, Gauge, TimerReset, Users, ShieldCheck,
+  FolderKanban, Gauge, ShieldCheck, Users,
 } from 'lucide-react'
 import {
-  Area, AreaChart, CartesianGrid, Cell, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis,
+  Area, AreaChart, Bar, BarChart, CartesianGrid, Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis,
 } from 'recharts'
-import { approvalsApi, clientsApi, notificationsApi, projectsApi, resourcesApi, timelinesApi, authApi } from '@/api/index.js'
+import { approvalsApi, authApi, clientsApi, notificationsApi, projectsApi, resourcesApi, timelinesApi } from '@/api/index.js'
 import { Badge, Card, ProgressBar, StatCard } from '@/components/ui/index.jsx'
 import { useAuthStore } from '@/stores/authStore.js'
 
-const PIE_COLORS = ['#237227', '#3f7f58', '#6d8fa0', '#7f9498']
+const PIE_COLORS = ['#237227', '#3f7f58', '#6d8fa0', '#7f9498', '#d97706']
+const WEEKDAY_LABELS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+const STATUS_LABELS = {
+  planning: 'Planning',
+  in_progress: 'In Progress',
+  review: 'Review',
+  on_hold: 'On Hold',
+  completed: 'Completed',
+}
 
 const safeList = (response) => response?.data?.results || response?.data || []
 const clamp = (value, min, max) => Math.max(min, Math.min(max, value))
@@ -52,26 +60,69 @@ function getProjectPlannedHours(project) {
   return formulaHours || Number(project.hours || project.estimated_hours || 0)
 }
 
-function buildWeeklySeries(projects, timelines, role) {
-  const activeProjects = projects.filter((item) => item.status !== 'completed')
-  const delayedProjects = projects.filter((item) => item.is_delayed || item.status === 'on_hold')
-  const completedItems = timelines.filter((item) => item.progress >= 100)
-  const base = [
-    { label: 'Mon', load: 52, output: 44 },
-    { label: 'Tue', load: 56, output: 48 },
-    { label: 'Wed', load: 60, output: 54 },
-    { label: 'Thu', load: 57, output: 50 },
-    { label: 'Fri', load: 64, output: 58 },
-  ]
+function weekdayIndex(dateValue) {
+  const date = new Date(dateValue)
+  if (Number.isNaN(date.getTime())) return null
+  return (date.getDay() + 6) % 7
+}
 
-  return base.map((item, index) => ({
+function buildWeeklySeries(timeEntries, activeProjects) {
+  const base = WEEKDAY_LABELS.map((label) => ({ label, submitted: 0, approved: 0, pending: 0, target: 0 }))
+  const submittedHours = sumHours(timeEntries)
+  const baseTarget = Math.max(submittedHours, activeProjects.length * 8) / 5
+
+  base.forEach((item, index) => {
+    item.target = Number(index < 5 ? baseTarget.toFixed(1) : 0)
+  })
+
+  timeEntries.forEach((entry) => {
+    const index = weekdayIndex(entry.date)
+    if (index == null) return
+    const hoursValue = Number(entry.hours || 0)
+    base[index].submitted += hoursValue
+    if (entry.approved) {
+      base[index].approved += hoursValue
+    } else {
+      base[index].pending += hoursValue
+    }
+  })
+
+  return base.map((item) => ({
     ...item,
-    load: clamp(item.load + activeProjects.length * 2 - index, 18, 96),
-    output: clamp(item.output + completedItems.length * 2 - delayedProjects.length, 12, 92),
-    focus: role === 'resource'
-      ? clamp(item.output + 6, 10, 95)
-      : clamp(item.load - 4, 10, 95),
+    submitted: Number(item.submitted.toFixed(1)),
+    approved: Number(item.approved.toFixed(1)),
+    pending: Number(item.pending.toFixed(1)),
   }))
+}
+
+function buildProjectStatusMix(projects) {
+  const counts = {
+    planning: 0,
+    in_progress: 0,
+    review: 0,
+    on_hold: 0,
+    completed: 0,
+  }
+  projects.forEach((project) => {
+    const key = project.status || 'planning'
+    if (Object.prototype.hasOwnProperty.call(counts, key)) {
+      counts[key] += 1
+    }
+  })
+  return Object.entries(counts)
+    .map(([key, value]) => ({ name: STATUS_LABELS[key], value }))
+    .filter((item) => item.value > 0)
+}
+
+function buildCapacityMix(resources) {
+  const overloaded = resources.filter((item) => Number(item.availability || 0) <= 20).length
+  const allocated = resources.filter((item) => Number(item.active_project_count || 0) > 0 && Number(item.availability || 0) > 20).length
+  const bench = resources.filter((item) => Number(item.active_project_count || 0) === 0).length
+  return [
+    { name: 'Overloaded', value: overloaded, fill: '#ef4444' },
+    { name: 'Allocated', value: allocated, fill: '#237227' },
+    { name: 'Bench', value: bench, fill: '#6d8fa0' },
+  ].filter((item) => item.value > 0)
 }
 
 function getRoleCopy(role, name) {
@@ -83,11 +134,11 @@ function getRoleCopy(role, name) {
     },
     manager: {
       title: `Delivery view for ${firstName}`,
-      text: 'Track your project portfolio, team hours, delayed milestones, and current approval pressure.',
+      text: 'Track your portfolio, assigned team hours, approval backlog, and delivery pressure from one place.',
     },
     resource: {
       title: `Execution board for ${firstName}`,
-      text: 'Review assigned effort, logged hours, delivery risk, and project momentum for the current cycle.',
+      text: 'Review assigned effort, logged hours, pending approvals, and project momentum for the current cycle.',
     },
     client: {
       title: `Project visibility for ${firstName}`,
@@ -141,16 +192,18 @@ export default function DashboardPage() {
   const role = user?.role || 'resource'
   const userReady = !!user
 
+  const dashboardQueryOptions = { staleTime: 60_000, refetchOnWindowFocus: false, refetchOnReconnect: false }
+
   const results = useQueries({
     queries: [
-      { queryKey: ['dashboard-projects', role], queryFn: queryList(() => projectsApi.list({ page_size: 500 })), enabled: userReady },
-      { queryKey: ['dashboard-timelines', role], queryFn: queryList(() => timelinesApi.list({ page_size: 500 })), enabled: userReady },
-      { queryKey: ['dashboard-resources', role], queryFn: queryList(() => resourcesApi.list({ page_size: 500 })), enabled: userReady && role !== 'client' },
-      { queryKey: ['dashboard-clients', role], queryFn: queryList(() => clientsApi.list({ page_size: 500 })), enabled: userReady && role !== 'resource' },
-      { queryKey: ['dashboard-notifications', role], queryFn: queryList(() => notificationsApi.list()), enabled: userReady },
-      { queryKey: ['dashboard-approvals', role], queryFn: queryList(() => approvalsApi.list({ page_size: 50, status: 'pending' })), enabled: userReady && (role === 'admin' || role === 'manager') },
-      { queryKey: ['dashboard-users', role], queryFn: queryList(() => authApi.users({ page_size: 500 })), enabled: userReady && role === 'admin' },
-      { queryKey: ['dashboard-time-entries', role], queryFn: queryList(() => resourcesApi.timeEntries({ page_size: 500 })), enabled: userReady && role !== 'client' },
+      { queryKey: ['dashboard-projects', role], queryFn: queryList(() => projectsApi.list({ page_size: 500 })), enabled: userReady, ...dashboardQueryOptions },
+      { queryKey: ['dashboard-timelines', role], queryFn: queryList(() => timelinesApi.list({ page_size: 500 })), enabled: userReady, ...dashboardQueryOptions },
+      { queryKey: ['dashboard-resources', role], queryFn: queryList(() => resourcesApi.list({ page_size: 500 })), enabled: userReady && role !== 'client', ...dashboardQueryOptions },
+      { queryKey: ['dashboard-clients', role], queryFn: queryList(() => clientsApi.list({ page_size: 500 })), enabled: userReady && role !== 'resource', ...dashboardQueryOptions },
+      { queryKey: ['dashboard-notifications', role], queryFn: queryList(() => notificationsApi.list()), enabled: userReady, ...dashboardQueryOptions },
+      { queryKey: ['dashboard-approvals', role], queryFn: queryList(() => approvalsApi.list({ page_size: 50, status: 'pending' })), enabled: userReady && (role === 'admin' || role === 'manager'), ...dashboardQueryOptions },
+      { queryKey: ['dashboard-users', role], queryFn: queryList(() => authApi.users({ page_size: 500 })), enabled: userReady && role === 'admin', ...dashboardQueryOptions },
+      { queryKey: ['dashboard-time-entries', role], queryFn: queryList(() => resourcesApi.timeEntries({ page_size: 500 })), enabled: userReady && role !== 'client', ...dashboardQueryOptions },
     ],
   })
 
@@ -183,13 +236,12 @@ export default function DashboardPage() {
   const consumedHours = sumHours(timeEntries)
   const approvedHours = sumHours(approvedEntries)
   const pendingHours = sumHours(pendingEntries)
-  const myEntries = timeEntries
-    .filter((item) => item.resource_user === user?.id || item.user === user?.id || item.resource?.user === user?.id)
+  const myEntries = timeEntries.filter((item) => item.resource_user === user?.id || item.user === user?.id || item.resource?.user === user?.id)
   const myHours = sumHours(myEntries)
   const myApprovedHours = sumHours(myEntries.filter((item) => item.approved))
   const activeProjects = projects.filter((item) => item.status !== 'completed')
   const delayedProjects = projects.filter((item) => item.is_delayed || item.status === 'on_hold' || Number(item.progress || 0) < 40)
-  const overdueTimelines = timelines.filter((item) => item.is_delayed || (item.progress || 0) < 100)
+  const overdueTimelines = timelines.filter((item) => item.is_delayed || (item.status !== 'completed' && Number(item.progress || 0) < 100))
   const completedProjects = projects.filter((item) => item.status === 'completed' || Number(item.progress || 0) >= 100)
   const unreadCount = notifications.filter((item) => !item.is_read).length
   const activeResources = resources.filter((item) => Number(item.active_project_count || 0) > 0)
@@ -197,17 +249,9 @@ export default function DashboardPage() {
   const utilization = pct(visibleHours, plannedHours || 1)
   const approvalRate = pct(approvedHours, consumedHours || 1)
   const deliveryScore = clamp(100 - delayedProjects.length * 12 + completedProjects.length * 5, 28, 98)
-  const weeklySeries = buildWeeklySeries(projects, timelines, role)
-  const healthMix = [
-    { name: 'On Track', value: Math.max(activeProjects.length - delayedProjects.length, 0) },
-    { name: 'At Risk', value: delayedProjects.length },
-    { name: 'Completed', value: completedProjects.length },
-  ].filter((item) => item.value > 0)
-  const roleMix = [
-    { name: 'Active', value: activeResources.length },
-    { name: 'Bench', value: Math.max(resources.length - activeResources.length, 0) },
-    { name: 'Managers', value: users.filter((item) => item.role === 'manager').length },
-  ].filter((item) => item.value > 0)
+  const weeklySeries = buildWeeklySeries(timeEntries, activeProjects)
+  const healthMix = buildProjectStatusMix(projects)
+  const capacityMix = buildCapacityMix(resources)
   const roleCopy = getRoleCopy(role, user?.name)
 
   const statsByRole = {
@@ -226,7 +270,7 @@ export default function DashboardPage() {
     resource: [
       { label: 'Assigned Hours', value: hours(plannedHours), sub: `${activeProjects.length} active assignments`, icon: FolderKanban, accent: 'var(--accent)' },
       { label: 'Logged Hours', value: hours(myHours || consumedHours), sub: `${hours(myApprovedHours)} approved by manager`, icon: Clock3, accent: 'var(--info)' },
-      { label: 'Unread Updates', value: unreadCount, sub: `${hours(myHours - myApprovedHours)} still pending approval`, icon: Bell, accent: 'var(--success)' },
+      { label: 'Unread Updates', value: unreadCount, sub: `${hours(Math.max(myHours - myApprovedHours, 0))} still pending approval`, icon: Bell, accent: 'var(--success)' },
       { label: 'At-Risk Items', value: delayedProjects.length, sub: 'Delays or low progress projects', icon: AlertTriangle, accent: 'var(--danger)' },
     ],
     client: [
@@ -241,7 +285,7 @@ export default function DashboardPage() {
     { label: 'Approval queue', value: approvals.length, hint: 'Pending changes that need review.', tone: 'var(--accent)' },
     { label: 'Unread notifications', value: unreadCount, hint: 'Operational updates waiting for attention.', tone: 'var(--info)' },
     { label: 'Delayed projects', value: delayedProjects.length, hint: 'Projects showing risk or stalled progress.', tone: 'var(--danger)' },
-    { label: 'Utilization', value: `${utilization}%`, hint: 'Working-day formula hours versus visible approved/submitted effort.', tone: 'var(--success)' },
+    { label: 'Utilization', value: `${utilization}%`, hint: 'Planned hours versus visible delivered effort.', tone: 'var(--success)' },
   ]
 
   return (
@@ -286,37 +330,29 @@ export default function DashboardPage() {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 'var(--sp-4)', alignItems: 'start' }}>
         <Card className="card-hover animate-rise-in" style={{ minHeight: 360 }}>
           <PanelTitle
-            title={role === 'resource' ? 'Assigned Workload vs Output' : 'Hours vs Delivery Momentum'}
-            sub="A steady view of expected effort, logged execution, and delivery movement through the week."
-            badge={<Badge color="var(--info)">Weekly rhythm</Badge>}
+            title="Worklog Flow Through The Week"
+            sub="Real submitted, approved, and pending hours grouped by weekday from your visible entries."
+            badge={<Badge color="var(--info)">Live data</Badge>}
           />
           <div style={{ height: 280 }}>
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={weeklySeries}>
-                <defs>
-                  <linearGradient id="loadFill" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#237227" stopOpacity={0.45} />
-                    <stop offset="100%" stopColor="#237227" stopOpacity={0.02} />
-                  </linearGradient>
-                  <linearGradient id="outputFill" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#6d8fa0" stopOpacity={0.35} />
-                    <stop offset="100%" stopColor="#6d8fa0" stopOpacity={0.02} />
-                  </linearGradient>
-                </defs>
+              <BarChart data={weeklySeries}>
                 <CartesianGrid stroke="rgba(191,198,196,0.08)" vertical={false} />
                 <XAxis dataKey="label" stroke="var(--text-3)" tickLine={false} axisLine={false} />
-                <YAxis stroke="var(--text-3)" tickLine={false} axisLine={false} width={30} />
+                <YAxis stroke="var(--text-3)" tickLine={false} axisLine={false} width={34} />
                 <Tooltip contentStyle={{ borderRadius: 12, border: '1px solid rgba(191,198,196,0.14)', background: '#1a2c43', color: '#f6faf8' }} />
-                <Area type="monotone" dataKey="load" stroke="#237227" fill="url(#loadFill)" strokeWidth={3} />
-                <Area type="monotone" dataKey="output" stroke="#6d8fa0" fill="url(#outputFill)" strokeWidth={3} />
-              </AreaChart>
+                <Legend />
+                <Bar dataKey="approved" name="Approved" stackId="hours" fill="#237227" radius={[8, 8, 0, 0]} />
+                <Bar dataKey="pending" name="Pending" stackId="hours" fill="#d97706" radius={[8, 8, 0, 0]} />
+                <Area type="monotone" dataKey="target" name="Target" stroke="#6d8fa0" fillOpacity={0} strokeWidth={3} />
+              </BarChart>
             </ResponsiveContainer>
           </div>
         </Card>
 
         <div style={{ display: 'grid', gap: 'var(--sp-4)' }}>
           <Card className="card-hover animate-rise-in">
-            <PanelTitle title="Delivery Mix" sub="Distribution of project health across the current workspace." badge={<Badge color="var(--accent)">Portfolio</Badge>} />
+            <PanelTitle title="Project Status Mix" sub="How the visible portfolio is distributed right now." badge={<Badge color="var(--accent)">Portfolio</Badge>} />
             <div style={{ height: 220 }}>
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
@@ -331,15 +367,18 @@ export default function DashboardPage() {
 
           {role !== 'client' && (
             <Card className="card-hover animate-rise-in">
-              <PanelTitle title="Workforce Coverage" sub="A compact view of active allocation versus available capacity." badge={<Badge color="var(--success)">Resources</Badge>} />
+              <PanelTitle title="Resource Capacity" sub="A clearer view of overloaded, allocated, and bench capacity across visible resources." badge={<Badge color="var(--success)">Resources</Badge>} />
               <div style={{ height: 220 }}>
                 <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie data={roleMix} dataKey="value" nameKey="name" innerRadius={48} outerRadius={78} paddingAngle={5}>
-                      {roleMix.map((entry, index) => <Cell key={entry.name} fill={PIE_COLORS[index % PIE_COLORS.length]} />)}
-                    </Pie>
+                  <BarChart data={capacityMix} layout="vertical" margin={{ left: 8, right: 12, top: 4, bottom: 4 }}>
+                    <CartesianGrid stroke="rgba(191,198,196,0.08)" horizontal={false} />
+                    <XAxis type="number" stroke="var(--text-3)" tickLine={false} axisLine={false} allowDecimals={false} />
+                    <YAxis type="category" dataKey="name" stroke="var(--text-3)" tickLine={false} axisLine={false} width={80} />
                     <Tooltip contentStyle={{ borderRadius: 12, border: '1px solid rgba(191,198,196,0.14)', background: '#1a2c43', color: '#f6faf8' }} />
-                  </PieChart>
+                    <Bar dataKey="value" name="Resources" radius={[0, 10, 10, 0]}>
+                      {capacityMix.map((item) => <Cell key={item.name} fill={item.fill} />)}
+                    </Bar>
+                  </BarChart>
                 </ResponsiveContainer>
               </div>
             </Card>

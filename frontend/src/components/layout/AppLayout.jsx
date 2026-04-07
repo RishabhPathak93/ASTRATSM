@@ -49,6 +49,8 @@ export default function AppLayout() {
     queryFn: () => notificationsApi.unreadCount().then(r => r.data),
     refetchInterval: 60_000,
     refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    staleTime: 30_000,
   })
 
   const { data: approvalData } = useQuery({
@@ -62,6 +64,8 @@ export default function AppLayout() {
     },
     refetchInterval: 60_000,
     refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    staleTime: 30_000,
     enabled: user?.role === 'admin' || user?.role === 'manager',
   })
 
