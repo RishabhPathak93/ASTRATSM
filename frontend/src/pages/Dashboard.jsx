@@ -143,14 +143,14 @@ export default function DashboardPage() {
 
   const results = useQueries({
     queries: [
-      { queryKey: ['dashboard-projects', role], queryFn: queryList(() => projectsApi.list({ page_size: 100 })), enabled: userReady },
-      { queryKey: ['dashboard-timelines', role], queryFn: queryList(() => timelinesApi.list({ page_size: 100 })), enabled: userReady },
-      { queryKey: ['dashboard-resources', role], queryFn: queryList(() => resourcesApi.list({ page_size: 100 })), enabled: userReady && role !== 'client' },
-      { queryKey: ['dashboard-clients', role], queryFn: queryList(() => clientsApi.list({ page_size: 100 })), enabled: userReady && role !== 'resource' },
+      { queryKey: ['dashboard-projects', role], queryFn: queryList(() => projectsApi.list({ page_size: 500 })), enabled: userReady },
+      { queryKey: ['dashboard-timelines', role], queryFn: queryList(() => timelinesApi.list({ page_size: 500 })), enabled: userReady },
+      { queryKey: ['dashboard-resources', role], queryFn: queryList(() => resourcesApi.list({ page_size: 500 })), enabled: userReady && role !== 'client' },
+      { queryKey: ['dashboard-clients', role], queryFn: queryList(() => clientsApi.list({ page_size: 500 })), enabled: userReady && role !== 'resource' },
       { queryKey: ['dashboard-notifications', role], queryFn: queryList(() => notificationsApi.list()), enabled: userReady },
       { queryKey: ['dashboard-approvals', role], queryFn: queryList(() => approvalsApi.list({ page_size: 50, status: 'pending' })), enabled: userReady && (role === 'admin' || role === 'manager') },
-      { queryKey: ['dashboard-users', role], queryFn: queryList(() => authApi.users({ page_size: 100 })), enabled: userReady && role === 'admin' },
-      { queryKey: ['dashboard-time-entries', role], queryFn: queryList(() => resourcesApi.timeEntries({ page_size: 200 })), enabled: userReady && role !== 'client' },
+      { queryKey: ['dashboard-users', role], queryFn: queryList(() => authApi.users({ page_size: 500 })), enabled: userReady && role === 'admin' },
+      { queryKey: ['dashboard-time-entries', role], queryFn: queryList(() => resourcesApi.timeEntries({ page_size: 500 })), enabled: userReady && role !== 'client' },
     ],
   })
 

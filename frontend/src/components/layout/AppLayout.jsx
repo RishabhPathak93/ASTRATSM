@@ -47,8 +47,8 @@ export default function AppLayout() {
   const { data: unreadData } = useQuery({
     queryKey: ['unread-count'],
     queryFn: () => notificationsApi.unreadCount().then(r => r.data),
-    refetchInterval: 15_000,
-    refetchOnWindowFocus: true,
+    refetchInterval: 60_000,
+    refetchOnWindowFocus: false,
   })
 
   const { data: approvalData } = useQuery({
@@ -60,8 +60,8 @@ export default function AppLayout() {
       ])
       return { count: (proj.data.count || 0) + (tl.data.count || 0) }
     },
-    refetchInterval: 15_000,
-    refetchOnWindowFocus: true,
+    refetchInterval: 60_000,
+    refetchOnWindowFocus: false,
     enabled: user?.role === 'admin' || user?.role === 'manager',
   })
 

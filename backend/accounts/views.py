@@ -1,22 +1,31 @@
-"""accounts/views.py"""
 import logging
-from rest_framework import generics, status, viewsets, filters
+import secrets
+
+from django.conf import settings
+from django.utils import timezone
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters, generics, status, viewsets
 from rest_framework.decorators import action
-from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.response import Response
 from rest_framework.throttling import AnonRateThrottle
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.exceptions import TokenError
-from django_filters.rest_framework import DjangoFilterBackend
 
-from .models import User, RolePermission
-from .serializers import (
-    CustomTokenObtainPairSerializer, UserSerializer, UserCreateSerializer,
-    UserUpdateSerializer, ChangePasswordSerializer, AdminChangeRoleSerializer,
-    RolePermissionSerializer,
-)
+from .email_utils import OTPEmailError, send_otp_email
+from .models import LoginOTPChallenge, RolePermission, User
 from .permissions import IsAdmin, IsAdminOrManager
+from .serializers import (
+    AdminChangeRoleSerializer,
+    ChangePasswordSerializer,
+    LoginStartSerializer,
+    LoginVerifyOTPSerializer,
+    RolePermissionSerializer,
+    UserCreateSerializer,
+    UserSerializer,
+    UserUpdateSerializer,
+    build_user_payload,
+)
 
 logger = logging.getLogger('nexus')
 
@@ -25,10 +34,63 @@ class LoginThrottle(AnonRateThrottle):
     rate = '10/min'
 
 
-class LoginView(TokenObtainPairView):
+class LoginView(generics.GenericAPIView):
     permission_classes = [AllowAny]
-    serializer_class   = CustomTokenObtainPairSerializer
-    throttle_classes   = [LoginThrottle]
+    serializer_class = LoginStartSerializer
+    throttle_classes = [LoginThrottle]
+
+    def post(self, request):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data['user']
+
+        if not user.two_factor_enabled:
+            refresh = RefreshToken.for_user(user)
+            logger.info('Successful login without OTP: %s', user.email)
+            return Response({
+                'access': str(refresh.access_token),
+                'refresh': str(refresh),
+                'user': build_user_payload(user),
+            }, status=status.HTTP_200_OK)
+
+        otp = ''.join(secrets.choice('0123456789') for _ in range(settings.LOGIN_OTP_LENGTH))
+        challenge = LoginOTPChallenge.create_for_user(user=user, code=otp, ttl_seconds=settings.LOGIN_OTP_TTL_SECONDS)
+        try:
+            send_otp_email(user.email, otp, user.name)
+        except OTPEmailError as exc:
+            challenge.delete()
+            return Response({'detail': str(exc)}, status=status.HTTP_503_SERVICE_UNAVAILABLE)
+
+        logger.info('OTP login challenge created for %s', user.email)
+        return Response({
+            'requires_otp': True,
+            'challenge_id': challenge.challenge_id,
+            'email': user.email,
+            'detail': f'OTP sent to your email address. It is valid for {settings.LOGIN_OTP_TTL_SECONDS} seconds.',
+            'otp_expires_in_seconds': settings.LOGIN_OTP_TTL_SECONDS,
+        }, status=status.HTTP_200_OK)
+
+
+class VerifyOTPView(generics.GenericAPIView):
+    permission_classes = [AllowAny]
+    serializer_class = LoginVerifyOTPSerializer
+    throttle_classes = [LoginThrottle]
+
+    def post(self, request):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        challenge = serializer.validated_data['challenge']
+        challenge.consumed_at = timezone.now()
+        challenge.save(update_fields=['consumed_at'])
+
+        user = challenge.user
+        refresh = RefreshToken.for_user(user)
+        logger.info('Successful OTP login: %s', user.email)
+        return Response({
+            'access': str(refresh.access_token),
+            'refresh': str(refresh),
+            'user': build_user_payload(user),
+        }, status=status.HTTP_200_OK)
 
 
 class LogoutView(generics.GenericAPIView):
@@ -66,7 +128,7 @@ class MeView(generics.RetrieveUpdateAPIView):
 
 class ChangePasswordView(generics.GenericAPIView):
     permission_classes = [IsAuthenticated]
-    serializer_class   = ChangePasswordSerializer
+    serializer_class = ChangePasswordSerializer
 
     def post(self, request):
         serializer = self.get_serializer(data=request.data, context={'request': request})
@@ -79,10 +141,10 @@ class ChangePasswordView(generics.GenericAPIView):
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all().order_by('name')
-    filter_backends  = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['role', 'is_active', 'department']
-    search_fields    = ['name', 'email', 'department']
-    ordering_fields  = ['name', 'date_joined', 'role', 'last_seen']
+    search_fields = ['name', 'email', 'department']
+    ordering_fields = ['name', 'date_joined', 'role', 'last_seen']
 
     def get_permissions(self):
         if self.action in ('list', 'retrieve'):
@@ -121,12 +183,10 @@ class UserViewSet(viewsets.ModelViewSet):
             )
         user.is_active = not user.is_active
         user.save(update_fields=['is_active', 'updated_at'])
-        logger.warning('Admin %s toggled status of %s → is_active=%s',
-                       request.user.email, user.email, user.is_active)
+        logger.warning('Admin %s toggled status of %s -> is_active=%s', request.user.email, user.email, user.is_active)
         return Response({'id': user.id, 'is_active': user.is_active})
 
-    @action(detail=True, methods=['patch'], permission_classes=[IsAdmin],
-            serializer_class=AdminChangeRoleSerializer)
+    @action(detail=True, methods=['patch'], permission_classes=[IsAdmin], serializer_class=AdminChangeRoleSerializer)
     def change_role(self, request, pk=None):
         user = self.get_object()
         if user == request.user:
@@ -136,21 +196,19 @@ class UserViewSet(viewsets.ModelViewSet):
             )
         serializer = AdminChangeRoleSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        old_role  = user.role
+        old_role = user.role
         user.role = serializer.validated_data['role']
         user.save(update_fields=['role', 'updated_at'])
-        logger.warning('Admin %s changed role of %s: %s → %s',
-                       request.user.email, user.email, old_role, user.role)
+        logger.warning('Admin %s changed role of %s: %s -> %s', request.user.email, user.email, old_role, user.role)
         return Response(UserSerializer(user, context={'request': request}).data)
 
 
 class RolePermissionViewSet(viewsets.ModelViewSet):
-    queryset           = RolePermission.objects.all().order_by('role')
-    serializer_class   = RolePermissionSerializer
+    queryset = RolePermission.objects.all().order_by('role')
+    serializer_class = RolePermissionSerializer
     permission_classes = [IsAdminOrManager]
-    http_method_names  = ['get', 'put', 'patch', 'head', 'options']  # no create/delete
+    http_method_names = ['get', 'put', 'patch', 'head', 'options']
 
     def perform_update(self, serializer):
         serializer.save(updated_by=self.request.user)
-        logger.info('Role permissions updated for %s by %s',
-                    serializer.instance.role, self.request.user.email)
+        logger.info('Role permissions updated for %s by %s', serializer.instance.role, self.request.user.email)

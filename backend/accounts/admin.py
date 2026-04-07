@@ -1,28 +1,27 @@
-"""accounts/admin.py"""
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.utils.html import format_html
-from .models import User, RolePermission
+from .models import LoginOTPChallenge, RolePermission, User
 
 
 @admin.register(User)
 class UserAdmin(BaseUserAdmin):
-    list_display    = ['email', 'name', 'role_badge', 'department', 'is_active', 'date_joined', 'last_seen']
-    list_filter     = ['role', 'is_active', 'department']
-    search_fields   = ['name', 'email', 'department']
-    ordering        = ['name']
+    list_display = ['email', 'name', 'role_badge', 'two_factor_enabled', 'department', 'is_active', 'date_joined', 'last_seen']
+    list_filter = ['role', 'is_active', 'department', 'two_factor_enabled']
+    search_fields = ['name', 'email', 'department']
+    ordering = ['name']
     readonly_fields = ['date_joined', 'updated_at', 'last_seen', 'initials_display']
 
     fieldsets = (
-        ('Credentials',  {'fields': ('email', 'password')}),
-        ('Profile',      {'fields': ('name', 'department', 'phone', 'bio', 'avatar', 'initials_display')}),
-        ('Access',       {'fields': ('role', 'is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}),
-        ('Timestamps',   {'fields': ('date_joined', 'updated_at', 'last_seen')}),
+        ('Credentials', {'fields': ('email', 'password')}),
+        ('Profile', {'fields': ('name', 'department', 'phone', 'bio', 'avatar', 'initials_display')}),
+        ('Access', {'fields': ('role', 'two_factor_enabled', 'is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}),
+        ('Timestamps', {'fields': ('date_joined', 'updated_at', 'last_seen')}),
     )
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('email', 'name', 'role', 'department', 'password1', 'password2'),
+            'fields': ('email', 'name', 'role', 'department', 'two_factor_enabled', 'password1', 'password2'),
         }),
     )
 
@@ -42,11 +41,19 @@ class UserAdmin(BaseUserAdmin):
 
 @admin.register(RolePermission)
 class RolePermissionAdmin(admin.ModelAdmin):
-    list_display  = ['role', 'updated_by', 'updated_at']
+    list_display = ['role', 'updated_by', 'updated_at']
     readonly_fields = ['updated_by', 'updated_at']
 
     def has_add_permission(self, request):
-        return False  # only created via signal
+        return False
 
     def has_delete_permission(self, request, obj=None):
-        return False  # permanent rows
+        return False
+
+
+@admin.register(LoginOTPChallenge)
+class LoginOTPChallengeAdmin(admin.ModelAdmin):
+    list_display = ['user', 'challenge_id', 'attempts', 'expires_at', 'consumed_at', 'created_at']
+    search_fields = ['user__email', 'user__name', 'challenge_id']
+    list_filter = ['created_at', 'expires_at', 'consumed_at']
+    readonly_fields = ['challenge_id', 'code_hash', 'attempts', 'expires_at', 'consumed_at', 'created_at']

@@ -657,6 +657,7 @@ function PhaseRow({ phase, user, now, isMobile, onRefresh, onToast }) {
           }),
           resourcesApi.createTimeEntry({
             project: phase.project,
+            timeline: phase.id,
             date: form.work_date,
             hours: form.hours,
             description: `Phase: ${phase.name}\n${form.description.trim()}`,

@@ -1,19 +1,28 @@
-"""accounts/serializers.py"""
 import logging
+
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError as DjangoValidationError
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from .models import User, RolePermission
+
+from .models import LoginOTPChallenge, RolePermission, User, validate_company_email
 
 logger = logging.getLogger('nexus')
 
 
+def build_user_payload(user):
+    return {
+        'id': user.id,
+        'name': user.name,
+        'email': user.email,
+        'role': user.role,
+        'department': user.department,
+        'initials': user.initials,
+        'permissions': RolePermission.get_for_role(user.role),
+    }
+
+
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
-    """
-    Extends the default JWT response with the user profile so the frontend
-    doesn't need a second round-trip after login.
-    """
     def validate(self, attrs):
         data = super().validate(attrs)
         user = self.user
@@ -23,29 +32,66 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
                 'Your account has been deactivated. Contact an administrator.'
             )
 
-        data['user'] = {
-            'id':          user.id,
-            'name':        user.name,
-            'email':       user.email,
-            'role':        user.role,
-            'department':  user.department,
-            'initials':    user.initials,
-            'permissions': RolePermission.get_for_role(user.role),
-        }
+        data['user'] = build_user_payload(user)
         logger.info('Successful login: %s', user.email)
         return data
 
 
+class LoginStartSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    password = serializers.CharField(write_only=True)
+
+    def validate(self, attrs):
+        email = attrs['email'].strip().lower()
+        password = attrs['password']
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist as exc:
+            raise serializers.ValidationError({'detail': 'Invalid email or password.'}) from exc
+        if not user.check_password(password):
+            raise serializers.ValidationError({'detail': 'Invalid email or password.'})
+        if not user.is_active:
+            raise serializers.ValidationError({'detail': 'Your account has been deactivated. Contact an administrator.'})
+        attrs['user'] = user
+        attrs['email'] = email
+        return attrs
+
+
+class LoginVerifyOTPSerializer(serializers.Serializer):
+    challenge_id = serializers.CharField()
+    otp = serializers.CharField(min_length=4, max_length=8)
+
+    def validate(self, attrs):
+        try:
+            challenge = LoginOTPChallenge.objects.select_related('user').get(challenge_id=attrs['challenge_id'])
+        except LoginOTPChallenge.DoesNotExist as exc:
+            raise serializers.ValidationError({'detail': 'OTP challenge not found.'}) from exc
+
+        if challenge.consumed_at:
+            raise serializers.ValidationError({'detail': 'This OTP has already been used.'})
+        if challenge.is_expired():
+            raise serializers.ValidationError({'detail': 'This OTP has expired. Please click resend OTP to continue.'})
+        if challenge.attempts >= 5:
+            raise serializers.ValidationError({'detail': 'Too many incorrect OTP attempts. Please log in again.'})
+        if not challenge.verify(attrs['otp']):
+            challenge.attempts += 1
+            challenge.save(update_fields=['attempts'])
+            raise serializers.ValidationError({'detail': 'Invalid OTP.'})
+
+        attrs['challenge'] = challenge
+        return attrs
+
+
 class UserSerializer(serializers.ModelSerializer):
-    initials    = serializers.ReadOnlyField()
-    avatar_url  = serializers.SerializerMethodField()
+    initials = serializers.ReadOnlyField()
+    avatar_url = serializers.SerializerMethodField()
     permissions = serializers.SerializerMethodField()
 
     class Meta:
-        model  = User
+        model = User
         fields = [
             'id', 'name', 'email', 'role', 'department', 'phone',
-            'bio', 'is_active', 'date_joined', 'last_seen',
+            'bio', 'is_active', 'date_joined', 'last_seen', 'two_factor_enabled',
             'initials', 'avatar_url', 'permissions',
         ]
         read_only_fields = ['id', 'date_joined', 'last_seen']
@@ -61,20 +107,24 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class UserCreateSerializer(serializers.ModelSerializer):
-    password  = serializers.CharField(write_only=True, style={'input_type': 'password'})
+    password = serializers.CharField(write_only=True, style={'input_type': 'password'})
     password2 = serializers.CharField(write_only=True, style={'input_type': 'password'}, label='Confirm password')
 
     class Meta:
-        model  = User
-        fields = ['name', 'email', 'password', 'password2', 'role', 'department', 'phone']
+        model = User
+        fields = ['name', 'email', 'password', 'password2', 'role', 'department', 'phone', 'two_factor_enabled']
         extra_kwargs = {
             'email': {'required': True},
-            'name':  {'required': True},
-            'role':  {'required': True},
+            'name': {'required': True},
+            'role': {'required': True},
         }
 
     def validate_email(self, value):
-        value = value.strip().lower()
+        try:
+            value = validate_company_email(value)
+        except DjangoValidationError as exc:
+            detail = exc.message_dict.get('email', exc.messages) if hasattr(exc, 'message_dict') else exc.messages
+            raise serializers.ValidationError(detail[0] if isinstance(detail, list) else detail)
         if User.objects.filter(email=value).exists():
             raise serializers.ValidationError('A user with this email already exists.')
         return value
@@ -104,7 +154,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
 
 class UserUpdateSerializer(serializers.ModelSerializer):
     class Meta:
-        model  = User
+        model = User
         fields = ['name', 'department', 'phone', 'bio', 'avatar']
 
     def validate_name(self, value):
@@ -161,7 +211,7 @@ class AdminChangeRoleSerializer(serializers.Serializer):
 
 class RolePermissionSerializer(serializers.ModelSerializer):
     class Meta:
-        model  = RolePermission
+        model = RolePermission
         fields = ['id', 'role', 'permissions', 'updated_by', 'updated_at']
         read_only_fields = ['id', 'updated_by', 'updated_at']
 

@@ -16,3 +16,6 @@ nexus-frontend/.env
 # OS
 .DS_Store
 Thumbs.db
+
+.env.example
+.env.uat.example

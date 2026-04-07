@@ -4,7 +4,7 @@ accounts/management/commands/create_admin.py
 Creates the first admin user interactively.
 Usage:
   python manage.py create_admin
-  python manage.py create_admin --email admin@company.com --name "Alex Morgan"
+  python manage.py create_admin --email admin@astracybertech.com --name "Alex Morgan"
 
 No dummy data. No hardcoded passwords. Reads from stdin or env vars.
 """
@@ -18,7 +18,7 @@ class Command(BaseCommand):
     help = 'Create the initial admin user (no dummy data).'
 
     def add_arguments(self, parser):
-        parser.add_argument('--email', type=str, default='', help='Admin email address')
+        parser.add_argument('--email', type=str, default='', help='Admin email address (@astracybertech.com only)')
         parser.add_argument('--name',  type=str, default='', help='Admin full name')
 
     def handle(self, *args, **options):

@@ -6,7 +6,7 @@ import {
 } from 'lucide-react'
 import { notificationsApi, resourcesApi, authApi } from '@/api/index.js'
 import { Btn, Badge, EmptyState, Spinner, Avatar, Input, Textarea, Modal } from '@/components/ui/index.jsx'
-import { timeAgo, extractError } from '@/utils/index.js'
+import { timeAgo, extractError, downloadBlob } from '@/utils/index.js'
 import { useAuthStore } from '@/stores/authStore.js'
 
 /* ─────────────────────────────────────────────────
@@ -168,125 +168,188 @@ export function NotificationsPage() {
 export function ResourcesPage() {
   const qc = useQueryClient()
   const user = useAuthStore(s => s.user)
-  const canCreate = useAuthStore(s => s.hasPermission('resources'))
+  const isAdmin = user?.role === 'admin'
+  const isManager = user?.role === 'manager'
   const [showCreate, setShowCreate] = useState(false)
+  const [editingResource, setEditingResource] = useState(null)
+  const [deletingResource, setDeletingResource] = useState(null)
+  const [deleting, setDeleting] = useState(false)
+  const [exporting, setExporting] = useState(false)
+  const [page, setPage] = useState(1)
+  const [search, setSearch] = useState('')
+  const [approvingId, setApprovingId] = useState(null)
 
-  // Fetch ResourceProfiles (role=resource users with profile data)
   const { data, isLoading } = useQuery({
-    queryKey: ['resources'],
-    queryFn: () => resourcesApi.list({ page_size: 100 }).then(r => r.data.results || r.data),
-    refetchInterval: 15000,
-    refetchOnWindowFocus: true,
+    queryKey: ['resources', page, search],
+    queryFn: () => resourcesApi.list({ page, page_size: 25, search: search || undefined }).then(r => r.data),
+    keepPreviousData: true,
   })
 
-  // Fetch managers as plain users
   const { data: managersData } = useQuery({
     queryKey: ['managers-all'],
-    queryFn: () => authApi.users({ role: 'manager', is_active: true, page_size: 100 }).then(r => r.data.results || r.data),
-    refetchInterval: 30000,
+    queryFn: () => authApi.users({ role: 'manager', is_active: true, page_size: 500 }).then(r => r.data.results || r.data),
   })
 
-  const resources = data || []
-  const managers  = managersData || []
+  const { data: pendingEntriesData, isLoading: pendingEntriesLoading } = useQuery({
+    queryKey: ['pending-time-entries', user?.role],
+    queryFn: () => resourcesApi.timeEntries({ approved: false, page_size: 200 }).then(r => r.data.results || r.data),
+    enabled: isAdmin || isManager,
+  })
 
-  const bench  = resources.filter(r => (r.active_project_count ?? 0) === 0)
+  const resources = data?.results || data || []
+  const totalResources = data?.count ?? resources.length
+  const totalPages = data?.total_pages ?? 1
+  const managers = managersData || []
+  const pendingEntries = pendingEntriesData || []
+  const bench = resources.filter(r => (r.active_project_count ?? 0) === 0)
   const active = resources.filter(r => (r.active_project_count ?? 0) > 0)
+
+  useEffect(() => {
+    setPage(1)
+  }, [search])
+
+  async function exportResources() {
+    setExporting(true)
+    try {
+      const response = await resourcesApi.export()
+      downloadBlob(response, 'resources.xlsx')
+    } finally {
+      setExporting(false)
+    }
+  }
+
+  async function confirmDelete() {
+    if (!deletingResource) return
+    setDeleting(true)
+    try {
+      await resourcesApi.delete(deletingResource.id)
+      setDeletingResource(null)
+      qc.invalidateQueries(['resources'])
+    } finally {
+      setDeleting(false)
+    }
+  }
+
+  async function approveEntry(entryId) {
+    setApprovingId(entryId)
+    try {
+      await resourcesApi.approveTimeEntry(entryId)
+      qc.invalidateQueries(['pending-time-entries'])
+      qc.invalidateQueries(['resources'])
+      qc.invalidateQueries(['dashboard-time-entries'])
+      qc.invalidateQueries(['dashboard-projects'])
+      qc.invalidateQueries(['dashboard-timelines'])
+    } finally {
+      setApprovingId(null)
+    }
+  }
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--sp-6)' }}>
-
-      {/* Header */}
       <div className="mobile-center-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 'var(--sp-3)' }}>
         <div>
           <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '1.8rem', letterSpacing: '-0.02em' }}>Resources</h1>
           <p style={{ color: 'var(--text-2)', fontSize: '14px', marginTop: 4 }}>
-            {resources.length} resources · <span style={{ color: 'var(--success)' }}>{active.length} active</span> · <span style={{ color: 'var(--danger)' }}>{bench.length} on bench</span>
-            {managers.length > 0 && <> · <span style={{ color: 'var(--info)' }}>{managers.length} manager{managers.length !== 1 ? 's' : ''}</span></>}
+            {totalResources} resources | <span style={{ color: 'var(--success)' }}>{active.length} active on this page</span> | <span style={{ color: 'var(--danger)' }}>{bench.length} on bench on this page</span>
+            {user?.role === 'manager' && <span style={{ marginLeft: 8, color: 'var(--info)' }}>Assigned to you only</span>}
           </p>
         </div>
-        {canCreate && <Btn className="mobile-center-card" icon={<Users size={14} />} onClick={() => setShowCreate(true)}>New Resource</Btn>}
+        {isAdmin && (
+          <div style={{ display: 'flex', gap: 'var(--sp-2)', flexWrap: 'wrap' }}>
+            <Btn variant="ghost" icon={<FolderKanban size={14} />} loading={exporting} onClick={exportResources}>Export Excel</Btn>
+            <Btn icon={<Users size={14} />} onClick={() => setShowCreate(true)}>New Resource</Btn>
+          </div>
+        )}
       </div>
+
+      <div style={{ display: 'flex', gap: 'var(--sp-3)', flexWrap: 'wrap', alignItems: 'center' }}>
+        <div style={{ position: 'relative', flex: 1, minWidth: 220, maxWidth: 360 }}>
+          <input
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            placeholder="Search by name, email, resource ID, or manager..."
+            style={{ width: '100%', background: 'var(--bg-2)', border: '1px solid var(--border)', borderRadius: 'var(--r-md)', color: 'var(--text-0)', fontSize: '13px', padding: '9px 12px', outline: 'none' }}
+          />
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--sp-2)' }}>
+          <Btn variant="ghost" disabled={page <= 1} onClick={() => setPage(p => Math.max(1, p - 1))}>Prev</Btn>
+          <span style={{ fontSize: '12px', color: 'var(--text-2)', minWidth: 90, textAlign: 'center' }}>Page {page} / {totalPages}</span>
+          <Btn variant="ghost" disabled={page >= totalPages} onClick={() => setPage(p => Math.min(totalPages, p + 1))}>Next</Btn>
+        </div>
+      </div>
+
+      {(isAdmin || isManager) && (
+        <PendingTimeApprovalTable
+          entries={pendingEntries}
+          isLoading={pendingEntriesLoading}
+          approvingId={approvingId}
+          onApprove={approveEntry}
+        />
+      )}
 
       {isLoading ? (
         <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--sp-8)' }}><Spinner /></div>
+      ) : resources.length === 0 ? (
+        <EmptyState icon={Wrench} title="No resources" description={search ? 'No resources matched your search.' : 'Add your first resource to get started.'} />
       ) : (
         <>
-          {/* Managers Table */}
-          {managers.length > 0 && (
-            <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--sp-3)', marginBottom: 'var(--sp-3)' }}>
-                <span style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text-3)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Managers</span>
-                <span style={{ background: 'rgba(96,165,250,0.12)', color: 'var(--info)', borderRadius: 'var(--r-full)', padding: '2px 8px', fontSize: '11px', fontWeight: 700 }}>
-                  {managers.length} total
-                </span>
-              </div>
-              <div style={{ background: 'var(--bg-1)', border: '1px solid var(--border)', borderRadius: 'var(--r-lg)', overflow: 'hidden' }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                  <thead>
-                    <tr>
-                      {['Name', 'Email', 'Department', 'Role'].map(h => (
-                        <th key={h} style={{ textAlign: 'left', padding: '10px 16px', fontSize: '11px', fontWeight: 600, color: 'var(--text-3)', textTransform: 'uppercase', letterSpacing: '0.08em', borderBottom: '1px solid var(--border)' }}>{h}</th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {managers.map((m, i) => (
-                      <tr key={m.id} style={{ borderBottom: i < managers.length - 1 ? '1px solid var(--border)' : 'none' }}
-                        onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-2)'}
-                        onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
-                        <td style={{ padding: '12px 16px' }}>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--sp-3)' }}>
-                            <Avatar name={m.name} src={m.avatar || m.avatar_url} size={32} role={m.role} />
-                            <span style={{ fontWeight: 600, fontSize: '13px' }}>{m.name}</span>
-                          </div>
-                        </td>
-                        <td style={{ padding: '12px 16px', fontSize: '12px', color: 'var(--text-3)' }}>{m.email}</td>
-                        <td style={{ padding: '12px 16px', fontSize: '13px', color: 'var(--text-2)' }}>{m.department || '—'}</td>
-                        <td style={{ padding: '12px 16px' }}>
-                          <span style={{ fontSize: '11px', fontWeight: 700, color: 'var(--info)', background: 'rgba(96,165,250,0.1)', padding: '2px 10px', borderRadius: 'var(--r-full)' }}>Manager</span>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          )}
-
-          {/* Active Resources Table */}
-          {resources.length === 0 && managers.length === 0 ? (
-            <EmptyState icon={Wrench} title="No resources" description="Add your first resource to get started." />
-          ) : (
-            <>
-              <ResourceTable
-                title="Active"
-                badge={{ text: `${active.length} assigned`, color: 'var(--success)', bg: 'rgba(74,222,128,0.12)' }}
-                resources={active}
-                emptyText="No active resources right now."
-              />
-              <ResourceTable
-                title="On Bench"
-                badge={{ text: `${bench.length} unassigned`, color: 'var(--danger)', bg: 'rgba(248,113,113,0.12)' }}
-                resources={bench}
-                emptyText="Everyone is assigned to a project."
-                borderColor="rgba(248,113,113,0.25)"
-              />
-            </>
-          )}
+          <ResourceTable
+            title="Active"
+            badge={{ text: `${active.length} assigned`, color: 'var(--success)', bg: 'rgba(74,222,128,0.12)' }}
+            resources={active}
+            emptyText="No active resources on this page."
+            canManage={isAdmin}
+            onEdit={setEditingResource}
+            onDelete={setDeletingResource}
+          />
+          <ResourceTable
+            title="On Bench"
+            badge={{ text: `${bench.length} unassigned`, color: 'var(--danger)', bg: 'rgba(248,113,113,0.12)' }}
+            resources={bench}
+            emptyText="No bench resources on this page."
+            borderColor="rgba(248,113,113,0.25)"
+            canManage={isAdmin}
+            onEdit={setEditingResource}
+            onDelete={setDeletingResource}
+          />
         </>
       )}
 
       {showCreate && (
-        <CreateResourceModal
+        <ResourceFormModal
+          managers={managers}
           onClose={() => setShowCreate(false)}
-          onCreated={() => { setShowCreate(false); qc.invalidateQueries(['resources']) }}
+          onSaved={() => { setShowCreate(false); qc.invalidateQueries(['resources']) }}
         />
+      )}
+
+      {editingResource && (
+        <ResourceFormModal
+          resource={editingResource}
+          managers={managers}
+          onClose={() => setEditingResource(null)}
+          onSaved={() => { setEditingResource(null); qc.invalidateQueries(['resources']) }}
+        />
+      )}
+
+      {deletingResource && (
+        <Modal open onClose={() => setDeletingResource(null)} title="Delete Resource" width={460}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--sp-4)' }}>
+            <p style={{ fontSize: '13px', color: 'var(--text-2)', lineHeight: 1.6 }}>
+              Delete <strong style={{ color: 'var(--text-0)' }}>{deletingResource.name || deletingResource.user_detail?.name}</strong>? This also removes the linked resource login.
+            </p>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 'var(--sp-2)' }}>
+              <Btn variant="ghost" onClick={() => setDeletingResource(null)}>Cancel</Btn>
+              <Btn loading={deleting} onClick={confirmDelete} style={{ background: 'var(--danger)', borderColor: 'var(--danger)' }}>Delete</Btn>
+            </div>
+          </div>
+        </Modal>
       )}
     </div>
   )
 }
 
-function ResourceTable({ title, badge, resources, emptyText, borderColor }) {
+function ResourceTable({ title, badge, resources, emptyText, borderColor, canManage, onEdit, onDelete }) {
   return (
     <div>
       <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--sp-3)', marginBottom: 'var(--sp-3)' }}>
@@ -303,7 +366,7 @@ function ResourceTable({ title, badge, resources, emptyText, borderColor }) {
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
               <tr>
-                {['Resource ID', 'Email', 'Level', 'Manager', 'Active Projects', 'Availability'].map(h => (
+                {['Name', 'Resource ID', 'Email', 'Level', 'Manager', 'Logged', 'Approved', 'Pending', 'Active Projects', 'Availability', ...(canManage ? ['Actions'] : [])].map(h => (
                   <th key={h} style={{ textAlign: 'left', padding: '10px 16px', fontSize: '11px', fontWeight: 600, color: 'var(--text-3)', textTransform: 'uppercase', letterSpacing: '0.08em', borderBottom: '1px solid var(--border)' }}>{h}</th>
                 ))}
               </tr>
@@ -315,28 +378,18 @@ function ResourceTable({ title, badge, resources, emptyText, borderColor }) {
                   onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
                   <td style={{ padding: '12px 16px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--sp-3)' }}>
-                      <Avatar name={r.resource_id || r.user_detail?.name} src={r.user_detail?.avatar || r.user_detail?.avatar_url} size={32} role={r.user_detail?.role} />
-                      <span style={{ fontFamily: 'var(--font-mono)', fontSize: '13px', fontWeight: 700, color: 'var(--accent)', background: 'var(--accent-dim)', padding: '3px 10px', borderRadius: 'var(--r-sm)' }}>
-                        {r.resource_id || '—'}
-                      </span>
+                      <Avatar name={r.name || r.user_detail?.name} src={r.user_detail?.avatar || r.user_detail?.avatar_url} size={32} role="resource" />
+                      <span style={{ fontWeight: 600, fontSize: '13px' }}>{r.name || r.user_detail?.name || '?'}</span>
                     </div>
                   </td>
-                  <td style={{ padding: '12px 16px', fontSize: '12px', color: 'var(--text-3)' }}>
-                    {r.user_detail?.email || '—'}
-                  </td>
-                  <td style={{ padding: '12px 16px' }}>
-                    {r.level ? (
-                      <span style={{ fontSize: '12px', fontWeight: 700, color: 'var(--info)', background: 'rgba(96,165,250,0.1)', padding: '2px 10px', borderRadius: 'var(--r-full)' }}>
-                        {r.level}
-                      </span>
-                    ) : <span style={{ color: 'var(--text-3)', fontSize: '13px' }}>—</span>}
-                  </td>
-                  <td style={{ padding: '12px 16px', fontSize: '13px', color: 'var(--text-2)' }}>
-                    {r.manager_detail?.name || '—'}
-                  </td>
-                  <td style={{ padding: '12px 16px', fontFamily: 'var(--font-mono)', fontSize: '13px', color: badge.color, fontWeight: 600 }}>
-                    {r.active_project_count ?? 0}
-                  </td>
+                  <td style={{ padding: '12px 16px', fontFamily: 'var(--font-mono)', fontSize: '13px', color: 'var(--accent)' }}>{r.resource_id || '?'}</td>
+                  <td style={{ padding: '12px 16px', fontSize: '12px', color: 'var(--text-3)' }}>{r.email || r.user_detail?.email || '?'}</td>
+                  <td style={{ padding: '12px 16px', fontSize: '13px', color: 'var(--text-2)' }}>{r.level || '?'}</td>
+                  <td style={{ padding: '12px 16px', fontSize: '13px', color: 'var(--text-2)' }}>{r.manager_detail?.name || '?'}</td>
+                  <td style={{ padding: '12px 16px', fontFamily: 'var(--font-mono)', fontSize: '13px', color: 'var(--text-1)' }}>{Number(r.total_hours_logged || 0).toFixed(1)}h</td>
+                  <td style={{ padding: '12px 16px', fontFamily: 'var(--font-mono)', fontSize: '13px', color: 'var(--success)', fontWeight: 600 }}>{Number(r.approved_hours_logged || 0).toFixed(1)}h</td>
+                  <td style={{ padding: '12px 16px', fontFamily: 'var(--font-mono)', fontSize: '13px', color: Number(r.pending_hours_logged || 0) > 0 ? 'var(--warning)' : 'var(--text-3)', fontWeight: 600 }}>{Number(r.pending_hours_logged || 0).toFixed(1)}h</td>
+                  <td style={{ padding: '12px 16px', fontFamily: 'var(--font-mono)', fontSize: '13px', color: badge.color, fontWeight: 600 }}>{r.active_project_count ?? 0}</td>
                   <td style={{ padding: '12px 16px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--sp-2)' }}>
                       <div style={{ flex: 1, maxWidth: 80, height: 4, background: 'var(--bg-3)', borderRadius: 2, overflow: 'hidden' }}>
@@ -345,6 +398,14 @@ function ResourceTable({ title, badge, resources, emptyText, borderColor }) {
                       <span style={{ fontSize: '12px', fontFamily: 'var(--font-mono)', color: 'var(--text-2)' }}>{r.availability}%</span>
                     </div>
                   </td>
+                  {canManage && (
+                    <td style={{ padding: '12px 16px' }}>
+                      <div style={{ display: 'flex', gap: 'var(--sp-2)' }}>
+                        <Btn variant="ghost" onClick={() => onEdit(r)}>Edit</Btn>
+                        <Btn variant="ghost" onClick={() => onDelete(r)} style={{ color: 'var(--danger)' }}><Trash2 size={14} /></Btn>
+                      </div>
+                    </td>
+                  )}
                 </tr>
               ))}
             </tbody>
@@ -355,19 +416,67 @@ function ResourceTable({ title, badge, resources, emptyText, borderColor }) {
   )
 }
 
-function CreateResourceModal({ onClose, onCreated }) {
-  const [form, setForm] = useState({ resource_id: '', email: '', password: '', level: '', manager_id: '' })
+function PendingTimeApprovalTable({ entries, isLoading, approvingId, onApprove }) {
+  return (
+    <div style={{ background: 'var(--bg-1)', border: '1px solid var(--border)', borderRadius: 'var(--r-lg)', overflow: 'hidden' }}>
+      <div style={{ padding: 'var(--sp-4) var(--sp-5)', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 'var(--sp-3)', flexWrap: 'wrap' }}>
+        <div>
+          <h3 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '1rem' }}>Pending Time Approvals</h3>
+          <p style={{ fontSize: '12px', color: 'var(--text-3)', marginTop: 4 }}>Review submitted work logs and approve them directly from here.</p>
+        </div>
+        <Badge color={entries.length ? 'var(--warning)' : 'var(--success)'}>{entries.length} pending</Badge>
+      </div>
+      {isLoading ? (
+        <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--sp-6)' }}><Spinner /></div>
+      ) : entries.length === 0 ? (
+        <p style={{ padding: 'var(--sp-5)', color: 'var(--text-3)', fontSize: '13px' }}>No time entries are waiting for approval.</p>
+      ) : (
+        <div style={{ overflowX: 'auto' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+            <thead>
+              <tr>
+                {['Resource', 'Project', 'Phase', 'Date', 'Hours', 'Notes', 'Action'].map(h => (
+                  <th key={h} style={{ textAlign: 'left', padding: '10px 16px', fontSize: '11px', fontWeight: 600, color: 'var(--text-3)', textTransform: 'uppercase', letterSpacing: '0.08em', borderBottom: '1px solid var(--border)' }}>{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {entries.map((entry, index) => (
+                <tr key={entry.id} style={{ borderBottom: index < entries.length - 1 ? '1px solid var(--border)' : 'none' }}>
+                  <td style={{ padding: '12px 16px', fontWeight: 600, fontSize: '13px' }}>{entry.resource_name}</td>
+                  <td style={{ padding: '12px 16px', fontSize: '13px', color: 'var(--text-2)' }}>{entry.project_name}</td>
+                  <td style={{ padding: '12px 16px', fontSize: '13px', color: 'var(--text-2)' }}>{entry.timeline_name || 'Project-level log'}</td>
+                  <td style={{ padding: '12px 16px', fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--text-2)' }}>{entry.date}</td>
+                  <td style={{ padding: '12px 16px', fontFamily: 'var(--font-mono)', fontSize: '13px', color: 'var(--accent)', fontWeight: 700 }}>{entry.hours}h</td>
+                  <td style={{ padding: '12px 16px', fontSize: '12px', color: 'var(--text-3)', maxWidth: 320, whiteSpace: 'pre-wrap' }}>{entry.description || 'No notes provided.'}</td>
+                  <td style={{ padding: '12px 16px' }}>
+                    <Btn size="sm" loading={approvingId === entry.id} onClick={() => onApprove(entry.id)} icon={<CheckCircle size={13} />}>Approve</Btn>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
+  )
+}
+
+function ResourceFormModal({ resource, managers, onClose, onSaved }) {
+  const isEdit = !!resource
+  const [form, setForm] = useState({
+    name: resource?.name || resource?.user_detail?.name || '',
+    email: resource?.email || resource?.user_detail?.email || '',
+    password: '',
+    resource_id: resource?.resource_id || '',
+    level: resource?.level || '',
+    manager: resource?.manager || '',
+    availability: resource?.availability ?? 100,
+  })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
-  const { data: managersData } = useQuery({
-    queryKey: ['managers-list'],
-    queryFn: () => authApi.users({ role: 'manager', is_active: true, page_size: 100 }).then(r => r.data.results || r.data),
-  })
-  const managers = managersData || []
-
   const f = (k, v) => setForm(p => ({ ...p, [k]: v }))
-
   const dropdownStyle = {
     width: '100%',
     background: 'var(--bg-2)',
@@ -382,94 +491,53 @@ function CreateResourceModal({ onClose, onCreated }) {
 
   async function submit(e) {
     e.preventDefault()
-    if (!form.resource_id.trim()) return setError('Resource ID is required.')
     setLoading(true)
     setError('')
     try {
-      // Step 1 — Create user; resource_id is used as the name (no separate name field)
-      await authApi.createUser({
-        name:      form.resource_id.trim(),
-        email:     form.email,
-        password:  form.password,
-        password2: form.password,
-        role:      'resource',
-      })
-
-      // Step 2 — Find the newly created user by email, then get their ResourceProfile
-      const usersRes = await authApi.users({ role: 'resource', page_size: 200 }).then(r => r.data.results || r.data)
-      const newUser = usersRes.find(u => u.email === form.email)
-
-      if (newUser) {
-        // Find ResourceProfile by user id
-        const allProfiles = await resourcesApi.list({ page_size: 200 }).then(r => r.data.results || r.data)
-        const newProfile = allProfiles.find(r => r.user === newUser.id || r.user_detail?.email === form.email)
-        if (newProfile) {
-          await resourcesApi.update(newProfile.id, {
-            resource_id: form.resource_id.trim(),
-            level:       form.level || '',
-            manager:     form.manager_id || null,
-          })
-        }
+      const payload = {
+        name: form.name,
+        email: form.email,
+        resource_id: form.resource_id,
+        level: form.level,
+        manager: form.manager || null,
+        availability: Number(form.availability || 0),
       }
+      if (form.password) payload.password = form.password
 
-      onCreated()
+      if (isEdit) {
+        await resourcesApi.update(resource.id, payload)
+      } else {
+        if (!payload.password) throw new Error('Password is required for new resources.')
+        await resourcesApi.create(payload)
+      }
+      onSaved()
     } catch (err) {
-      setError(extractError(err))
+      setError(err.message || extractError(err))
     } finally {
       setLoading(false)
     }
   }
 
   return (
-    <Modal open onClose={onClose} title="New Resource" width={520}>
+    <Modal open onClose={onClose} title={isEdit ? 'Edit Resource' : 'New Resource'} width={560}>
       <form onSubmit={submit} style={{ display: 'flex', flexDirection: 'column', gap: 'var(--sp-4)' }}>
-        {error && (
-          <div style={{ color: 'var(--danger)', fontSize: '13px', background: 'rgba(248,113,113,0.1)', padding: '8px 12px', borderRadius: 'var(--r-md)' }}>
-            {error}
-          </div>
-        )}
+        {error && <div style={{ color: 'var(--danger)', fontSize: '13px', background: 'rgba(248,113,113,0.1)', padding: '8px 12px', borderRadius: 'var(--r-md)' }}>{error}</div>}
 
-        {/* Resource ID & Email */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 'var(--sp-4)' }}>
-          <Input
-            label="Resource ID"
-            value={form.resource_id}
-            onChange={e => f('resource_id', e.target.value)}
-            placeholder="e.g. E001"
-            required
-          />
-          <Input
-            label="Email"
-            type="email"
-            value={form.email}
-            onChange={e => f('email', e.target.value)}
-            required
-          />
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--sp-4)' }}>
+          <Input label="Name" value={form.name} onChange={e => f('name', e.target.value)} required />
+          <Input label="Email" type="email" value={form.email} onChange={e => f('email', e.target.value)} required />
         </div>
 
-        {/* Password */}
-        <Input
-          label="Password"
-          type="password"
-          value={form.password}
-          onChange={e => f('password', e.target.value)}
-          required
-        />
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--sp-4)' }}>
+          <Input label="Resource ID" value={form.resource_id} onChange={e => f('resource_id', e.target.value)} placeholder="e.g. E001" required />
+          <Input label={isEdit ? 'Reset Password (optional)' : 'Password'} type="password" value={form.password} onChange={e => f('password', e.target.value)} required={!isEdit} />
+        </div>
 
-        {/* Level & Manager side by side */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 'var(--sp-4)' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--sp-4)' }}>
           <div>
-            <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--text-2)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 6 }}>
-              Resource Level
-            </div>
-            <select
-              value={form.level}
-              onChange={e => f('level', e.target.value)}
-              style={dropdownStyle}
-              onFocus={e => e.target.style.borderColor = 'var(--accent)'}
-              onBlur={e => e.target.style.borderColor = 'var(--border)'}
-            >
-              <option value="">— Select level —</option>
+            <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--text-2)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 6 }}>Resource Level</div>
+            <select value={form.level} onChange={e => f('level', e.target.value)} style={dropdownStyle}>
+              <option value="">Select level</option>
               <option value="L1">L1</option>
               <option value="L2">L2</option>
               <option value="L3">L3</option>
@@ -477,41 +545,25 @@ function CreateResourceModal({ onClose, onCreated }) {
             </select>
           </div>
           <div>
-            <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--text-2)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 6 }}>
-              Manager
-            </div>
-            <select
-              value={form.manager_id}
-              onChange={e => f('manager_id', e.target.value)}
-              style={dropdownStyle}
-              onFocus={e => e.target.style.borderColor = 'var(--accent)'}
-              onBlur={e => e.target.style.borderColor = 'var(--border)'}
-            >
-              <option value="">— Select a manager —</option>
-              {managers.map(m => (
-                <option key={m.id} value={m.id}>{m.name}</option>
-              ))}
+            <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--text-2)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 6 }}>Manager</div>
+            <select value={form.manager} onChange={e => f('manager', e.target.value)} style={dropdownStyle}>
+              <option value="">Unassigned</option>
+              {managers.map(m => <option key={m.id} value={m.id}>{m.name}</option>)}
             </select>
-            {managers.length === 0 && (
-              <div style={{ fontSize: '11px', color: 'var(--text-3)', marginTop: 4 }}>
-                No managers found. Add a manager user first.
-              </div>
-            )}
           </div>
         </div>
 
+        <Input label="Availability %" type="number" min="0" max="100" value={form.availability} onChange={e => f('availability', e.target.value)} />
+
         <div style={{ display: 'flex', gap: 'var(--sp-3)', justifyContent: 'flex-end', marginTop: 'var(--sp-2)' }}>
           <Btn variant="ghost" type="button" onClick={onClose}>Cancel</Btn>
-          <Btn type="submit" loading={loading}>Create Resource</Btn>
+          <Btn type="submit" loading={loading}>{isEdit ? 'Save Changes' : 'Create Resource'}</Btn>
         </div>
       </form>
     </Modal>
   )
 }
 
-/* ─────────────────────────────────────────────────
-   PROFILE PAGE
-───────────────────────────────────────────────── */
 export function ProfilePage() {
   const user = useAuthStore(s => s.user)
   const setUser = useAuthStore(s => s.setUser)
@@ -980,6 +1032,7 @@ const NOTIF_TYPES = [
 export function NotificationPreferencesSection() {
   const qc = useQueryClient()
   const [search, setSearch] = useState('')
+  const [approvingId, setApprovingId] = useState(null)
 
   const { data: resources, isLoading: rLoad } = useQuery({
     queryKey: ['users-resources'],

@@ -30440,3 +30440,2351 @@ Traceback (most recent call last):
     raise ConnectionError(self._error_message(e))
 redis.exceptions.ConnectionError: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it.
 ERROR 2026-04-05 21:19:03,372 basehttp 25276 11504 "POST /api/v1/auth/login/ HTTP/1.1" 500 145
+ERROR 2026-04-07 09:12:24,834 log 25628 23860 Internal Server Error: /api/v1/auth/login/
+Traceback (most recent call last):
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\redis\connection.py", line 276, in connect
+    sock = self.retry.call_with_retry(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\redis\retry.py", line 46, in call_with_retry
+    return do()
+           ^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\redis\connection.py", line 277, in <lambda>
+    lambda: self._connect(), lambda error: self.disconnect(error)
+            ^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\redis\connection.py", line 639, in _connect
+    raise err
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\redis\connection.py", line 627, in _connect
+    sock.connect(socket_address)
+ConnectionRefusedError: [WinError 10061] No connection could be made because the target machine actively refused it
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\views\decorators\csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\views\generic\base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 497, in dispatch
+    self.initial(request, *args, **kwargs)
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 416, in initial
+    self.check_throttles(request)
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 359, in check_throttles
+    if not throttle.allow_request(request, self):
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\throttling.py", line 123, in allow_request
+    self.history = self.cache.get(self.key, [])
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\cache\backends\redis.py", line 187, in get
+    return self._cache.get(key, default)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\cache\backends\redis.py", line 99, in get
+    value = client.get(key)
+            ^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\redis\commands\core.py", line 1830, in get
+    return self.execute_command("GET", name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\redis\client.py", line 542, in execute_command
+    conn = self.connection or pool.get_connection(command_name, **options)
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\redis\connection.py", line 1109, in get_connection
+    connection.connect()
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\redis\connection.py", line 282, in connect
+    raise ConnectionError(self._error_message(e))
+redis.exceptions.ConnectionError: Error 10061 connecting to localhost:6379. No connection could be made because the target machine actively refused it.
+ERROR 2026-04-07 09:12:24,843 basehttp 25628 23860 "POST /api/v1/auth/login/ HTTP/1.1" 500 145
+ERROR 2026-04-07 09:39:16,746 log 2692 4436 Internal Server Error: /api/v1/resources/
+Traceback (most recent call last):
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\views\decorators\csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\mixins.py", line 40, in list
+    page = self.paginate_queryset(queryset)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\generics.py", line 175, in paginate_queryset
+    return self.paginator.paginate_queryset(queryset, self.request, view=self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\pagination.py", line 223, in paginate_queryset
+    return list(self.page)
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\paginator.py", line 174, in __len__
+    return len(self.object_list)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 380, in __len__
+    self._fetch_all()
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 1881, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1549, in execute_sql
+    sql, params = self.as_sql()
+                  ^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 736, in as_sql
+    extra_select, order_by, group_by = self.pre_sql_setup(
+                                       ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 84, in pre_sql_setup
+    self.setup_query(with_col_aliases=with_col_aliases)
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 73, in setup_query
+    self.select, self.klass_info, self.annotation_col_map = self.get_select(
+                                                            ^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 309, in get_select
+    sql, params = col.select_format(self, sql, params)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\expressions.py", line 475, in select_format
+    if hasattr(self.output_field, "select_format"):
+               ^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\utils\functional.py", line 57, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+                                         ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\expressions.py", line 305, in output_field
+    output_field = self._resolve_output_field()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\expressions.py", line 343, in _resolve_output_field
+    raise FieldError(
+django.core.exceptions.FieldError: Expression contains mixed types: DecimalField, IntegerField. You must set output_field.
+ERROR 2026-04-07 09:39:16,766 basehttp 2692 4436 "GET /api/v1/resources/?page_size=100 HTTP/1.1" 500 145
+ERROR 2026-04-07 09:39:18,905 log 2692 31084 Internal Server Error: /api/v1/resources/
+Traceback (most recent call last):
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\views\decorators\csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\mixins.py", line 40, in list
+    page = self.paginate_queryset(queryset)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\generics.py", line 175, in paginate_queryset
+    return self.paginator.paginate_queryset(queryset, self.request, view=self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\pagination.py", line 223, in paginate_queryset
+    return list(self.page)
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\paginator.py", line 174, in __len__
+    return len(self.object_list)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 380, in __len__
+    self._fetch_all()
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 1881, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1549, in execute_sql
+    sql, params = self.as_sql()
+                  ^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 736, in as_sql
+    extra_select, order_by, group_by = self.pre_sql_setup(
+                                       ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 84, in pre_sql_setup
+    self.setup_query(with_col_aliases=with_col_aliases)
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 73, in setup_query
+    self.select, self.klass_info, self.annotation_col_map = self.get_select(
+                                                            ^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 309, in get_select
+    sql, params = col.select_format(self, sql, params)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\expressions.py", line 475, in select_format
+    if hasattr(self.output_field, "select_format"):
+               ^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\utils\functional.py", line 57, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+                                         ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\expressions.py", line 305, in output_field
+    output_field = self._resolve_output_field()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\expressions.py", line 343, in _resolve_output_field
+    raise FieldError(
+django.core.exceptions.FieldError: Expression contains mixed types: DecimalField, IntegerField. You must set output_field.
+ERROR 2026-04-07 09:39:18,913 basehttp 2692 31084 "GET /api/v1/resources/?page_size=100 HTTP/1.1" 500 145
+ERROR 2026-04-07 09:39:19,996 log 2692 6624 Internal Server Error: /api/v1/resources/
+Traceback (most recent call last):
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\views\decorators\csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\mixins.py", line 40, in list
+    page = self.paginate_queryset(queryset)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\generics.py", line 175, in paginate_queryset
+    return self.paginator.paginate_queryset(queryset, self.request, view=self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\pagination.py", line 223, in paginate_queryset
+    return list(self.page)
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\paginator.py", line 174, in __len__
+    return len(self.object_list)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 380, in __len__
+    self._fetch_all()
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 1881, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1549, in execute_sql
+    sql, params = self.as_sql()
+                  ^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 736, in as_sql
+    extra_select, order_by, group_by = self.pre_sql_setup(
+                                       ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 84, in pre_sql_setup
+    self.setup_query(with_col_aliases=with_col_aliases)
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 73, in setup_query
+    self.select, self.klass_info, self.annotation_col_map = self.get_select(
+                                                            ^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 309, in get_select
+    sql, params = col.select_format(self, sql, params)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\expressions.py", line 475, in select_format
+    if hasattr(self.output_field, "select_format"):
+               ^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\utils\functional.py", line 57, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+                                         ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\expressions.py", line 305, in output_field
+    output_field = self._resolve_output_field()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\expressions.py", line 343, in _resolve_output_field
+    raise FieldError(
+django.core.exceptions.FieldError: Expression contains mixed types: DecimalField, IntegerField. You must set output_field.
+ERROR 2026-04-07 09:39:19,999 basehttp 2692 6624 "GET /api/v1/resources/?page_size=100 HTTP/1.1" 500 145
+ERROR 2026-04-07 09:39:21,959 log 2692 15584 Internal Server Error: /api/v1/resources/
+Traceback (most recent call last):
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\views\decorators\csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\mixins.py", line 40, in list
+    page = self.paginate_queryset(queryset)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\generics.py", line 175, in paginate_queryset
+    return self.paginator.paginate_queryset(queryset, self.request, view=self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\pagination.py", line 223, in paginate_queryset
+    return list(self.page)
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\paginator.py", line 174, in __len__
+    return len(self.object_list)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 380, in __len__
+    self._fetch_all()
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 1881, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1549, in execute_sql
+    sql, params = self.as_sql()
+                  ^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 736, in as_sql
+    extra_select, order_by, group_by = self.pre_sql_setup(
+                                       ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 84, in pre_sql_setup
+    self.setup_query(with_col_aliases=with_col_aliases)
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 73, in setup_query
+    self.select, self.klass_info, self.annotation_col_map = self.get_select(
+                                                            ^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 309, in get_select
+    sql, params = col.select_format(self, sql, params)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\expressions.py", line 475, in select_format
+    if hasattr(self.output_field, "select_format"):
+               ^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\utils\functional.py", line 57, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+                                         ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\expressions.py", line 305, in output_field
+    output_field = self._resolve_output_field()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\expressions.py", line 343, in _resolve_output_field
+    raise FieldError(
+django.core.exceptions.FieldError: Expression contains mixed types: DecimalField, IntegerField. You must set output_field.
+ERROR 2026-04-07 09:39:22,005 basehttp 2692 15584 "GET /api/v1/resources/?page_size=100 HTTP/1.1" 500 145
+ERROR 2026-04-07 09:39:31,985 log 2692 4136 Internal Server Error: /api/v1/resources/
+Traceback (most recent call last):
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\views\decorators\csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\mixins.py", line 40, in list
+    page = self.paginate_queryset(queryset)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\generics.py", line 175, in paginate_queryset
+    return self.paginator.paginate_queryset(queryset, self.request, view=self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\pagination.py", line 223, in paginate_queryset
+    return list(self.page)
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\paginator.py", line 174, in __len__
+    return len(self.object_list)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 380, in __len__
+    self._fetch_all()
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 1881, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1549, in execute_sql
+    sql, params = self.as_sql()
+                  ^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 736, in as_sql
+    extra_select, order_by, group_by = self.pre_sql_setup(
+                                       ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 84, in pre_sql_setup
+    self.setup_query(with_col_aliases=with_col_aliases)
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 73, in setup_query
+    self.select, self.klass_info, self.annotation_col_map = self.get_select(
+                                                            ^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 309, in get_select
+    sql, params = col.select_format(self, sql, params)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\expressions.py", line 475, in select_format
+    if hasattr(self.output_field, "select_format"):
+               ^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\utils\functional.py", line 57, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+                                         ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\expressions.py", line 305, in output_field
+    output_field = self._resolve_output_field()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\expressions.py", line 343, in _resolve_output_field
+    raise FieldError(
+django.core.exceptions.FieldError: Expression contains mixed types: DecimalField, IntegerField. You must set output_field.
+ERROR 2026-04-07 09:39:32,010 basehttp 2692 4136 "GET /api/v1/resources/?page_size=100 HTTP/1.1" 500 145
+ERROR 2026-04-07 09:45:05,968 log 2692 14836 Internal Server Error: /api/v1/resources/
+Traceback (most recent call last):
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\views\decorators\csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\mixins.py", line 40, in list
+    page = self.paginate_queryset(queryset)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\generics.py", line 175, in paginate_queryset
+    return self.paginator.paginate_queryset(queryset, self.request, view=self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\pagination.py", line 223, in paginate_queryset
+    return list(self.page)
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\paginator.py", line 174, in __len__
+    return len(self.object_list)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 380, in __len__
+    self._fetch_all()
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 1881, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1549, in execute_sql
+    sql, params = self.as_sql()
+                  ^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 736, in as_sql
+    extra_select, order_by, group_by = self.pre_sql_setup(
+                                       ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 84, in pre_sql_setup
+    self.setup_query(with_col_aliases=with_col_aliases)
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 73, in setup_query
+    self.select, self.klass_info, self.annotation_col_map = self.get_select(
+                                                            ^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 309, in get_select
+    sql, params = col.select_format(self, sql, params)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\expressions.py", line 475, in select_format
+    if hasattr(self.output_field, "select_format"):
+               ^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\utils\functional.py", line 57, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+                                         ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\expressions.py", line 305, in output_field
+    output_field = self._resolve_output_field()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\expressions.py", line 343, in _resolve_output_field
+    raise FieldError(
+django.core.exceptions.FieldError: Expression contains mixed types: DecimalField, IntegerField. You must set output_field.
+ERROR 2026-04-07 09:45:05,975 basehttp 2692 14836 "GET /api/v1/resources/?page_size=100 HTTP/1.1" 500 145
+ERROR 2026-04-07 09:45:07,055 log 2692 23152 Internal Server Error: /api/v1/resources/
+Traceback (most recent call last):
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\views\decorators\csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\mixins.py", line 40, in list
+    page = self.paginate_queryset(queryset)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\generics.py", line 175, in paginate_queryset
+    return self.paginator.paginate_queryset(queryset, self.request, view=self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\pagination.py", line 223, in paginate_queryset
+    return list(self.page)
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\paginator.py", line 174, in __len__
+    return len(self.object_list)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 380, in __len__
+    self._fetch_all()
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 1881, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1549, in execute_sql
+    sql, params = self.as_sql()
+                  ^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 736, in as_sql
+    extra_select, order_by, group_by = self.pre_sql_setup(
+                                       ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 84, in pre_sql_setup
+    self.setup_query(with_col_aliases=with_col_aliases)
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 73, in setup_query
+    self.select, self.klass_info, self.annotation_col_map = self.get_select(
+                                                            ^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 309, in get_select
+    sql, params = col.select_format(self, sql, params)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\expressions.py", line 475, in select_format
+    if hasattr(self.output_field, "select_format"):
+               ^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\utils\functional.py", line 57, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+                                         ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\expressions.py", line 305, in output_field
+    output_field = self._resolve_output_field()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\expressions.py", line 343, in _resolve_output_field
+    raise FieldError(
+django.core.exceptions.FieldError: Expression contains mixed types: DecimalField, IntegerField. You must set output_field.
+ERROR 2026-04-07 09:45:07,061 basehttp 2692 23152 "GET /api/v1/resources/?page_size=100 HTTP/1.1" 500 145
+ERROR 2026-04-07 09:45:09,092 log 2692 31532 Internal Server Error: /api/v1/resources/
+Traceback (most recent call last):
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\views\decorators\csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\mixins.py", line 40, in list
+    page = self.paginate_queryset(queryset)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\generics.py", line 175, in paginate_queryset
+    return self.paginator.paginate_queryset(queryset, self.request, view=self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\pagination.py", line 223, in paginate_queryset
+    return list(self.page)
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\paginator.py", line 174, in __len__
+    return len(self.object_list)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 380, in __len__
+    self._fetch_all()
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 1881, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1549, in execute_sql
+    sql, params = self.as_sql()
+                  ^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 736, in as_sql
+    extra_select, order_by, group_by = self.pre_sql_setup(
+                                       ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 84, in pre_sql_setup
+    self.setup_query(with_col_aliases=with_col_aliases)
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 73, in setup_query
+    self.select, self.klass_info, self.annotation_col_map = self.get_select(
+                                                            ^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 309, in get_select
+    sql, params = col.select_format(self, sql, params)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\expressions.py", line 475, in select_format
+    if hasattr(self.output_field, "select_format"):
+               ^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\utils\functional.py", line 57, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+                                         ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\expressions.py", line 305, in output_field
+    output_field = self._resolve_output_field()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\expressions.py", line 343, in _resolve_output_field
+    raise FieldError(
+django.core.exceptions.FieldError: Expression contains mixed types: DecimalField, IntegerField. You must set output_field.
+ERROR 2026-04-07 09:45:09,108 basehttp 2692 31532 "GET /api/v1/resources/?page_size=100 HTTP/1.1" 500 145
+ERROR 2026-04-07 09:45:10,395 log 2692 31624 Internal Server Error: /api/v1/resources/
+Traceback (most recent call last):
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\views\decorators\csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\mixins.py", line 40, in list
+    page = self.paginate_queryset(queryset)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\generics.py", line 175, in paginate_queryset
+    return self.paginator.paginate_queryset(queryset, self.request, view=self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\pagination.py", line 223, in paginate_queryset
+    return list(self.page)
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\paginator.py", line 174, in __len__
+    return len(self.object_list)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 380, in __len__
+    self._fetch_all()
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 1881, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1549, in execute_sql
+    sql, params = self.as_sql()
+                  ^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 736, in as_sql
+    extra_select, order_by, group_by = self.pre_sql_setup(
+                                       ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 84, in pre_sql_setup
+    self.setup_query(with_col_aliases=with_col_aliases)
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 73, in setup_query
+    self.select, self.klass_info, self.annotation_col_map = self.get_select(
+                                                            ^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 309, in get_select
+    sql, params = col.select_format(self, sql, params)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\expressions.py", line 475, in select_format
+    if hasattr(self.output_field, "select_format"):
+               ^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\utils\functional.py", line 57, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+                                         ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\expressions.py", line 305, in output_field
+    output_field = self._resolve_output_field()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\expressions.py", line 343, in _resolve_output_field
+    raise FieldError(
+django.core.exceptions.FieldError: Expression contains mixed types: DecimalField, IntegerField. You must set output_field.
+ERROR 2026-04-07 09:45:10,398 basehttp 2692 31624 "GET /api/v1/resources/?page_size=100 HTTP/1.1" 500 145
+ERROR 2026-04-07 09:45:11,478 log 2692 4604 Internal Server Error: /api/v1/resources/
+Traceback (most recent call last):
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\views\decorators\csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\mixins.py", line 40, in list
+    page = self.paginate_queryset(queryset)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\generics.py", line 175, in paginate_queryset
+    return self.paginator.paginate_queryset(queryset, self.request, view=self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\pagination.py", line 223, in paginate_queryset
+    return list(self.page)
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\paginator.py", line 174, in __len__
+    return len(self.object_list)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 380, in __len__
+    self._fetch_all()
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 1881, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1549, in execute_sql
+    sql, params = self.as_sql()
+                  ^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 736, in as_sql
+    extra_select, order_by, group_by = self.pre_sql_setup(
+                                       ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 84, in pre_sql_setup
+    self.setup_query(with_col_aliases=with_col_aliases)
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 73, in setup_query
+    self.select, self.klass_info, self.annotation_col_map = self.get_select(
+                                                            ^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 309, in get_select
+    sql, params = col.select_format(self, sql, params)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\expressions.py", line 475, in select_format
+    if hasattr(self.output_field, "select_format"):
+               ^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\utils\functional.py", line 57, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+                                         ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\expressions.py", line 305, in output_field
+    output_field = self._resolve_output_field()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\expressions.py", line 343, in _resolve_output_field
+    raise FieldError(
+django.core.exceptions.FieldError: Expression contains mixed types: DecimalField, IntegerField. You must set output_field.
+ERROR 2026-04-07 09:45:11,480 basehttp 2692 4604 "GET /api/v1/resources/?page_size=100 HTTP/1.1" 500 145
+ERROR 2026-04-07 09:46:15,683 log 30740 9364 Internal Server Error: /api/v1/resources/
+Traceback (most recent call last):
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\views\decorators\csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\mixins.py", line 40, in list
+    page = self.paginate_queryset(queryset)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\generics.py", line 175, in paginate_queryset
+    return self.paginator.paginate_queryset(queryset, self.request, view=self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\pagination.py", line 223, in paginate_queryset
+    return list(self.page)
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\paginator.py", line 174, in __len__
+    return len(self.object_list)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 380, in __len__
+    self._fetch_all()
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 1881, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1549, in execute_sql
+    sql, params = self.as_sql()
+                  ^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 736, in as_sql
+    extra_select, order_by, group_by = self.pre_sql_setup(
+                                       ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 84, in pre_sql_setup
+    self.setup_query(with_col_aliases=with_col_aliases)
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 73, in setup_query
+    self.select, self.klass_info, self.annotation_col_map = self.get_select(
+                                                            ^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 309, in get_select
+    sql, params = col.select_format(self, sql, params)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\expressions.py", line 475, in select_format
+    if hasattr(self.output_field, "select_format"):
+               ^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\utils\functional.py", line 57, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+                                         ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\expressions.py", line 305, in output_field
+    output_field = self._resolve_output_field()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\expressions.py", line 343, in _resolve_output_field
+    raise FieldError(
+django.core.exceptions.FieldError: Expression contains mixed types: DecimalField, IntegerField. You must set output_field.
+ERROR 2026-04-07 09:46:15,693 basehttp 30740 9364 "GET /api/v1/resources/?page_size=100 HTTP/1.1" 500 145
+ERROR 2026-04-07 09:46:16,769 log 30740 16800 Internal Server Error: /api/v1/resources/
+Traceback (most recent call last):
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\views\decorators\csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\mixins.py", line 40, in list
+    page = self.paginate_queryset(queryset)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\generics.py", line 175, in paginate_queryset
+    return self.paginator.paginate_queryset(queryset, self.request, view=self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\pagination.py", line 223, in paginate_queryset
+    return list(self.page)
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\paginator.py", line 174, in __len__
+    return len(self.object_list)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 380, in __len__
+    self._fetch_all()
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 1881, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1549, in execute_sql
+    sql, params = self.as_sql()
+                  ^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 736, in as_sql
+    extra_select, order_by, group_by = self.pre_sql_setup(
+                                       ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 84, in pre_sql_setup
+    self.setup_query(with_col_aliases=with_col_aliases)
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 73, in setup_query
+    self.select, self.klass_info, self.annotation_col_map = self.get_select(
+                                                            ^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 309, in get_select
+    sql, params = col.select_format(self, sql, params)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\expressions.py", line 475, in select_format
+    if hasattr(self.output_field, "select_format"):
+               ^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\utils\functional.py", line 57, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+                                         ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\expressions.py", line 305, in output_field
+    output_field = self._resolve_output_field()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\expressions.py", line 343, in _resolve_output_field
+    raise FieldError(
+django.core.exceptions.FieldError: Expression contains mixed types: DecimalField, IntegerField. You must set output_field.
+ERROR 2026-04-07 09:46:16,772 basehttp 30740 16800 "GET /api/v1/resources/?page_size=100 HTTP/1.1" 500 145
+ERROR 2026-04-07 09:46:27,316 log 30740 16596 Internal Server Error: /api/v1/resources/
+Traceback (most recent call last):
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\views\decorators\csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\mixins.py", line 40, in list
+    page = self.paginate_queryset(queryset)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\generics.py", line 175, in paginate_queryset
+    return self.paginator.paginate_queryset(queryset, self.request, view=self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\pagination.py", line 223, in paginate_queryset
+    return list(self.page)
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\paginator.py", line 174, in __len__
+    return len(self.object_list)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 380, in __len__
+    self._fetch_all()
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 1881, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1549, in execute_sql
+    sql, params = self.as_sql()
+                  ^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 736, in as_sql
+    extra_select, order_by, group_by = self.pre_sql_setup(
+                                       ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 84, in pre_sql_setup
+    self.setup_query(with_col_aliases=with_col_aliases)
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 73, in setup_query
+    self.select, self.klass_info, self.annotation_col_map = self.get_select(
+                                                            ^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 309, in get_select
+    sql, params = col.select_format(self, sql, params)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\expressions.py", line 475, in select_format
+    if hasattr(self.output_field, "select_format"):
+               ^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\utils\functional.py", line 57, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+                                         ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\expressions.py", line 305, in output_field
+    output_field = self._resolve_output_field()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\expressions.py", line 343, in _resolve_output_field
+    raise FieldError(
+django.core.exceptions.FieldError: Expression contains mixed types: DecimalField, IntegerField. You must set output_field.
+ERROR 2026-04-07 09:46:27,380 basehttp 30740 16596 "GET /api/v1/resources/?page_size=100 HTTP/1.1" 500 145
+ERROR 2026-04-07 09:46:30,010 log 30740 26492 Internal Server Error: /api/v1/resources/
+Traceback (most recent call last):
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\views\decorators\csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\mixins.py", line 40, in list
+    page = self.paginate_queryset(queryset)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\generics.py", line 175, in paginate_queryset
+    return self.paginator.paginate_queryset(queryset, self.request, view=self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\pagination.py", line 223, in paginate_queryset
+    return list(self.page)
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\paginator.py", line 174, in __len__
+    return len(self.object_list)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 380, in __len__
+    self._fetch_all()
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 1881, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1549, in execute_sql
+    sql, params = self.as_sql()
+                  ^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 736, in as_sql
+    extra_select, order_by, group_by = self.pre_sql_setup(
+                                       ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 84, in pre_sql_setup
+    self.setup_query(with_col_aliases=with_col_aliases)
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 73, in setup_query
+    self.select, self.klass_info, self.annotation_col_map = self.get_select(
+                                                            ^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 309, in get_select
+    sql, params = col.select_format(self, sql, params)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\expressions.py", line 475, in select_format
+    if hasattr(self.output_field, "select_format"):
+               ^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\utils\functional.py", line 57, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+                                         ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\expressions.py", line 305, in output_field
+    output_field = self._resolve_output_field()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\expressions.py", line 343, in _resolve_output_field
+    raise FieldError(
+django.core.exceptions.FieldError: Expression contains mixed types: DecimalField, IntegerField. You must set output_field.
+ERROR 2026-04-07 09:46:30,018 basehttp 30740 26492 "GET /api/v1/resources/?page_size=100 HTTP/1.1" 500 145
+ERROR 2026-04-07 09:46:31,095 log 30740 28180 Internal Server Error: /api/v1/resources/
+Traceback (most recent call last):
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\views\decorators\csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\mixins.py", line 40, in list
+    page = self.paginate_queryset(queryset)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\generics.py", line 175, in paginate_queryset
+    return self.paginator.paginate_queryset(queryset, self.request, view=self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\pagination.py", line 223, in paginate_queryset
+    return list(self.page)
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\paginator.py", line 174, in __len__
+    return len(self.object_list)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 380, in __len__
+    self._fetch_all()
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 1881, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1549, in execute_sql
+    sql, params = self.as_sql()
+                  ^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 736, in as_sql
+    extra_select, order_by, group_by = self.pre_sql_setup(
+                                       ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 84, in pre_sql_setup
+    self.setup_query(with_col_aliases=with_col_aliases)
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 73, in setup_query
+    self.select, self.klass_info, self.annotation_col_map = self.get_select(
+                                                            ^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 309, in get_select
+    sql, params = col.select_format(self, sql, params)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\expressions.py", line 475, in select_format
+    if hasattr(self.output_field, "select_format"):
+               ^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\utils\functional.py", line 57, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+                                         ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\expressions.py", line 305, in output_field
+    output_field = self._resolve_output_field()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\expressions.py", line 343, in _resolve_output_field
+    raise FieldError(
+django.core.exceptions.FieldError: Expression contains mixed types: DecimalField, IntegerField. You must set output_field.
+ERROR 2026-04-07 09:46:31,098 basehttp 30740 28180 "GET /api/v1/resources/?page_size=100 HTTP/1.1" 500 145
+ERROR 2026-04-07 09:47:38,509 log 30740 25324 Internal Server Error: /api/v1/resources/
+Traceback (most recent call last):
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\views\decorators\csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\mixins.py", line 40, in list
+    page = self.paginate_queryset(queryset)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\generics.py", line 175, in paginate_queryset
+    return self.paginator.paginate_queryset(queryset, self.request, view=self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\pagination.py", line 223, in paginate_queryset
+    return list(self.page)
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\paginator.py", line 174, in __len__
+    return len(self.object_list)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 380, in __len__
+    self._fetch_all()
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 1881, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1549, in execute_sql
+    sql, params = self.as_sql()
+                  ^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 736, in as_sql
+    extra_select, order_by, group_by = self.pre_sql_setup(
+                                       ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 84, in pre_sql_setup
+    self.setup_query(with_col_aliases=with_col_aliases)
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 73, in setup_query
+    self.select, self.klass_info, self.annotation_col_map = self.get_select(
+                                                            ^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 309, in get_select
+    sql, params = col.select_format(self, sql, params)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\expressions.py", line 475, in select_format
+    if hasattr(self.output_field, "select_format"):
+               ^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\utils\functional.py", line 57, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+                                         ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\expressions.py", line 305, in output_field
+    output_field = self._resolve_output_field()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\expressions.py", line 343, in _resolve_output_field
+    raise FieldError(
+django.core.exceptions.FieldError: Expression contains mixed types: DecimalField, IntegerField. You must set output_field.
+ERROR 2026-04-07 09:47:38,518 basehttp 30740 25324 "GET /api/v1/resources/?page_size=100 HTTP/1.1" 500 145
+ERROR 2026-04-07 09:47:39,592 log 30740 27528 Internal Server Error: /api/v1/resources/
+Traceback (most recent call last):
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\views\decorators\csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\mixins.py", line 40, in list
+    page = self.paginate_queryset(queryset)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\generics.py", line 175, in paginate_queryset
+    return self.paginator.paginate_queryset(queryset, self.request, view=self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\pagination.py", line 223, in paginate_queryset
+    return list(self.page)
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\paginator.py", line 174, in __len__
+    return len(self.object_list)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 380, in __len__
+    self._fetch_all()
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 1881, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1549, in execute_sql
+    sql, params = self.as_sql()
+                  ^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 736, in as_sql
+    extra_select, order_by, group_by = self.pre_sql_setup(
+                                       ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 84, in pre_sql_setup
+    self.setup_query(with_col_aliases=with_col_aliases)
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 73, in setup_query
+    self.select, self.klass_info, self.annotation_col_map = self.get_select(
+                                                            ^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 309, in get_select
+    sql, params = col.select_format(self, sql, params)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\expressions.py", line 475, in select_format
+    if hasattr(self.output_field, "select_format"):
+               ^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\utils\functional.py", line 57, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+                                         ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\expressions.py", line 305, in output_field
+    output_field = self._resolve_output_field()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\expressions.py", line 343, in _resolve_output_field
+    raise FieldError(
+django.core.exceptions.FieldError: Expression contains mixed types: DecimalField, IntegerField. You must set output_field.
+ERROR 2026-04-07 09:47:39,594 basehttp 30740 27528 "GET /api/v1/resources/?page_size=100 HTTP/1.1" 500 145
+ERROR 2026-04-07 09:47:51,645 log 30740 31364 Internal Server Error: /api/v1/resources/
+Traceback (most recent call last):
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\views\decorators\csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\mixins.py", line 40, in list
+    page = self.paginate_queryset(queryset)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\generics.py", line 175, in paginate_queryset
+    return self.paginator.paginate_queryset(queryset, self.request, view=self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\pagination.py", line 223, in paginate_queryset
+    return list(self.page)
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\paginator.py", line 174, in __len__
+    return len(self.object_list)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 380, in __len__
+    self._fetch_all()
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 1881, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1549, in execute_sql
+    sql, params = self.as_sql()
+                  ^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 736, in as_sql
+    extra_select, order_by, group_by = self.pre_sql_setup(
+                                       ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 84, in pre_sql_setup
+    self.setup_query(with_col_aliases=with_col_aliases)
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 73, in setup_query
+    self.select, self.klass_info, self.annotation_col_map = self.get_select(
+                                                            ^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 309, in get_select
+    sql, params = col.select_format(self, sql, params)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\expressions.py", line 475, in select_format
+    if hasattr(self.output_field, "select_format"):
+               ^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\utils\functional.py", line 57, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+                                         ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\expressions.py", line 305, in output_field
+    output_field = self._resolve_output_field()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\expressions.py", line 343, in _resolve_output_field
+    raise FieldError(
+django.core.exceptions.FieldError: Expression contains mixed types: DecimalField, IntegerField. You must set output_field.
+ERROR 2026-04-07 09:47:51,648 basehttp 30740 31364 "GET /api/v1/resources/?page_size=100 HTTP/1.1" 500 145
+ERROR 2026-04-07 09:51:04,070 log 30740 22260 Internal Server Error: /api/v1/resources/
+Traceback (most recent call last):
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\views\decorators\csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\mixins.py", line 40, in list
+    page = self.paginate_queryset(queryset)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\generics.py", line 175, in paginate_queryset
+    return self.paginator.paginate_queryset(queryset, self.request, view=self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\pagination.py", line 223, in paginate_queryset
+    return list(self.page)
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\paginator.py", line 174, in __len__
+    return len(self.object_list)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 380, in __len__
+    self._fetch_all()
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 1881, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1549, in execute_sql
+    sql, params = self.as_sql()
+                  ^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 736, in as_sql
+    extra_select, order_by, group_by = self.pre_sql_setup(
+                                       ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 84, in pre_sql_setup
+    self.setup_query(with_col_aliases=with_col_aliases)
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 73, in setup_query
+    self.select, self.klass_info, self.annotation_col_map = self.get_select(
+                                                            ^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 309, in get_select
+    sql, params = col.select_format(self, sql, params)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\expressions.py", line 475, in select_format
+    if hasattr(self.output_field, "select_format"):
+               ^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\utils\functional.py", line 57, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+                                         ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\expressions.py", line 305, in output_field
+    output_field = self._resolve_output_field()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\expressions.py", line 343, in _resolve_output_field
+    raise FieldError(
+django.core.exceptions.FieldError: Expression contains mixed types: DecimalField, IntegerField. You must set output_field.
+ERROR 2026-04-07 09:51:04,073 basehttp 30740 22260 "GET /api/v1/resources/?page_size=500 HTTP/1.1" 500 145
+ERROR 2026-04-07 09:51:49,454 log 30740 28828 Internal Server Error: /api/v1/resources/
+Traceback (most recent call last):
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\views\decorators\csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\mixins.py", line 40, in list
+    page = self.paginate_queryset(queryset)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\generics.py", line 175, in paginate_queryset
+    return self.paginator.paginate_queryset(queryset, self.request, view=self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\pagination.py", line 223, in paginate_queryset
+    return list(self.page)
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\paginator.py", line 174, in __len__
+    return len(self.object_list)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 380, in __len__
+    self._fetch_all()
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 1881, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1549, in execute_sql
+    sql, params = self.as_sql()
+                  ^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 736, in as_sql
+    extra_select, order_by, group_by = self.pre_sql_setup(
+                                       ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 84, in pre_sql_setup
+    self.setup_query(with_col_aliases=with_col_aliases)
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 73, in setup_query
+    self.select, self.klass_info, self.annotation_col_map = self.get_select(
+                                                            ^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 309, in get_select
+    sql, params = col.select_format(self, sql, params)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\expressions.py", line 475, in select_format
+    if hasattr(self.output_field, "select_format"):
+               ^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\utils\functional.py", line 57, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+                                         ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\expressions.py", line 305, in output_field
+    output_field = self._resolve_output_field()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\expressions.py", line 343, in _resolve_output_field
+    raise FieldError(
+django.core.exceptions.FieldError: Expression contains mixed types: DecimalField, IntegerField. You must set output_field.
+ERROR 2026-04-07 09:51:49,464 basehttp 30740 28828 "GET /api/v1/resources/?page_size=500 HTTP/1.1" 500 145
+ERROR 2026-04-07 09:51:50,545 log 30740 29940 Internal Server Error: /api/v1/resources/
+Traceback (most recent call last):
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\views\decorators\csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\mixins.py", line 40, in list
+    page = self.paginate_queryset(queryset)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\generics.py", line 175, in paginate_queryset
+    return self.paginator.paginate_queryset(queryset, self.request, view=self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\pagination.py", line 223, in paginate_queryset
+    return list(self.page)
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\paginator.py", line 174, in __len__
+    return len(self.object_list)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 380, in __len__
+    self._fetch_all()
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 1881, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1549, in execute_sql
+    sql, params = self.as_sql()
+                  ^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 736, in as_sql
+    extra_select, order_by, group_by = self.pre_sql_setup(
+                                       ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 84, in pre_sql_setup
+    self.setup_query(with_col_aliases=with_col_aliases)
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 73, in setup_query
+    self.select, self.klass_info, self.annotation_col_map = self.get_select(
+                                                            ^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 309, in get_select
+    sql, params = col.select_format(self, sql, params)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\expressions.py", line 475, in select_format
+    if hasattr(self.output_field, "select_format"):
+               ^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\utils\functional.py", line 57, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+                                         ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\expressions.py", line 305, in output_field
+    output_field = self._resolve_output_field()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\expressions.py", line 343, in _resolve_output_field
+    raise FieldError(
+django.core.exceptions.FieldError: Expression contains mixed types: DecimalField, IntegerField. You must set output_field.
+ERROR 2026-04-07 09:51:50,547 basehttp 30740 29940 "GET /api/v1/resources/?page_size=500 HTTP/1.1" 500 145
+WARNING 2026-04-07 09:52:28,386 log 30740 28512 Bad Request: /api/v1/resources/
+WARNING 2026-04-07 09:52:28,388 basehttp 30740 28512 "POST /api/v1/resources/ HTTP/1.1" 400 121
+WARNING 2026-04-07 09:52:40,383 log 30740 11848 Bad Request: /api/v1/resources/
+WARNING 2026-04-07 09:52:40,384 basehttp 30740 11848 "POST /api/v1/resources/ HTTP/1.1" 400 121
+WARNING 2026-04-07 09:54:53,645 log 18656 29608 Bad Request: /api/v1/resources/
+WARNING 2026-04-07 09:54:53,646 basehttp 18656 29608 "POST /api/v1/resources/ HTTP/1.1" 400 121
+ERROR 2026-04-07 09:54:56,682 log 18656 12364 Internal Server Error: /api/v1/resources/
+Traceback (most recent call last):
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\views\decorators\csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\mixins.py", line 40, in list
+    page = self.paginate_queryset(queryset)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\generics.py", line 175, in paginate_queryset
+    return self.paginator.paginate_queryset(queryset, self.request, view=self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\pagination.py", line 223, in paginate_queryset
+    return list(self.page)
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\paginator.py", line 174, in __len__
+    return len(self.object_list)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 380, in __len__
+    self._fetch_all()
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 1881, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 129, in __iter__
+    setattr(obj, attr_name, row[col_pos])
+AttributeError: property 'total_hours_logged' of 'ResourceProfile' object has no setter
+ERROR 2026-04-07 09:54:56,693 basehttp 18656 12364 "GET /api/v1/resources/?page_size=500 HTTP/1.1" 500 145
+ERROR 2026-04-07 09:54:57,773 log 18656 22252 Internal Server Error: /api/v1/resources/
+Traceback (most recent call last):
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\views\decorators\csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\mixins.py", line 40, in list
+    page = self.paginate_queryset(queryset)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\generics.py", line 175, in paginate_queryset
+    return self.paginator.paginate_queryset(queryset, self.request, view=self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\pagination.py", line 223, in paginate_queryset
+    return list(self.page)
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\paginator.py", line 174, in __len__
+    return len(self.object_list)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 380, in __len__
+    self._fetch_all()
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 1881, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 129, in __iter__
+    setattr(obj, attr_name, row[col_pos])
+AttributeError: property 'total_hours_logged' of 'ResourceProfile' object has no setter
+ERROR 2026-04-07 09:54:57,776 basehttp 18656 22252 "GET /api/v1/resources/?page_size=500 HTTP/1.1" 500 145
+ERROR 2026-04-07 09:55:31,466 log 18656 9720 Internal Server Error: /api/v1/resources/
+Traceback (most recent call last):
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\views\decorators\csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\mixins.py", line 40, in list
+    page = self.paginate_queryset(queryset)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\generics.py", line 175, in paginate_queryset
+    return self.paginator.paginate_queryset(queryset, self.request, view=self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\pagination.py", line 223, in paginate_queryset
+    return list(self.page)
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\paginator.py", line 174, in __len__
+    return len(self.object_list)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 380, in __len__
+    self._fetch_all()
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 1881, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 129, in __iter__
+    setattr(obj, attr_name, row[col_pos])
+AttributeError: property 'total_hours_logged' of 'ResourceProfile' object has no setter
+ERROR 2026-04-07 09:55:31,474 basehttp 18656 9720 "GET /api/v1/resources/?page_size=500 HTTP/1.1" 500 145
+ERROR 2026-04-07 09:55:32,549 log 18656 28472 Internal Server Error: /api/v1/resources/
+Traceback (most recent call last):
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\views\decorators\csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\mixins.py", line 40, in list
+    page = self.paginate_queryset(queryset)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\generics.py", line 175, in paginate_queryset
+    return self.paginator.paginate_queryset(queryset, self.request, view=self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\pagination.py", line 223, in paginate_queryset
+    return list(self.page)
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\paginator.py", line 174, in __len__
+    return len(self.object_list)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 380, in __len__
+    self._fetch_all()
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 1881, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 129, in __iter__
+    setattr(obj, attr_name, row[col_pos])
+AttributeError: property 'total_hours_logged' of 'ResourceProfile' object has no setter
+ERROR 2026-04-07 09:55:32,552 basehttp 18656 28472 "GET /api/v1/resources/?page_size=500 HTTP/1.1" 500 145
+ERROR 2026-04-07 09:55:39,338 log 18656 21836 Internal Server Error: /api/v1/resources/
+Traceback (most recent call last):
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\views\decorators\csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\mixins.py", line 40, in list
+    page = self.paginate_queryset(queryset)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\generics.py", line 175, in paginate_queryset
+    return self.paginator.paginate_queryset(queryset, self.request, view=self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\pagination.py", line 223, in paginate_queryset
+    return list(self.page)
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\paginator.py", line 174, in __len__
+    return len(self.object_list)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 380, in __len__
+    self._fetch_all()
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 1881, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 129, in __iter__
+    setattr(obj, attr_name, row[col_pos])
+AttributeError: property 'total_hours_logged' of 'ResourceProfile' object has no setter
+ERROR 2026-04-07 09:55:39,343 basehttp 18656 21836 "GET /api/v1/resources/?page_size=500 HTTP/1.1" 500 145
+ERROR 2026-04-07 09:55:40,542 log 18656 28020 Internal Server Error: /api/v1/resources/
+Traceback (most recent call last):
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\views\decorators\csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\mixins.py", line 40, in list
+    page = self.paginate_queryset(queryset)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\generics.py", line 175, in paginate_queryset
+    return self.paginator.paginate_queryset(queryset, self.request, view=self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\pagination.py", line 223, in paginate_queryset
+    return list(self.page)
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\paginator.py", line 174, in __len__
+    return len(self.object_list)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 380, in __len__
+    self._fetch_all()
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 1881, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 129, in __iter__
+    setattr(obj, attr_name, row[col_pos])
+AttributeError: property 'total_hours_logged' of 'ResourceProfile' object has no setter
+ERROR 2026-04-07 09:55:40,546 basehttp 18656 28020 "GET /api/v1/resources/?page_size=500 HTTP/1.1" 500 145
+ERROR 2026-04-07 09:55:50,886 log 18656 2680 Internal Server Error: /api/v1/resources/
+Traceback (most recent call last):
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\views\decorators\csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\mixins.py", line 40, in list
+    page = self.paginate_queryset(queryset)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\generics.py", line 175, in paginate_queryset
+    return self.paginator.paginate_queryset(queryset, self.request, view=self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\pagination.py", line 223, in paginate_queryset
+    return list(self.page)
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\paginator.py", line 174, in __len__
+    return len(self.object_list)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 380, in __len__
+    self._fetch_all()
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 1881, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 129, in __iter__
+    setattr(obj, attr_name, row[col_pos])
+AttributeError: property 'total_hours_logged' of 'ResourceProfile' object has no setter
+ERROR 2026-04-07 09:55:50,889 basehttp 18656 2680 "GET /api/v1/resources/?page_size=500 HTTP/1.1" 500 145
+ERROR 2026-04-07 09:55:51,964 log 18656 20080 Internal Server Error: /api/v1/resources/
+Traceback (most recent call last):
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\views\decorators\csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\mixins.py", line 40, in list
+    page = self.paginate_queryset(queryset)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\generics.py", line 175, in paginate_queryset
+    return self.paginator.paginate_queryset(queryset, self.request, view=self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\pagination.py", line 223, in paginate_queryset
+    return list(self.page)
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\paginator.py", line 174, in __len__
+    return len(self.object_list)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 380, in __len__
+    self._fetch_all()
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 1881, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 129, in __iter__
+    setattr(obj, attr_name, row[col_pos])
+AttributeError: property 'total_hours_logged' of 'ResourceProfile' object has no setter
+ERROR 2026-04-07 09:55:51,967 basehttp 18656 20080 "GET /api/v1/resources/?page_size=500 HTTP/1.1" 500 145
+ERROR 2026-04-07 09:55:54,101 log 18656 26776 Internal Server Error: /api/v1/resources/
+Traceback (most recent call last):
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\views\decorators\csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\mixins.py", line 40, in list
+    page = self.paginate_queryset(queryset)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\generics.py", line 175, in paginate_queryset
+    return self.paginator.paginate_queryset(queryset, self.request, view=self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\pagination.py", line 223, in paginate_queryset
+    return list(self.page)
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\paginator.py", line 174, in __len__
+    return len(self.object_list)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 380, in __len__
+    self._fetch_all()
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 1881, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 129, in __iter__
+    setattr(obj, attr_name, row[col_pos])
+AttributeError: property 'total_hours_logged' of 'ResourceProfile' object has no setter
+ERROR 2026-04-07 09:55:54,103 basehttp 18656 26776 "GET /api/v1/resources/?page_size=500 HTTP/1.1" 500 145
+ERROR 2026-04-07 09:55:55,187 log 18656 30968 Internal Server Error: /api/v1/resources/
+Traceback (most recent call last):
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\views\decorators\csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\mixins.py", line 40, in list
+    page = self.paginate_queryset(queryset)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\generics.py", line 175, in paginate_queryset
+    return self.paginator.paginate_queryset(queryset, self.request, view=self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\pagination.py", line 223, in paginate_queryset
+    return list(self.page)
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\paginator.py", line 174, in __len__
+    return len(self.object_list)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 380, in __len__
+    self._fetch_all()
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 1881, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 129, in __iter__
+    setattr(obj, attr_name, row[col_pos])
+AttributeError: property 'total_hours_logged' of 'ResourceProfile' object has no setter
+ERROR 2026-04-07 09:55:55,190 basehttp 18656 30968 "GET /api/v1/resources/?page_size=500 HTTP/1.1" 500 145
+ERROR 2026-04-07 09:56:00,610 log 18656 29244 Internal Server Error: /api/v1/resources/export/
+Traceback (most recent call last):
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\views\decorators\csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\resources\views.py", line 70, in export
+    rows = [
+           ^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 398, in __iter__
+    self._fetch_all()
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 1881, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 129, in __iter__
+    setattr(obj, attr_name, row[col_pos])
+AttributeError: property 'total_hours_logged' of 'ResourceProfile' object has no setter
+ERROR 2026-04-07 09:56:00,614 basehttp 18656 29244 "GET /api/v1/resources/export/ HTTP/1.1" 500 145
+ERROR 2026-04-07 09:56:48,081 log 18656 18904 Internal Server Error: /api/v1/resources/
+Traceback (most recent call last):
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\views\decorators\csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\mixins.py", line 40, in list
+    page = self.paginate_queryset(queryset)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\generics.py", line 175, in paginate_queryset
+    return self.paginator.paginate_queryset(queryset, self.request, view=self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\pagination.py", line 223, in paginate_queryset
+    return list(self.page)
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\paginator.py", line 174, in __len__
+    return len(self.object_list)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 380, in __len__
+    self._fetch_all()
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 1881, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 129, in __iter__
+    setattr(obj, attr_name, row[col_pos])
+AttributeError: property 'total_hours_logged' of 'ResourceProfile' object has no setter
+ERROR 2026-04-07 09:56:48,086 basehttp 18656 18904 "GET /api/v1/resources/?page_size=500 HTTP/1.1" 500 145
+ERROR 2026-04-07 09:56:49,185 log 18656 26416 Internal Server Error: /api/v1/resources/
+Traceback (most recent call last):
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\views\decorators\csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\mixins.py", line 40, in list
+    page = self.paginate_queryset(queryset)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\generics.py", line 175, in paginate_queryset
+    return self.paginator.paginate_queryset(queryset, self.request, view=self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\pagination.py", line 223, in paginate_queryset
+    return list(self.page)
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\paginator.py", line 174, in __len__
+    return len(self.object_list)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 380, in __len__
+    self._fetch_all()
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 1881, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 129, in __iter__
+    setattr(obj, attr_name, row[col_pos])
+AttributeError: property 'total_hours_logged' of 'ResourceProfile' object has no setter
+ERROR 2026-04-07 09:56:49,187 basehttp 18656 26416 "GET /api/v1/resources/?page_size=500 HTTP/1.1" 500 145
+ERROR 2026-04-07 09:58:43,253 log 18656 16316 Internal Server Error: /api/v1/resources/
+Traceback (most recent call last):
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\views\decorators\csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\mixins.py", line 40, in list
+    page = self.paginate_queryset(queryset)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\generics.py", line 175, in paginate_queryset
+    return self.paginator.paginate_queryset(queryset, self.request, view=self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\pagination.py", line 223, in paginate_queryset
+    return list(self.page)
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\paginator.py", line 174, in __len__
+    return len(self.object_list)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 380, in __len__
+    self._fetch_all()
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 1881, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 129, in __iter__
+    setattr(obj, attr_name, row[col_pos])
+AttributeError: property 'total_hours_logged' of 'ResourceProfile' object has no setter
+ERROR 2026-04-07 09:58:43,257 basehttp 18656 16316 "GET /api/v1/resources/?page=1&page_size=25 HTTP/1.1" 500 145
+ERROR 2026-04-07 10:02:46,222 log 18656 8804 Internal Server Error: /api/v1/resources/
+Traceback (most recent call last):
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\views\decorators\csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\mixins.py", line 40, in list
+    page = self.paginate_queryset(queryset)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\generics.py", line 175, in paginate_queryset
+    return self.paginator.paginate_queryset(queryset, self.request, view=self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\pagination.py", line 223, in paginate_queryset
+    return list(self.page)
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\paginator.py", line 174, in __len__
+    return len(self.object_list)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 380, in __len__
+    self._fetch_all()
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 1881, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 129, in __iter__
+    setattr(obj, attr_name, row[col_pos])
+AttributeError: property 'total_hours_logged' of 'ResourceProfile' object has no setter
+ERROR 2026-04-07 10:02:46,233 basehttp 18656 8804 "GET /api/v1/resources/?page=1&page_size=25 HTTP/1.1" 500 145
+ERROR 2026-04-07 10:02:51,589 log 18656 13032 Internal Server Error: /api/v1/resources/
+Traceback (most recent call last):
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\views\decorators\csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\mixins.py", line 40, in list
+    page = self.paginate_queryset(queryset)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\generics.py", line 175, in paginate_queryset
+    return self.paginator.paginate_queryset(queryset, self.request, view=self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\pagination.py", line 223, in paginate_queryset
+    return list(self.page)
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\paginator.py", line 174, in __len__
+    return len(self.object_list)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 380, in __len__
+    self._fetch_all()
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 1881, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 129, in __iter__
+    setattr(obj, attr_name, row[col_pos])
+AttributeError: property 'total_hours_logged' of 'ResourceProfile' object has no setter
+ERROR 2026-04-07 10:02:51,592 basehttp 18656 13032 "GET /api/v1/resources/?page=1&page_size=25 HTTP/1.1" 500 145
+ERROR 2026-04-07 10:02:52,700 log 18656 29068 Internal Server Error: /api/v1/resources/
+Traceback (most recent call last):
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\views\decorators\csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\mixins.py", line 40, in list
+    page = self.paginate_queryset(queryset)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\generics.py", line 175, in paginate_queryset
+    return self.paginator.paginate_queryset(queryset, self.request, view=self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\rest_framework\pagination.py", line 223, in paginate_queryset
+    return list(self.page)
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\core\paginator.py", line 174, in __len__
+    return len(self.object_list)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 380, in __len__
+    self._fetch_all()
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 1881, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\Downloads\tsm_improved\ASTRATSM\backend\venv\Lib\site-packages\django\db\models\query.py", line 129, in __iter__
+    setattr(obj, attr_name, row[col_pos])
+AttributeError: property 'total_hours_logged' of 'ResourceProfile' object has no setter
+ERROR 2026-04-07 10:02:52,703 basehttp 18656 29068 "GET /api/v1/resources/?page=1&page_size=25 HTTP/1.1" 500 145
+WARNING 2026-04-07 10:05:22,880 views 31176 3124 Resource "gaurav@gmail.com" deleted by tsm@gmail.com
+WARNING 2026-04-07 10:52:50,355 log 17192 28552 Unauthorized: /api/v1/notifications/unread_count/
+WARNING 2026-04-07 10:52:50,357 basehttp 17192 28552 "GET /api/v1/notifications/unread_count/ HTTP/1.1" 401 91
+WARNING 2026-04-07 10:52:50,369 log 17192 32360 Unauthorized: /api/v1/timelines/approvals/pending_count/
+WARNING 2026-04-07 10:52:50,372 log 17192 3428 Unauthorized: /api/v1/approvals/pending_count/
+WARNING 2026-04-07 10:52:50,378 basehttp 17192 32360 "GET /api/v1/timelines/approvals/pending_count/ HTTP/1.1" 401 91
+WARNING 2026-04-07 10:52:50,379 basehttp 17192 3428 "GET /api/v1/approvals/pending_count/ HTTP/1.1" 401 91
+WARNING 2026-04-07 10:52:50,766 log 17192 28584 Unauthorized: /api/v1/timelines/approvals/pending_count/
+WARNING 2026-04-07 10:52:50,767 basehttp 17192 28584 "GET /api/v1/timelines/approvals/pending_count/ HTTP/1.1" 401 91
+WARNING 2026-04-07 10:52:50,775 log 17192 28592 Unauthorized: /api/v1/approvals/pending_count/
+WARNING 2026-04-07 10:52:50,777 log 17192 32896 Unauthorized: /api/v1/notifications/unread_count/
+WARNING 2026-04-07 10:52:50,778 basehttp 17192 28592 "GET /api/v1/approvals/pending_count/ HTTP/1.1" 401 91
+WARNING 2026-04-07 10:52:50,780 basehttp 17192 32896 "GET /api/v1/notifications/unread_count/ HTTP/1.1" 401 91
+WARNING 2026-04-07 10:52:51,848 log 17192 6352 Unauthorized: /api/v1/approvals/pending_count/
+WARNING 2026-04-07 10:52:51,849 log 17192 33420 Unauthorized: /api/v1/timelines/approvals/pending_count/
+WARNING 2026-04-07 10:52:51,850 basehttp 17192 6352 "GET /api/v1/approvals/pending_count/ HTTP/1.1" 401 91
+WARNING 2026-04-07 10:52:51,852 basehttp 17192 33420 "GET /api/v1/timelines/approvals/pending_count/ HTTP/1.1" 401 91
+WARNING 2026-04-07 10:52:51,868 log 17192 22304 Unauthorized: /api/v1/notifications/unread_count/
+WARNING 2026-04-07 10:52:51,870 basehttp 17192 22304 "GET /api/v1/notifications/unread_count/ HTTP/1.1" 401 91
+WARNING 2026-04-07 10:52:51,949 log 17192 27840 Unauthorized: /api/v1/auth/token/refresh/
+WARNING 2026-04-07 10:52:51,952 basehttp 17192 27840 "POST /api/v1/auth/token/refresh/ HTTP/1.1" 401 98
+WARNING 2026-04-07 10:52:51,958 log 17192 33604 Unauthorized: /api/v1/auth/token/refresh/
+WARNING 2026-04-07 10:52:51,960 basehttp 17192 33604 "POST /api/v1/auth/token/refresh/ HTTP/1.1" 401 98
+WARNING 2026-04-07 10:52:51,966 log 17192 5512 Unauthorized: /api/v1/auth/token/refresh/
+WARNING 2026-04-07 10:52:51,967 basehttp 17192 5512 "POST /api/v1/auth/token/refresh/ HTTP/1.1" 401 98
+WARNING 2026-04-07 10:56:49,083 log 7348 27404 Bad Request: /api/v1/auth/login/
+WARNING 2026-04-07 10:56:49,084 basehttp 7348 27404 "POST /api/v1/auth/login/ HTTP/1.1" 400 120
+WARNING 2026-04-07 11:44:26,522 views 30612 32176 Resource "resource1@astracybertech.com" deleted by rishabh.p@astracybertech.com

@@ -248,6 +248,14 @@ EMAIL_USE_TLS       = config('EMAIL_USE_TLS',  default=True, cast=bool)
 EMAIL_HOST_USER     = config('EMAIL_HOST_USER',     default='')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
 DEFAULT_FROM_EMAIL  = config('DEFAULT_FROM_EMAIL',  default='noreply@nexuscrm.io')
+ALLOWED_USER_EMAIL_DOMAIN = config('ALLOWED_USER_EMAIL_DOMAIN', default='astracybertech.com').strip().lower().lstrip('@')
+
+MS_GRAPH_TENANT_ID = config('MS_GRAPH_TENANT_ID', default='')
+MS_GRAPH_CLIENT_ID = config('MS_GRAPH_CLIENT_ID', default='')
+MS_GRAPH_CLIENT_SECRET = config('MS_GRAPH_CLIENT_SECRET', default='')
+MS_GRAPH_SENDER_EMAIL = config('MS_GRAPH_SENDER_EMAIL', default='')
+LOGIN_OTP_TTL_SECONDS = config('LOGIN_OTP_TTL_SECONDS', default=90, cast=int)
+LOGIN_OTP_LENGTH = config('LOGIN_OTP_LENGTH', default=6, cast=int)
 
 # ─── LOGGING ───────────────────────────────────────────────────────────────────
 LOGGING = {

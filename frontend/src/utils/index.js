@@ -5,7 +5,7 @@ export function cn(...classes) {
 }
 
 export function formatDate(d, fmt = 'MMM d, yyyy') {
-  if (!d) return '—'
+  if (!d) return '?'
   try { return format(typeof d === 'string' ? parseISO(d) : d, fmt) }
   catch { return d }
 }
@@ -17,7 +17,7 @@ export function timeAgo(d) {
 }
 
 export function formatCurrency(n) {
-  if (n == null) return '—'
+  if (n == null) return '?'
   return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n)
 }
 
@@ -27,6 +27,20 @@ export function formatBytes(bytes) {
   const sizes = ['B', 'KB', 'MB', 'GB']
   const i = Math.floor(Math.log(bytes) / Math.log(k))
   return `${parseFloat((bytes / Math.pow(k, i)).toFixed(1))} ${sizes[i]}`
+}
+
+export function downloadBlob(response, fallbackName) {
+  const disposition = response?.headers?.['content-disposition'] || ''
+  const match = disposition.match(/filename="?([^";]+)"?/i)
+  const filename = match?.[1] || fallbackName
+  const url = window.URL.createObjectURL(response.data)
+  const link = document.createElement('a')
+  link.href = url
+  link.download = filename
+  document.body.appendChild(link)
+  link.click()
+  link.remove()
+  window.URL.revokeObjectURL(url)
 }
 
 export const STATUS_COLOR = {

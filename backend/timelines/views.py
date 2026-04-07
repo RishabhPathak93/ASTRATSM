@@ -9,11 +9,12 @@ from django.utils import timezone
 from django.db import transaction
 from django.core.exceptions import PermissionDenied
 
-from django.db.models import Avg, Q
+from django.db.models import Avg, DecimalField, F, IntegerField, Q, Sum, Value, Case, When
+from django.db.models.functions import Coalesce, Greatest
 from .models import Timeline, TimelineMilestone, TimelineApprovalRequest
 from .serializers import TimelineSerializer, TimelineMilestoneSerializer, TimelineApprovalRequestSerializer
 from accounts.permissions import IsAdminOrManagerOrReadOnly, IsAdmin
-from notifications.utils import notify_project_team
+from notifications.utils import email_no_reply, notify_project_team
 from accounts.models import User
 from rest_framework.permissions import IsAuthenticated
 
@@ -100,6 +101,47 @@ def _apply_progress_status(timeline, progress, requested_status=None):
     return old_status
 
 
+def _email_timeline_approval_request(req):
+    admins = list(User.objects.filter(role=User.Role.ADMIN, is_active=True))
+    if not admins:
+        return
+    timeline_name = req.timeline.name if req.timeline else 'Timeline request'
+    email_no_reply(
+        admins,
+        subject=f'Timeline approval request: {timeline_name}',
+        heading='A timeline approval request needs review.',
+        intro='A user requested timeline approval in AstraTSM. Please review it from the approvals page.',
+        details=[
+            ('Timeline', timeline_name),
+            ('Project', req.timeline.project.name if req.timeline and req.timeline.project else 'Unknown'),
+            ('Request type', req.get_request_type_display()),
+            ('Requested by', req.requested_by.name if req.requested_by else 'Unknown'),
+            ('Reason', req.reason or 'No reason given'),
+        ],
+        footer_note='This is an automated no-reply notification from AstraTSM.',
+    )
+
+
+def _email_timeline_approval_resolution(req, resolved_by, approved):
+    if not req.requested_by:
+        return
+    timeline_name = req.timeline.name if req.timeline else 'Timeline request'
+    status_text = 'approved' if approved else 'rejected'
+    email_no_reply(
+        [req.requested_by],
+        subject=f'Timeline approval {status_text}: {timeline_name}',
+        heading=f'Your timeline request was {status_text}.',
+        intro='AstraTSM has resolved your timeline approval request.',
+        details=[
+            ('Timeline', timeline_name),
+            ('Request type', req.get_request_type_display()),
+            ('Resolved by', resolved_by.name),
+            ('Admin note', req.admin_note or 'No note provided'),
+        ],
+        footer_note='This is an automated no-reply notification from AstraTSM.',
+    )
+
+
 class TimelineViewSet(viewsets.ModelViewSet):
     serializer_class = TimelineSerializer
     permission_classes = [IsAuthenticated]
@@ -110,7 +152,18 @@ class TimelineViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        base = Timeline.objects.select_related('project__manager').prefetch_related('assignees', 'milestones')
+        base = Timeline.objects.select_related('project__manager').prefetch_related('assignees', 'milestones').annotate(
+            submitted_hours_value=Coalesce(Sum('timeentries__hours'), Value(0), output_field=DecimalField(max_digits=10, decimal_places=2)),
+            approved_hours_value=Coalesce(Sum('timeentries__hours', filter=Q(timeentries__approved=True)), Value(0), output_field=DecimalField(max_digits=10, decimal_places=2)),
+        ).annotate(
+            pending_hours_value=Greatest(F('submitted_hours_value') - F('approved_hours_value'), Value(0), output_field=DecimalField(max_digits=10, decimal_places=2)),
+            remaining_hours_value=Greatest(F('hours_allocated') - F('submitted_hours_value'), Value(0), output_field=DecimalField(max_digits=10, decimal_places=2)),
+            hours_progress_value=Case(
+                When(hours_allocated__gt=0, then=Greatest(Value(0), F('submitted_hours_value') * Value(100.0) / F('hours_allocated'))),
+                default=Value(0),
+                output_field=IntegerField(),
+            ),
+        )
         if user.role == User.Role.ADMIN:
             return base.all()
         if user.role == User.Role.MANAGER:
@@ -402,6 +455,7 @@ class TimelineApprovalViewSet(viewsets.ModelViewSet):
             message=(f'{user.name} wants to {req.request_type} timeline "{timeline_name}". Reason: {req.reason or "No reason given."}'),
             action_url='/approvals',
         )
+        _email_timeline_approval_request(req)
 
     @action(detail=True, methods=['post'], permission_classes=[IsAdmin])
     def approve(self, request, pk=None):
@@ -425,9 +479,11 @@ class TimelineApprovalViewSet(viewsets.ModelViewSet):
                 _sync_project_progress(project)
             if requesting_user:
                 notify_project_team(users=[requesting_user], notif_type='update', title=f'Delete approved - {timeline_name}', message=f'Your delete request for timeline "{timeline_name}" was approved.' + (f' Note: {req.admin_note}' if req.admin_note else ''), action_url='/approvals')
+            _email_timeline_approval_resolution(req, request.user, approved=True)
             return Response({'detail': 'Approved. Timeline deleted.'})
         if requesting_user:
             notify_project_team(users=[requesting_user], notif_type='update', title=f'Edit approved - {timeline_name}', message=f'Your edit request for timeline "{timeline_name}" was approved. Go to Approvals to apply changes.' + (f' Note: {req.admin_note}' if req.admin_note else ''), action_url='/approvals')
+        _email_timeline_approval_resolution(req, request.user, approved=True)
         return Response({'detail': 'Approved. User can now apply the edit.'})
 
     @action(detail=True, methods=['post'], permission_classes=[IsAdmin])
@@ -442,6 +498,7 @@ class TimelineApprovalViewSet(viewsets.ModelViewSet):
         req.save()
         if req.requested_by and req.timeline:
             notify_project_team(users=[req.requested_by], notif_type='update', title=f'Request rejected - {req.timeline.name}', message=f'Your {req.request_type} request for "{req.timeline.name}" was rejected.' + (f' Reason: {req.admin_note}' if req.admin_note else ''), action_url='/approvals')
+        _email_timeline_approval_resolution(req, request.user, approved=False)
         return Response({'detail': 'Rejected.'})
 
     @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])

@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { Plus, FolderKanban, Search, Calendar } from 'lucide-react'
+import { Plus, FolderKanban, Search, Calendar, Download } from 'lucide-react'
 import { projectsApi, clientsApi, resourcesApi } from '@/api/index.js'
 import { Btn, Badge, EmptyState, Modal, Input, Select, Textarea, Spinner } from '@/components/ui/index.jsx'
-import { STATUS_COLOR, STATUS_LABEL, PRIORITY_COLOR, PRIORITY_LABEL, formatDate, extractError } from '@/utils/index.js'
+import { STATUS_COLOR, STATUS_LABEL, PRIORITY_COLOR, PRIORITY_LABEL, downloadBlob, formatDate, extractError } from '@/utils/index.js'
 import { useAuthStore } from '@/stores/authStore.js'
 
 /** Count working days between two date strings, excluding Saturday and Sunday */
@@ -38,6 +38,7 @@ export default function ProjectsPage() {
   const [priorityFilter, setPriorityFilter] = useState(params.get('priority') || '')
   const [overBudgetOnly, setOverBudgetOnly] = useState(params.get('filter') === 'over_budget')
   const [showCreate, setShowCreate] = useState(false)
+  const [exporting, setExporting] = useState(false)
 
   useEffect(() => {
     const p = new URLSearchParams(location.search)
@@ -52,11 +53,21 @@ export default function ProjectsPage() {
       search: search || undefined,
       status: statusFilter || undefined,
       priority: priorityFilter || undefined,
-      page_size: 100,
+      page_size: 500,
     }).then(r => r.data.results || r.data),
   })
 
   const allProjects = data || []
+
+  async function exportProjects() {
+    setExporting(true)
+    try {
+      const response = await projectsApi.export()
+      downloadBlob(response, 'projects.xlsx')
+    } finally {
+      setExporting(false)
+    }
+  }
   const projects = overBudgetOnly
     ? allProjects.filter(p => p.is_over_budget || (p.spent > p.budget && p.budget > 0))
     : allProjects
@@ -71,7 +82,10 @@ export default function ProjectsPage() {
             {isManager && <span style={{ color: 'var(--info)', marginLeft: 8, fontSize: '12px', background: 'rgba(96,165,250,0.1)', border: '1px solid rgba(96,165,250,0.25)', padding: '2px 8px', borderRadius: 'var(--r-full)' }}>Your assigned projects</span>}
           </p>
         </div>
-        {canCreate && <Btn className="mobile-center-card" icon={<Plus size={14} />} onClick={() => setShowCreate(true)}>New Project</Btn>}
+        <div style={{ display: 'flex', gap: 'var(--sp-2)', flexWrap: 'wrap' }}>
+          {isAdmin && <Btn variant="ghost" className="mobile-center-card" icon={<Download size={14} />} loading={exporting} onClick={exportProjects}>Export Excel</Btn>}
+          {canCreate && <Btn className="mobile-center-card" icon={<Plus size={14} />} onClick={() => setShowCreate(true)}>New Project</Btn>}
+        </div>
       </div>
 
       <div className="mobile-center-search" style={{ display: 'flex', gap: 'var(--sp-3)', flexWrap: 'wrap', alignItems: 'center' }}>
@@ -258,8 +272,8 @@ function CreateProjectModal({ onClose, onCreated }) {
   const workingDays = countWorkingDays(form.start_date, form.end_date)
   const calculatedHours = workingDays * 8
 
-  const { data: clients } = useQuery({ queryKey: ['clients-all'], queryFn: () => clientsApi.list({ page_size: 200 }).then(r => r.data.results || r.data) })
-  const { data: resourcesData } = useQuery({ queryKey: ['resources-dropdown'], queryFn: () => resourcesApi.list({ page_size: 200 }).then(r => r.data.results || r.data) })
+  const { data: clients } = useQuery({ queryKey: ['clients-all'], queryFn: () => clientsApi.list({ page_size: 500 }).then(r => r.data.results || r.data) })
+  const { data: resourcesData } = useQuery({ queryKey: ['resources-dropdown'], queryFn: () => resourcesApi.list({ page_size: 500 }).then(r => r.data.results || r.data) })
   const allResources = (resourcesData || []).filter(r => r.user_detail?.is_active)
 
   const filteredClients = (clients || []).filter(c => c.name.toLowerCase().includes(clientSearch.toLowerCase()))

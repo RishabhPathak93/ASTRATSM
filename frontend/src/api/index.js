@@ -46,6 +46,7 @@ export default api
 // ── Auth ──────────────────────────────────────────────────────────────
 export const authApi = {
   login: (data) => api.post('/auth/login/', data),
+  verifyLoginOtp: (data) => api.post('/auth/login/verify-otp/', data),
   logout: (refresh) => api.post('/auth/logout/', { refresh }),
   me: () => api.get('/auth/me/'),
   updateMe: (data) => api.patch('/auth/me/', data, { headers: { 'Content-Type': 'multipart/form-data' } }),
@@ -65,6 +66,7 @@ export const clientsApi = {
   get: (id) => api.get(`/clients/${id}/`),
   update: (id, data) => api.patch(`/clients/${id}/`, data),
   delete: (id) => api.delete(`/clients/${id}/`),
+  export: () => api.get('/clients/export/', { responseType: 'blob' }),
   getProjects: (id) => api.get(`/clients/${id}/projects/`),
   addContact: (id, data) => api.post(`/clients/${id}/contacts/`, data),
   deleteContact: (contactId) => api.delete(`/clients/contacts/${contactId}/`),
@@ -83,6 +85,7 @@ export const projectsApi = {
   updateProgress: (id, progress) => api.patch(`/projects/${id}/update_progress/`, { progress }),
   assignResource: (id, userId) => api.post(`/projects/${id}/assign_resource/`, { user_id: userId }),
   removeResource: (id, userId) => api.post(`/projects/${id}/remove_resource/`, { user_id: userId }),
+  export: () => api.get('/projects/export/', { responseType: 'blob' }),
 }
 
 // ── Timelines ─────────────────────────────────────────────────────────
@@ -104,6 +107,8 @@ export const resourcesApi = {
   create: (data) => api.post('/resources/', data),
   get: (id) => api.get(`/resources/${id}/`),
   update: (id, data) => api.patch(`/resources/${id}/`, data),
+  delete: (id) => api.delete(`/resources/${id}/`),
+  export: () => api.get('/resources/export/', { responseType: 'blob' }),
   setAvailability: (id, data) => api.patch(`/resources/${id}/set_availability/`, data),
   timeEntries: (params) => api.get('/resources/time-entries/', { params }),
   createTimeEntry: (data) => api.post('/resources/time-entries/', data),

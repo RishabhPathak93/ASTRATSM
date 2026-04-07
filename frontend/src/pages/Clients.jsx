@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
-import { Plus, Building2, Globe, Mail, Phone, Search } from 'lucide-react'
+import { Plus, Building2, Search, Download } from 'lucide-react'
 import { clientsApi } from '@/api/index.js'
 import { Btn, Badge, EmptyState, Modal, Input, Select, Textarea } from '@/components/ui/index.jsx'
-import { extractError, timeAgo } from '@/utils/index.js'
+import { downloadBlob, extractError, timeAgo } from '@/utils/index.js'
 import { useAuthStore } from '@/stores/authStore.js'
 
 const STATUS_COLOR = { active: 'var(--success)', prospect: 'var(--info)', inactive: 'var(--text-3)' }
@@ -13,33 +13,46 @@ export default function ClientsPage() {
   const navigate = useNavigate()
   const qc = useQueryClient()
   const user = useAuthStore(s => s.user)
-  const canCreate = user?.role === 'admin'
+  const isAdmin = user?.role === 'admin'
   const [search, setSearch] = useState('')
   const [statusFilter, setStatusFilter] = useState('')
   const [showCreate, setShowCreate] = useState(false)
+  const [exporting, setExporting] = useState(false)
 
   const { data, isLoading } = useQuery({
     queryKey: ['clients', search, statusFilter],
-    queryFn: () => clientsApi.list({ search: search || undefined, status: statusFilter || undefined }).then(r => r.data.results || r.data),
+    queryFn: () => clientsApi.list({ search: search || undefined, status: statusFilter || undefined, page_size: 500 }).then(r => r.data.results || r.data),
   })
 
   const clients = data || []
 
+  async function exportClients() {
+    setExporting(true)
+    try {
+      const response = await clientsApi.export()
+      downloadBlob(response, 'clients.xlsx')
+    } finally {
+      setExporting(false)
+    }
+  }
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--sp-6)' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 'var(--sp-3)', flexWrap: 'wrap' }}>
         <div>
           <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '1.8rem', letterSpacing: '-0.02em' }}>Clients</h1>
           <p style={{ color: 'var(--text-2)', fontSize: '14px', marginTop: 4 }}>{clients.length} total</p>
         </div>
-        {canCreate && <Btn icon={<Plus size={14} />} onClick={() => setShowCreate(true)}>New Client</Btn>}
+        <div style={{ display: 'flex', gap: 'var(--sp-2)', flexWrap: 'wrap' }}>
+          {isAdmin && <Btn variant="ghost" icon={<Download size={14} />} loading={exporting} onClick={exportClients}>Export Excel</Btn>}
+          {isAdmin && <Btn icon={<Plus size={14} />} onClick={() => setShowCreate(true)}>New Client</Btn>}
+        </div>
       </div>
 
-      {/* Filters */}
-      <div style={{ display: 'flex', gap: 'var(--sp-3)' }}>
+      <div style={{ display: 'flex', gap: 'var(--sp-3)', flexWrap: 'wrap' }}>
         <div style={{ position: 'relative', flex: 1, maxWidth: 320 }}>
           <Search size={14} style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', color: 'var(--text-3)', pointerEvents: 'none' }} />
-          <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search clients…"
+          <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search clients..."
             style={{ width: '100%', background: 'var(--bg-2)', border: '1px solid var(--border)', borderRadius: 'var(--r-md)', color: 'var(--text-0)', fontSize: '13px', padding: '8px 12px 8px 32px', outline: 'none' }} />
         </div>
         <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)} style={{ background: 'var(--bg-2)', border: '1px solid var(--border)', borderRadius: 'var(--r-md)', color: 'var(--text-1)', fontSize: '13px', padding: '8px 12px', outline: 'none', cursor: 'pointer' }}>
@@ -49,11 +62,10 @@ export default function ClientsPage() {
         </select>
       </div>
 
-      {/* Table */}
       <div style={{ background: 'var(--bg-1)', border: '1px solid var(--border)', borderRadius: 'var(--r-lg)', overflow: 'hidden' }}>
         {isLoading ? (
           <div style={{ padding: 'var(--sp-8)', display: 'flex', justifyContent: 'center' }}>
-            <div style={{ color: 'var(--text-3)', fontSize: '14px' }}>Loading…</div>
+            <div style={{ color: 'var(--text-3)', fontSize: '14px' }}>Loading...</div>
           </div>
         ) : clients.length === 0 ? (
           <EmptyState icon={Building2} title="No clients found" description="Add your first client to get started." />
@@ -82,18 +94,18 @@ export default function ClientsPage() {
                       <span style={{ fontWeight: 600, fontSize: '13px', whiteSpace: 'nowrap' }}>{c.name}</span>
                     </div>
                   </td>
-                  <td style={{ padding: '12px 16px', fontSize: '13px', color: 'var(--text-2)' }}>{c.contact_person || '—'}</td>
-                  <td style={{ padding: '12px 16px', fontSize: '13px', color: 'var(--text-2)' }}>{c.contact_person2 || '—'}</td>
-                  <td style={{ padding: '12px 16px', fontSize: '12px', color: 'var(--text-2)' }}>{c.email || '—'}</td>
-                  <td style={{ padding: '12px 16px', fontSize: '12px', color: 'var(--text-2)' }}>{c.email2 || '—'}</td>
+                  <td style={{ padding: '12px 16px', fontSize: '13px', color: 'var(--text-2)' }}>{c.contact_person || '?'}</td>
+                  <td style={{ padding: '12px 16px', fontSize: '13px', color: 'var(--text-2)' }}>{c.contact_person2 || '?'}</td>
+                  <td style={{ padding: '12px 16px', fontSize: '12px', color: 'var(--text-2)' }}>{c.email || '?'}</td>
+                  <td style={{ padding: '12px 16px', fontSize: '12px', color: 'var(--text-2)' }}>{c.email2 || '?'}</td>
                   <td style={{ padding: '12px 16px', fontSize: '12px', color: 'var(--text-3)' }}>
-                    {c.website ? c.website.replace(/^https?:\/\//, '') : '—'}
+                    {c.website ? c.website.replace(/^https?:\/\//, '') : '?'}
                   </td>
                   <td style={{ padding: '12px 16px' }}>
                     <Badge color={STATUS_COLOR[c.status]}>{c.status}</Badge>
                   </td>
                   <td style={{ padding: '12px 16px', fontFamily: 'var(--font-mono)', fontSize: '13px', color: 'var(--text-2)' }}>
-                    {c.project_count ?? '—'}
+                    {c.project_count ?? '?'}
                   </td>
                   <td style={{ padding: '12px 16px', fontSize: '11px', color: 'var(--text-3)', fontFamily: 'var(--font-mono)', whiteSpace: 'nowrap' }}>{timeAgo(c.onboarded_at)}</td>
                 </tr>
@@ -127,7 +139,6 @@ function CreateClientModal({ onClose, onCreated }) {
     e.preventDefault()
     setLoading(true)
     try {
-      // Create client with all fields directly — no secondary ClientContact needed
       await clientsApi.create({
         name: form.name,
         email: form.email,
@@ -140,9 +151,6 @@ function CreateClientModal({ onClose, onCreated }) {
         notes: form.notes,
         status: form.status,
       })
-
-      onCreated()
-
       onCreated()
     } catch (err) {
       setError(extractError(err))
@@ -150,12 +158,6 @@ function CreateClientModal({ onClose, onCreated }) {
       setLoading(false)
     }
   }
-
-  const SectionLabel = ({ children }) => (
-    <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--text-3)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 2 }}>
-      {children}
-    </div>
-  )
 
   return (
     <Modal open onClose={onClose} title="New Client" fullscreen>
@@ -166,28 +168,23 @@ function CreateClientModal({ onClose, onCreated }) {
           </div>
         )}
 
-        {/* Company Name — full width */}
         <Input label="Company Name" value={form.name} onChange={e => f('name', e.target.value)} required />
 
-        {/* Email 1 & Email 2 */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--sp-4)' }}>
           <Input label="Email 1" type="email" value={form.email} onChange={e => f('email', e.target.value)} required />
           <Input label="Email 2" type="email" value={form.email2} onChange={e => f('email2', e.target.value)} />
         </div>
 
-        {/* Phone 1 & Phone 2 */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--sp-4)' }}>
           <Input label="Phone 1" value={form.phone} onChange={e => f('phone', e.target.value)} />
           <Input label="Phone 2" value={form.phone2} onChange={e => f('phone2', e.target.value)} />
         </div>
 
-        {/* Contact Person 1 & 2 */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--sp-4)' }}>
           <Input label="Name 1" value={form.contact_person} onChange={e => f('contact_person', e.target.value)} />
           <Input label="Name 2" value={form.contact_person2} onChange={e => f('contact_person2', e.target.value)} />
         </div>
 
-        {/* Website & Status */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--sp-4)' }}>
           <Input label="Website" value={form.website} onChange={e => f('website', e.target.value)} placeholder="https://example.com" />
           <Select label="Status" value={form.status} onChange={e => f('status', e.target.value)}>
@@ -196,8 +193,7 @@ function CreateClientModal({ onClose, onCreated }) {
           </Select>
         </div>
 
-        {/* Notes */}
-        <Textarea label="Notes" value={form.notes} onChange={e => f('notes', e.target.value)} placeholder="Internal notes…" rows={3} />
+        <Textarea label="Notes" value={form.notes} onChange={e => f('notes', e.target.value)} placeholder="Internal notes..." rows={3} />
 
         <div style={{ display: 'flex', gap: 'var(--sp-3)', justifyContent: 'flex-end', marginTop: 'var(--sp-2)' }}>
           <Btn type="submit" loading={loading}>Create Client</Btn>
