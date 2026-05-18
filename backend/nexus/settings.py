@@ -7,9 +7,14 @@ secrets.  Run `python manage.py check --deploy` before going live.
 import os
 from pathlib import Path
 from datetime import timedelta
-from decouple import config, Csv
+from decouple import config, Csv, UndefinedValueError
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
+# //module name for importing .Env
+import environ as environ
+from environ import Env
+
+env = Env()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -24,6 +29,7 @@ ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=Csv())
 # Base URL for building absolute media URLs (set your actual IP in .env)
 # e.g. BACKEND_URL=http://192.168.1.10:8000
 BACKEND_URL = config('BACKEND_URL', default='http://localhost:8000')
+FRONTEND_URL = config('FRONTEND_URL', default='http://localhost:5173')
 
 # ─── APPS ────────────────────────────────────────────────────────────────────
 DJANGO_APPS = [
@@ -185,26 +191,48 @@ CORS_ALLOW_HEADERS = [
 ]
 
 # ─── CHANNELS ──────────────────────────────────────────────────────────────────
-CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        'CONFIG':  {'hosts': [config('REDIS_URL')]},
-    }
-}
+# Redis is optional — falls back to in-memory (no WebSocket cross-process sync,
+# but everything else works fine without Redis).
+try:
+    _REDIS_URL = config('REDIS_URL')
+    _REDIS_AVAILABLE = True
+except UndefinedValueError:
+    _REDIS_URL = None
+    _REDIS_AVAILABLE = False
 
-# ─── CACHES ────────────────────────────────────────────────────────────────────
-CACHES = {
-    'default': {
-        'BACKEND':  'django.core.cache.backends.redis.RedisCache',
-        'LOCATION': config('REDIS_URL'),
-        'TIMEOUT':  300,
+if _REDIS_AVAILABLE:
+    CHANNEL_LAYERS = {
+        'default': {
+            'BACKEND': 'channels_redis.core.RedisChannelLayer',
+            'CONFIG':  {'hosts': [_REDIS_URL]},
+        }
     }
-}
+    CACHES = {
+        'default': {
+            'BACKEND':  'django.core.cache.backends.redis.RedisCache',
+            'LOCATION': _REDIS_URL,
+            'TIMEOUT':  300,
+        }
+    }
+    SESSION_ENGINE      = 'django.contrib.sessions.backends.cache'
+    SESSION_CACHE_ALIAS = 'default'
+else:
+    # In-process channel layer — chat still works on single-worker deployments
+    CHANNEL_LAYERS = {
+        'default': {
+            'BACKEND': 'channels.layers.InMemoryChannelLayer',
+        }
+    }
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+            'TIMEOUT': 300,
+        }
+    }
+    SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 
 # ─── SESSION ───────────────────────────────────────────────────────────────────
-SESSION_ENGINE         = 'django.contrib.sessions.backends.cache'
-SESSION_CACHE_ALIAS    = 'default'
-SESSION_COOKIE_SECURE  = True
+SESSION_COOKIE_SECURE   = True
 SESSION_COOKIE_HTTPONLY = True
 SESSION_COOKIE_SAMESITE = 'Lax'
 
@@ -342,3 +370,34 @@ ALLOWED_IMAGE_EXTENSIONS  = ['.jpg', '.jpeg', '.png', '.webp']
 ALLOWED_DOCUMENT_EXTENSIONS = ['.pdf', '.doc', '.docx', '.xls', '.xlsx', '.ppt', '.pptx', '.txt', '.zip']
 MAX_AVATAR_SIZE_MB         = 2
 MAX_DOCUMENT_SIZE_MB       = 10
+# ── Celery ────────────────────────────────────────────────────────────
+# Broker: Redis (same Redis you likely already use for Channels)
+# Change the URL/db number if needed.
+CELERY_BROKER_URL = env('CELERY_BROKER_URL', default='redis://localhost:6379/1')
+ 
+# Store task results in Redis (optional but useful for debugging)
+CELERY_RESULT_BACKEND = env('CELERY_RESULT_BACKEND', default='redis://localhost:6379/2')
+ 
+# IMPORTANT: set this to YOUR timezone so 17:30 means 5:30 PM local time,
+# not 5:30 PM UTC.
+CELERY_TIMEZONE = TIME_ZONE   # reuse Django's TIME_ZONE setting (e.g. 'Asia/Kolkata')
+ 
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_ACCEPT_CONTENT = ['json']
+ 
+# Prevent tasks from running forever if something hangs
+CELERY_TASK_SOFT_TIME_LIMIT = 300   # 5 minutes: raises SoftTimeLimitExceeded
+CELERY_TASK_TIME_LIMIT = 360        # 6 minutes: hard kill
+ 
+# Beat stores its schedule in the DB (no separate file needed)
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
+ 
+# ── .env additions ────────────────────────────────────────────────────
+# Add these to your backend/.env file:
+#
+#   CELERY_BROKER_URL=redis://localhost:6379/1
+#   CELERY_RESULT_BACKEND=redis://localhost:6379/2
+#
+# If Redis requires a password:
+#   CELERY_BROKER_URL=redis://:yourpassword@localhost:6379/1

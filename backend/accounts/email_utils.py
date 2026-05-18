@@ -105,8 +105,16 @@ def build_no_reply_email(subject: str, heading: str, intro: str, details=None, f
     escaped_subject = escape(subject)
     escaped_heading = escape(heading)
     escaped_intro = escape(intro)
+
+    def detail_value_html(value):
+        text = str(value)
+        escaped = escape(text)
+        if text.startswith(('http://', 'https://')):
+            return f"<a href='{escaped}' style='color:{BRAND_PRIMARY};font-weight:600;text-decoration:none'>Open in AstraTSM</a>"
+        return escaped
+
     rows_html = ''.join(
-        f"<tr><td style='padding:8px 0;color:{BRAND_MUTED};font-size:13px;font-weight:600;width:160px'>{escape(str(label))}</td><td style='padding:8px 0;color:{BRAND_DARK};font-size:13px'>{escape(str(value))}</td></tr>"
+        f"<tr><td style='padding:8px 0;color:{BRAND_MUTED};font-size:13px;font-weight:600;width:160px'>{escape(str(label))}</td><td style='padding:8px 0;color:{BRAND_DARK};font-size:13px'>{detail_value_html(value)}</td></tr>"
         for label, value in details
     )
     footer_note = footer_note or 'This is an automated message from AstraTSM. Please do not reply to this email.'

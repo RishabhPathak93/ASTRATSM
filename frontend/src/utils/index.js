@@ -79,12 +79,20 @@ export function getInitials(name = '') {
 export function extractError(err) {
   const data = err?.response?.data
   if (!data) return 'An unexpected error occurred.'
-  if (typeof data.message === 'string') return data.message
-  if (typeof data.detail === 'string') return data.detail
   if (typeof data === 'string') return data
   const errs = data.errors
   if (errs && typeof errs === 'object') {
-    return Object.values(errs).flat().join(' ')
+    const parts = Object.entries(errs).flatMap(([field, value]) => {
+      const values = Array.isArray(value) ? value : [value]
+      return values.map(v => {
+        if (typeof v === 'string') return field === 'non_field_errors' ? v : `${field}: ${v}`
+        if (v && typeof v === 'object') return Object.values(v).flat().join(' ')
+        return String(v)
+      })
+    }).filter(Boolean)
+    if (parts.length) return parts.join(' ')
   }
+  if (typeof data.message === 'string') return data.message
+  if (typeof data.detail === 'string') return data.detail
   return 'An error occurred.'
 }

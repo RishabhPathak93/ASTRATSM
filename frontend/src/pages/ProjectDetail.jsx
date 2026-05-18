@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { ArrowLeft, Plus, FileText, MessageSquare, Users, Calendar, DollarSign, TrendingUp, Edit2, Trash2, X, Save, Building2, GitBranch, CheckCircle, Circle, Send, Clock } from 'lucide-react'
-import { projectsApi, authApi, clientsApi, resourcesApi, timelinesApi, approvalsApi } from '@/api/index.js'
+import { projectsApi, authApi, clientsApi, timelinesApi, approvalsApi } from '@/api/index.js'
 import { Btn, Badge, ProgressBar, Tabs, Modal, Input, Textarea, Spinner, Avatar } from '@/components/ui/index.jsx'
 import { STATUS_COLOR, STATUS_LABEL, PRIORITY_COLOR, PRIORITY_LABEL, formatDate, formatCurrency, formatBytes, timeAgo, extractError } from '@/utils/index.js'
 import { useAuthStore } from '@/stores/authStore.js'
@@ -27,7 +27,6 @@ const TABS = [
   { id: 'overview',   label: 'Overview' },
   { id: 'timelines',  label: 'Timelines', icon: GitBranch },
   { id: 'updates',    label: 'Updates',   icon: MessageSquare },
-  { id: 'team',       label: 'Team',      icon: Users },
 ]
 
 const sel = { width: '100%', background: 'var(--bg-2)', border: '1px solid var(--border)', borderRadius: 'var(--r-md)', color: 'var(--text-1)', fontSize: '15px', padding: '8px 12px', outline: 'none' }
@@ -89,10 +88,6 @@ export default function ProjectDetailPage() {
       priority:    p.priority || 'medium',
       start_date:  p.start_date || '',
       end_date:    p.end_date || '',
-      resource_l1: p.resource_l1 ?? 0,
-      resource_l2: p.resource_l2 ?? 0,
-      resource_l3: p.resource_l3 ?? 0,
-      resource_l4: p.resource_l4 ?? 0,
       activity:    p.activity || '',
     })
     setEditing(true)
@@ -107,10 +102,6 @@ export default function ProjectDetailPage() {
       const autoHours   = workingDays * 8
       const payload = {
         ...form,
-        resource_l1: parseInt(form.resource_l1) || 0,
-        resource_l2: parseInt(form.resource_l2) || 0,
-        resource_l3: parseInt(form.resource_l3) || 0,
-        resource_l4: parseInt(form.resource_l4) || 0,
         hours:       autoHours,
         activity:    form.activity || '',
       }
@@ -304,17 +295,6 @@ export default function ProjectDetailPage() {
             ) : null
           })()}
 
-          {/* Resource Levels */}
-          <div>
-            <div style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-2)', marginBottom: 8 }}>Resource Levels</div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(80px, 1fr))', gap: 'var(--sp-3)' }}>
-              <Input label="L1" type="number" min="0" value={form.resource_l1} onChange={e => f('resource_l1', e.target.value)} placeholder="0" />
-              <Input label="L2" type="number" min="0" value={form.resource_l2} onChange={e => f('resource_l2', e.target.value)} placeholder="0" />
-              <Input label="L3" type="number" min="0" value={form.resource_l3} onChange={e => f('resource_l3', e.target.value)} placeholder="0" />
-              <Input label="L4" type="number" min="0" value={form.resource_l4} onChange={e => f('resource_l4', e.target.value)} placeholder="0" />
-            </div>
-          </div>
-
           <Input label="Activity" value={form.activity} onChange={e => f('activity', e.target.value)} placeholder="e.g. Development, Testing, Design..." />
 
           <Textarea label="Description" value={form.description} onChange={e => f('description', e.target.value)} placeholder="Project overview…" />
@@ -324,10 +304,6 @@ export default function ProjectDetailPage() {
       {/* Metric Cards — Resource levels, hours, activity */}
       {!editing && (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))', gap: 'var(--sp-3)' }}>
-          <MetricBox icon={Users}      label="L1 Resources" value={p.resource_l1 != null ? p.resource_l1 : '—'} />
-          <MetricBox icon={Users}      label="L2 Resources" value={p.resource_l2 != null ? p.resource_l2 : '—'} />
-          <MetricBox icon={Users}      label="L3 Resources" value={p.resource_l3 != null ? p.resource_l3 : '—'} />
-          <MetricBox icon={Users}      label="L4 Resources" value={p.resource_l4 != null ? p.resource_l4 : '—'} />
           <MetricBox icon={TrendingUp} label="Hours"        value={p.hours ? `${p.hours}h` : '—'} />
           <MetricBox icon={Calendar}   label="Start"        value={formatDate(p.start_date)} />
           <MetricBox icon={Calendar}   label="End"          value={formatDate(p.end_date)} />
@@ -347,7 +323,6 @@ export default function ProjectDetailPage() {
           {tab === 'overview'   && <OverviewTab project={p} />}
           {tab === 'timelines'  && <TimelinesTab projectId={p.id} canEdit={canEdit} />}
           {tab === 'updates'    && <UpdatesTab updates={p.updates || []} />}
-          {tab === 'team'       && <TeamTab resources={p.resource_details || []} manager={p.manager_detail} projectId={p.id} canEdit={canEdit} onRefresh={() => { qc.invalidateQueries(['project', id]); qc.invalidateQueries(['resources']); qc.invalidateQueries(['projects']); qc.invalidateQueries(['dashboard-projects']); qc.invalidateQueries(['dashboard-resources']) }} />}
         </div>
       </div>
 

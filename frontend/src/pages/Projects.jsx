@@ -291,7 +291,6 @@ function CreateProjectModal({ onClose, onCreated }) {
     resource_L1: '', resource_L2: '', resource_L3: '', resource_L4: '',
     activity: '',
   })
-  const [selectedResources, setSelectedResources] = useState([])
   const [clientSearch, setClientSearch] = useState('')
   const [showClientDropdown, setShowClientDropdown] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -301,9 +300,7 @@ function CreateProjectModal({ onClose, onCreated }) {
   const calculatedHours = workingDays * 8
 
   const { data: clients } = useQuery({ queryKey: ['clients-all'], queryFn: () => clientsApi.list({ page_size: 500 }).then(r => r.data.results || r.data) })
-  const { data: resourcesData } = useQuery({ queryKey: ['resources-dropdown'], queryFn: () => resourcesApi.list({ page_size: 500 }).then(r => r.data.results || r.data) })
   const { data: managers } = useQuery({ queryKey: ['project-create-managers'], queryFn: () => authApi.users({ role: 'manager', is_active: true, page_size: 500 }).then(r => r.data.results || r.data) })
-  const allResources = (resourcesData || []).filter(r => r.user_detail?.is_active)
 
   const filteredClients = (clients || []).filter(c => c.name.toLowerCase().includes(clientSearch.toLowerCase()))
 
@@ -323,13 +320,8 @@ function CreateProjectModal({ onClose, onCreated }) {
         start_date: form.start_date || undefined,
         end_date: form.end_date || undefined,
         budget: form.budget ? parseFloat(form.budget) : 0,
-        resource_l1: parseInt(form.resource_L1) || 0,
-        resource_l2: parseInt(form.resource_L2) || 0,
-        resource_l3: parseInt(form.resource_L3) || 0,
-        resource_l4: parseInt(form.resource_L4) || 0,
         hours: calculatedHours,
         activity: form.activity || '',
-        resources: selectedResources,
       }
       if (form.client) payload.client = form.client
       if (form.manager) payload.manager = form.manager
@@ -424,21 +416,6 @@ function CreateProjectModal({ onClose, onCreated }) {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--sp-3)', background: 'var(--bg-2)', border: '1px solid var(--border)', borderRadius: 'var(--r-md)', padding: 'var(--sp-4)' }}>
           <div style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-2)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Budget</div>
 
-          <div>
-            <div style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-2)', marginBottom: 8 }}>Resource Level</div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(80px, 1fr))', gap: 'var(--sp-3)' }}>
-              {['L1', 'L2', 'L3', 'L4'].map(level => (
-                <div key={level}>
-                  <div style={{ fontSize: '13px', color: 'var(--text-3)', marginBottom: 4, fontWeight: 600 }}>{level}</div>
-                  <input type="number" min="0" value={form[`resource_${level}`] || ''} onChange={e => f(`resource_${level}`, e.target.value)} placeholder="0"
-                    style={{ width: '100%', background: 'var(--bg-1)', border: '1px solid var(--border)', borderRadius: 'var(--r-md)', color: 'var(--text-0)', fontSize: '15px', padding: '7px 10px', outline: 'none', boxSizing: 'border-box' }}
-                    onFocus={e => e.target.style.borderColor = 'var(--accent)'}
-                    onBlur={e => e.target.style.borderColor = 'var(--border)'} />
-                </div>
-              ))}
-            </div>
-          </div>
-
           {/* Hours — read-only, auto-calculated */}
           <div>
             <div style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-2)', marginBottom: 4 }}>Hours (Auto-calculated from dates)</div>
@@ -457,8 +434,6 @@ function CreateProjectModal({ onClose, onCreated }) {
         </div>
 
         {/* Resources — with bench/active filter, L4 mandatory */}
-        <ResourceAssignSection selectedResources={selectedResources} setSelectedResources={setSelectedResources} allResources={allResources} />
-
         <div style={{ display: 'flex', gap: 'var(--sp-3)', justifyContent: 'flex-end', marginTop: 'var(--sp-2)' }}>
           <Btn type="submit" loading={loading}>Create Project</Btn>
         </div>

@@ -59,7 +59,7 @@ class Command(BaseCommand):
                 notif_type='update',
                 title='Timesheet reminder',
                 message=f'Please submit today timesheet ({today.isoformat()}) before end of day.',
-                action_url='/timelines',
+                action_url='/timesheet',
             )
             TimesheetReminderLog.objects.create(resource=profile, date=today)
             sent_count += 1

@@ -55,6 +55,8 @@ class TimeEntry(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='timeentries')
     timeline = models.ForeignKey(Timeline, on_delete=models.SET_NULL, null=True, blank=True, related_name='timeentries')
     date = models.DateField()
+    start_time = models.TimeField(null=True, blank=True)
+    end_time = models.TimeField(null=True, blank=True)
     hours = models.DecimalField(max_digits=5, decimal_places=2, validators=[MinValueValidator(Decimal('0.25'))])
     description = models.TextField(blank=True)
     approved = models.BooleanField(default=False, db_index=True)

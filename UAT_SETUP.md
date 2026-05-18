@@ -29,3 +29,18 @@
 - Verify admin can create, edit, delete, and export resources.
 - Verify Excel exports for clients, projects, and resources.
 - Verify Django admin at `/admin` only works for admin users.
+
+
+
+
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
+
+u = User.objects.get(email="sonia.p@astracybertech.com")
+
+u.set_password("Tridenzic")
+
+u.save()
+
+print("Password updated successfully")

@@ -45,6 +45,7 @@ class ProjectDocumentSerializer(serializers.ModelSerializer):
 
 
 class ProjectListSerializer(serializers.ModelSerializer):
+    client = serializers.IntegerField(source='client_id', read_only=True)
     client_name = serializers.CharField(source='client.name', read_only=True)
     manager_name = serializers.CharField(source='manager.name', read_only=True)
     resource_count = serializers.IntegerField(read_only=True)
@@ -62,7 +63,7 @@ class ProjectListSerializer(serializers.ModelSerializer):
             'start_date', 'end_date', 'budget', 'spent',
             'resource_l1', 'resource_l2', 'resource_l3', 'resource_l4',
             'hours', 'activity',
-            'client_name', 'manager_name', 'resource_count',
+            'client', 'client_name', 'manager_name', 'resource_count',
             'budget_utilization', 'is_over_budget', 'submitted_hours', 'approved_hours', 'pending_hours', 'remaining_hours',
             'tags', 'created_at',
         ]

@@ -6,7 +6,7 @@ import { Avatar } from '@/components/ui/index.jsx'
 
 const BREADCRUMBS = {
   '/dashboard': 'Dashboard', '/clients': 'Clients', '/projects': 'Projects',
-  '/timelines': 'Timelines', '/resources': 'Resources', '/chat': 'Chat',
+  '/timelines': 'Timesheet', '/timesheet': 'Timesheet', '/resources': 'Resources', '/chat': 'Chat',
   '/notifications': 'Notifications', '/profile': 'Profile', '/settings': 'Settings',
   '/approvals': 'Approvals',
 }

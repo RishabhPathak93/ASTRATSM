@@ -1,7 +1,7 @@
 import React from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
 import {
-  LayoutDashboard, FolderKanban, GitBranch,
+  LayoutDashboard, FolderKanban, Clock,
   MessageSquare, Bell, Settings, LogOut,
   ChevronLeft, UserCircle, Wrench, ChevronRight,
   Building2, ClipboardCheck, X,
@@ -13,7 +13,7 @@ const NAV = [
   { to: '/dashboard', icon: LayoutDashboard, label: 'Dashboard',  perm: 'dashboard'  },
   { to: '/clients',   icon: Building2,       label: 'Clients',    perm: 'clients'    },
   { to: '/projects',  icon: FolderKanban,    label: 'Projects',   perm: 'projects'   },
-  { to: '/timelines', icon: GitBranch,       label: 'Timelines',  perm: 'timelines'  },
+  { to: '/timesheet', icon: Clock,           label: 'Timesheet',  perm: null         },
   { to: '/resources', icon: Wrench,          label: 'Resources',  perm: 'resources'  },
   { to: '/chat',      icon: MessageSquare,   label: 'Chat',       perm: 'chat'       },
 ]

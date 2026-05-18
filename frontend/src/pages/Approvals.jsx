@@ -6,9 +6,9 @@ import { timeAgo, extractError } from '@/utils/index.js'
 import { useAuthStore } from '@/stores/authStore.js'
 import { approvalsApi, timelineApprovalsApi, resourcesApi } from '@/api/index.js'
 
-const TYPE_COLOR   = { edit: 'var(--info)', delete: 'var(--danger)', create: 'var(--accent)', timesheet: 'var(--success)' }
-const TYPE_BG      = { edit: 'rgba(122,166,184,0.12)', delete: 'rgba(217,108,108,0.12)', create: 'rgba(35,114,39,0.12)', timesheet: 'rgba(74,222,128,0.12)' }
-const TYPE_ICON    = { edit: FileEdit, delete: Trash2, create: Edit2 }
+const TYPE_COLOR   = { edit: 'var(--info)', delete: 'var(--danger)', create: 'var(--accent)', timesheet: 'var(--success)', late_entry: 'var(--warning)' }
+const TYPE_BG      = { edit: 'rgba(122,166,184,0.12)', delete: 'rgba(217,108,108,0.12)', create: 'rgba(35,114,39,0.12)', timesheet: 'rgba(74,222,128,0.12)', late_entry: 'rgba(251,191,36,0.12)' }
+const TYPE_ICON    = { edit: FileEdit, delete: Trash2, create: Edit2, late_entry: Clock }
 const STATUS_COLOR = { pending: 'var(--warning)', approved: 'var(--success)', rejected: 'var(--danger)' }
 const STATUS_BG    = { pending: 'rgba(111,166,118,0.12)', approved: 'rgba(73,163,95,0.12)', rejected: 'rgba(217,108,108,0.12)' }
 const SEL = { width: '100%', background: 'var(--bg-2)', border: '1px solid var(--border)', borderRadius: 'var(--r-md)', color: 'var(--text-1)', fontSize: '15px', padding: '8px 12px', outline: 'none', boxSizing: 'border-box' }
@@ -66,8 +66,8 @@ export default function ApprovalsPage() {
     refetchInterval: 15000,
   })
 
-  // Fetch pending time entries for manager approval only (not admin)
-  const canApproveTimesheets = isManager
+  // Fetch pending time entries and late-entry unlock requests for reviewers.
+  const canReviewTimesheets = isManager || isAdmin
   const { data: timeEntriesData, isLoading: timeEntriesLoading } = useQuery({
     queryKey: ['pending-time-entries', user?.id],
     queryFn: async () => {
@@ -76,11 +76,21 @@ export default function ApprovalsPage() {
       // Client-side guard: only truly unapproved entries
       return all.filter(e => e.approved === false || e.approved === 'false')
     },
-    enabled: canApproveTimesheets,
+    enabled: canReviewTimesheets,
     refetchInterval: 15000,
   })
 
-  const isLoading = projectLoading || timelineLoading || timeEntriesLoading
+  const { data: lateEntryData, isLoading: lateEntryLoading } = useQuery({
+    queryKey: ['late-entry-approvals', user?.id],
+    queryFn: async () => {
+      const res = await resourcesApi.lateEntryApprovals({ status: 'pending', page_size: 500 })
+      return res.data.results || res.data || []
+    },
+    enabled: canReviewTimesheets,
+    refetchInterval: 15000,
+  })
+
+  const isLoading = projectLoading || timelineLoading || timeEntriesLoading || lateEntryLoading
 
   const requests = React.useMemo(() => {
     const proj = (projectData || []).map(r => ({ ...r, _kind: 'project', _uid: `project-${r.id}` }))
@@ -90,7 +100,7 @@ export default function ApprovalsPage() {
 
   // Combine project/timeline approvals with timesheet entries for manager
   const allRequests = React.useMemo(() => {
-    if (!canApproveTimesheets) return requests
+    if (!canReviewTimesheets) return requests
     const entries = timeEntriesData || []
     const timesheetReqs = entries.map(entry => ({
       id: entry.id,
@@ -107,12 +117,27 @@ export default function ApprovalsPage() {
       created_at: entry.created_at || entry.date,
       _entryId: entry.id,
     }))
+    const lateReqs = (lateEntryData || []).map(req => ({
+      id: req.id,
+      _uid: `late-entry-${req.id}`,
+      _kind: 'late_entry',
+      project_name: 'Late timesheet unlock',
+      resource_name: req.resource_name || 'Unknown Resource',
+      request_type: 'late_entry',
+      status: req.status || 'pending',
+      date: req.date,
+      reason: req.reason,
+      admin_note: req.admin_note,
+      requested_by_name: req.requested_by_name,
+      created_at: req.created_at,
+    }))
     // Timesheets are always 'pending' — show on pending or all tabs
-    const filteredTimesheets = (statusFilter === '' || statusFilter === 'pending') ? timesheetReqs : []
+    const filteredTimesheets = (statusFilter === '' || statusFilter === 'pending') ? [...timesheetReqs, ...lateReqs] : []
     return [...requests, ...filteredTimesheets].sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
-  }, [requests, timeEntriesData, canApproveTimesheets, statusFilter])
+  }, [requests, timeEntriesData, lateEntryData, canReviewTimesheets, statusFilter])
 
   const pendingTimesheetCount = (timeEntriesData || []).length
+  const pendingLateEntryCount = (lateEntryData || []).length
   const pendingCount = allRequests.filter(r => r.status === 'pending').length
 
   function flash(msg) { setSuccessMsg(msg); setTimeout(() => setSuccessMsg(''), 4000) }
@@ -132,11 +157,30 @@ export default function ApprovalsPage() {
     finally { setActionLoading(null) }
   }
 
+  async function handleLateEntryDecision(req, approved) {
+    setActionLoading(`${req._uid}_${approved ? 'approve' : 'reject'}`); setError('')
+    try {
+      const note = adminNote[req._uid] || ''
+      if (approved) await resourcesApi.approveLateEntryApproval(req.id, { admin_note: note })
+      else await resourcesApi.rejectLateEntryApproval(req.id, { admin_note: note })
+      qc.invalidateQueries({ queryKey: ['late-entry-approvals'] })
+      qc.invalidateQueries({ queryKey: ['approval-count'] })
+      setExpanded(null)
+      flash(approved ? 'Late entry unlocked — resource has been notified.' : 'Late entry request rejected.')
+    } catch (err) { setError(extractError(err)) }
+    finally { setActionLoading(null) }
+  }
+
   async function handleApprove(id, kind, req) {
     setActionLoading(req?._uid ? req._uid + '_approve' : `${kind}-${id}_approve`); setError('')
     try {
       if (kind === 'timesheet') {
-        return handleTimesheetApproval(req || { id, _entryId: id?.toString().replace('timesheet-', '') })
+        await handleTimesheetApproval(req || { id, _entryId: id?.toString().replace('timesheet-', '') })
+        return
+      }
+      if (kind === 'late_entry') {
+        await handleLateEntryDecision(req, true)
+        return
       }
       const api = kind === 'timeline' ? timelineApprovalsApi : approvalsApi
       await api.approve(id, { admin_note: adminNote[req?._uid || id] || '' })
@@ -155,6 +199,10 @@ export default function ApprovalsPage() {
     const uid = `${kind}-${id}`
     setActionLoading(uid + '_reject'); setError('')
     try {
+      if (kind === 'late_entry') {
+        await handleLateEntryDecision({ id, _uid: `late-entry-${id}` }, false)
+        return
+      }
       const api = kind === 'timeline' ? timelineApprovalsApi : approvalsApi
       await api.reject(id, { admin_note: adminNote[uid] || '' })
       qc.invalidateQueries({ queryKey: ['approvals'] })
@@ -262,8 +310,9 @@ export default function ApprovalsPage() {
         : <span style={{ color: 'var(--success)' }}>All caught up ✓</span>
     }
     if (isManager) {
-      return pendingTimesheetCount > 0
-        ? <><span style={{ color: 'var(--warning)', fontWeight: 700 }}>{pendingTimesheetCount} timesheet{pendingTimesheetCount !== 1 ? 's' : ''} pending</span> · waiting for your approval</>
+      const count = pendingTimesheetCount + pendingLateEntryCount
+      return count > 0
+        ? <><span style={{ color: 'var(--warning)', fontWeight: 700 }}>{count} timesheet approval{count !== 1 ? 's' : ''}</span> · waiting for your review</>
         : <span style={{ color: 'var(--success)' }}>All caught up ✓</span>
     }
     return 'Your edit & delete requests'
@@ -272,7 +321,7 @@ export default function ApprovalsPage() {
   // FIX: Empty state copy is role-aware
   function getEmptyState() {
     if (isAdmin) return { title: 'No requests to review.', sub: 'Manager requests will appear here.' }
-    if (isManager) return { title: 'No pending timesheets.', sub: 'Submitted time entries from your resources will appear here for approval.' }
+    if (isManager) return { title: 'No pending timesheet approvals.', sub: 'Submitted entries and older-than-48-hours requests from your resources will appear here.' }
     return { title: 'No approval requests yet.', sub: 'Use "Request Edit" or "Request Delete" on a project.' }
   }
 
@@ -357,16 +406,16 @@ export default function ApprovalsPage() {
                       <div style={{ display:'flex', alignItems:'center', gap:6, flexWrap:'wrap', marginBottom:3 }}>
                         <span style={{ fontWeight:700, fontSize:'13px', color:'var(--text-0)' }}>{req.project_name || 'Unknown Project'}</span>
                         {/* FIX: Show resource name for timesheet entries so manager knows who submitted */}
-                        {req._kind === 'timesheet' && req.resource_name && (
+                        {(req._kind === 'timesheet' || req._kind === 'late_entry') && req.resource_name && (
                           <span style={{ fontSize:'11px', color:'var(--text-2)', fontWeight:500 }}>by {req.resource_name}</span>
                         )}
                         <span style={{ fontSize:'10px', fontWeight:700, padding:'2px 8px', borderRadius:'var(--r-full)', background:TYPE_BG[req.request_type], color:TYPE_COLOR[req.request_type], border:`1px solid ${TYPE_COLOR[req.request_type]}30`, textTransform:'uppercase', letterSpacing:'0.06em' }}>
-                          {req._kind === 'timesheet' ? `${req.hours}h timesheet` : req.request_type}
+                          {req._kind === 'timesheet' ? `${req.hours}h timesheet` : req._kind === 'late_entry' ? 'late entry unlock' : req.request_type}
                         </span>
                         <span style={{ fontSize:'10px', fontWeight:700, padding:'2px 8px', borderRadius:'var(--r-full)', background:STATUS_BG[req.status], color:STATUS_COLOR[req.status], border:`1px solid ${STATUS_COLOR[req.status]}30`, textTransform:'uppercase', letterSpacing:'0.06em' }}>{alreadyDone ? 'applied ✓' : req.status}</span>
                       </div>
                       <div style={{ fontSize:'12px', color:'var(--text-2)' }}>
-                        {isAdmin && req._kind !== 'timesheet' ? <><strong>{req.requested_by_name}</strong> · </> : ''}{timeAgo(req.created_at)}
+                        {isAdmin && req._kind !== 'timesheet' ? <><strong>{req.requested_by_name || req.resource_name}</strong> · </> : ''}{timeAgo(req.created_at)}
                         {req.resolved_by_name && <> · by <strong>{req.resolved_by_name}</strong></>}
                       </div>
                       {req.reason && <div style={{ fontSize:'12px', color:'var(--text-3)', marginTop:2, fontStyle:'italic' }}>"{req.reason}"</div>}
@@ -385,7 +434,7 @@ export default function ApprovalsPage() {
                     )}
 
                     {/* Quick approve button inline for timesheet rows — manager only */}
-                    {isManager && req._kind === 'timesheet' && req.status === 'pending' && !isApplying && !isOpen && (
+                    {canReviewTimesheets && (req._kind === 'timesheet' || req._kind === 'late_entry') && req.status === 'pending' && !isApplying && !isOpen && (
                       <button
                         onClick={e => { e.stopPropagation(); handleApprove(req.id, req._kind, req) }}
                         disabled={!!actionLoading}
@@ -394,7 +443,7 @@ export default function ApprovalsPage() {
                         onMouseLeave={e => e.currentTarget.style.background='rgba(74,222,128,0.12)'}
                       >
                         <CheckCircle size={13} />
-                        {actionLoading === req._uid + '_approve' ? 'Approving…' : 'Approve'}
+                        {actionLoading === req._uid + '_approve' ? 'Approving…' : req._kind === 'late_entry' ? 'Unlock' : 'Approve'}
                       </button>
                     )}
 
@@ -535,24 +584,47 @@ export default function ApprovalsPage() {
                         </div>
                       )}
 
+                      {req._kind === 'late_entry' && (
+                        <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(160px, 1fr))', gap:10 }}>
+                          {[
+                            { label:'Resource', value: req.resource_name },
+                            { label:'Requested date', value: req.date },
+                            { label:'Reason', value: req.reason || 'No reason provided' },
+                          ].map(({ label, value }) => (
+                            <div key={label} style={{ padding:'10px 14px', background:'var(--bg-1)', border:'1px solid var(--border)', borderRadius:'var(--r-md)' }}>
+                              <div style={{ fontSize:'10px', fontWeight:700, color:'var(--text-3)', textTransform:'uppercase', letterSpacing:'0.06em', marginBottom:4 }}>{label}</div>
+                              <div style={{ fontSize:'13px', fontWeight:600, color:'var(--text-0)' }}>{value || '—'}</div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+
                       {/* Approve/Reject buttons */}
-                      {(isAdmin && req._kind !== 'timesheet' || isManager && req._kind === 'timesheet') && req.status === 'pending' && (
+                      {((isAdmin && req._kind !== 'timesheet' && req._kind !== 'late_entry') || (canReviewTimesheets && (req._kind === 'timesheet' || req._kind === 'late_entry'))) && req.status === 'pending' && (
                         <>
                           {req._kind !== 'timesheet' && (
                             <div>
-                              <div style={{ fontSize:'11px', fontWeight:700, color:'var(--text-3)', textTransform:'uppercase', letterSpacing:'0.08em', marginBottom:6 }}>Note to Manager <span style={{ fontWeight:400 }}>(optional)</span></div>
-                              <textarea value={adminNote[`${req._kind}-${req.id}`] || ''} onChange={e => setAdminNote(n => ({ ...n, [`${req._kind}-${req.id}`]: e.target.value }))} placeholder="Explain your decision…" rows={2}
+                              <div style={{ fontSize:'11px', fontWeight:700, color:'var(--text-3)', textTransform:'uppercase', letterSpacing:'0.08em', marginBottom:6 }}>{req._kind === 'late_entry' ? 'Note to Resource' : 'Note to Manager'} <span style={{ fontWeight:400 }}>(optional)</span></div>
+                              <textarea value={adminNote[req._uid] || adminNote[`${req._kind}-${req.id}`] || ''} onChange={e => setAdminNote(n => ({ ...n, [req._uid]: e.target.value, [`${req._kind}-${req.id}`]: e.target.value }))} placeholder="Explain your decision…" rows={2}
                                 style={{ width:'100%', boxSizing:'border-box', background:'var(--bg-1)', border:'1px solid var(--border)', borderRadius:'var(--r-md)', color:'var(--text-0)', fontSize:'13px', padding:'10px 12px', outline:'none', resize:'vertical', fontFamily:'inherit' }}
                                 onFocus={e => e.target.style.borderColor='var(--accent)'} onBlur={e => e.target.style.borderColor='var(--border)'}
                               />
                             </div>
                           )}
                           <div style={{ display:'flex', gap:10, justifyContent:'flex-end', flexWrap: isMobile ? 'wrap' : 'nowrap' }}>
-                            {req._kind === 'timesheet' && (
+                            {(req._kind === 'timesheet' || req._kind === 'late_entry') && (
+                              <>
+                              {req._kind === 'late_entry' && (
+                                <button onClick={() => handleLateEntryDecision(req, false)} disabled={!!actionLoading}
+                                  style={{ display:'flex', alignItems:'center', gap:6, background:'rgba(248,113,113,0.1)', border:'1px solid rgba(248,113,113,0.4)', borderRadius:'var(--r-md)', padding:'9px 20px', cursor:'pointer', color:'var(--danger)', fontSize:'13px', fontWeight:600, opacity:actionLoading?0.6:1, transition:'all var(--t-fast)', flex: isMobile ? '1 1 auto' : 'none', justifyContent:'center' }}>
+                                  <XCircle size={14}/> {actionLoading === `${req._uid}_reject` ? 'Rejecting…' : 'Reject'}
+                                </button>
+                              )}
                               <button onClick={() => handleApprove(req.id, req._kind, req)} disabled={!!actionLoading}
                                 style={{ display:'flex', alignItems:'center', gap:6, background:'rgba(74,222,128,0.12)', border:'1px solid rgba(74,222,128,0.4)', borderRadius:'var(--r-md)', padding:'9px 20px', cursor:'pointer', color:'var(--success)', fontSize:'13px', fontWeight:600, opacity:actionLoading?0.6:1, transition:'all var(--t-fast)', flex: isMobile ? '1 1 auto' : 'none', justifyContent:'center' }}>
-                                <CheckCircle size={14}/> {actionLoading === req._uid + '_approve' ? 'Approving…' : 'Approve Entry'}
+                                <CheckCircle size={14}/> {actionLoading === req._uid + '_approve' ? 'Approving…' : req._kind === 'late_entry' ? 'Unlock Timesheet' : 'Approve Entry'}
                               </button>
+                              </>
                             )}
                             {isAdmin && req._kind !== 'timesheet' && (
                               <>

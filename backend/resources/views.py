@@ -1,6 +1,7 @@
 import logging
 from decimal import Decimal
 
+from django.conf import settings
 from django.db.models import Case, Count, DecimalField, F, Q, Sum, Value, When
 from django.db.models.functions import Coalesce, Greatest
 from django.utils import timezone
@@ -15,6 +16,7 @@ from accounts.models import User
 from accounts.permissions import IsAdmin, IsAdminOrManager
 from nexus.excel import workbook_response
 from notifications.utils import email_no_reply, notify_project_team, notify_user
+from projects.models import Project
 from timelines.models import Timeline
 from .models import ResourceProfile, TimeEntry, TimesheetLateEntryApproval
 from .serializers import ResourceProfileSerializer, TimeEntrySerializer, TimesheetLateEntryApprovalSerializer
@@ -23,6 +25,10 @@ logger = logging.getLogger('nexus')
 
 ACTIVE_PROJECT_STATUSES = ['planning', 'in_progress', 'review', 'on_hold']
 HOURS_OUTPUT = DecimalField(max_digits=10, decimal_places=2)
+
+
+def _app_url(path):
+    return f"{settings.FRONTEND_URL.rstrip('/')}/{path.lstrip('/')}"
 
 
 def _sync_timeline_hours(timeline_id):
@@ -37,11 +43,13 @@ def _sync_timeline_hours(timeline_id):
 
 def _timesheet_approvers(entry):
     recipients = []
-    if entry.resource.manager and entry.resource.manager.is_active and entry.resource.manager.role == User.Role.MANAGER:
+    if entry.resource.manager and entry.resource.manager.is_active and entry.resource.manager.role in (User.Role.MANAGER, User.Role.ADMIN):
         recipients.append(entry.resource.manager)
     project_manager = getattr(entry.project, 'manager', None)
-    if project_manager and project_manager.is_active and project_manager.role == User.Role.MANAGER:
+    if project_manager and project_manager.is_active and project_manager.role in (User.Role.MANAGER, User.Role.ADMIN):
         recipients.append(project_manager)
+    if not recipients:
+        recipients.extend(User.objects.filter(role=User.Role.ADMIN, is_active=True))
     deduped = []
     seen = set()
     for user in recipients:
@@ -78,13 +86,16 @@ def _send_timesheet_submission_email(entry):
         details=[
             ('Resource', entry.resource.user.name),
             ('Project', entry.project.name),
+            ('Client', entry.project.client.name if entry.project.client else 'Not assigned'),
             ('Phase', scope),
             ('Date', entry.date.isoformat()),
+            ('Time', f"{entry.start_time.strftime('%H:%M')} - {entry.end_time.strftime('%H:%M')}" if entry.start_time and entry.end_time else 'Hours-only entry'),
             ('Hours logged', entry.hours),
             ('Approval status', 'Pending manager review'),
             ('Remaining phase hours', f"{max((entry.timeline.hours_allocated if entry.timeline else 0) - float(entry.timeline.hours_consumed if entry.timeline else 0), 0):.2f}h" if entry.timeline else 'See dashboard'),
+            ('Review link', _app_url('/timesheet?tab=approvals')),
         ],
-        footer_note='This is an automated no-reply notification from AstraTSM. Please review the work log in the application.',
+        footer_note='This is an automated no-reply notification from AstraTSM. The link opens inside the authenticated application session.',
     )
 
 
@@ -99,12 +110,50 @@ def _send_timesheet_approval_email(entry, approver):
         details=[
             ('Resource', entry.resource.user.name),
             ('Project', entry.project.name),
+            ('Client', entry.project.client.name if entry.project.client else 'Not assigned'),
             ('Phase', entry.timeline.name if entry.timeline else 'Project-level log'),
             ('Date', entry.date.isoformat()),
+            ('Time', f"{entry.start_time.strftime('%H:%M')} - {entry.end_time.strftime('%H:%M')}" if entry.start_time and entry.end_time else 'Hours-only entry'),
             ('Hours approved', entry.hours),
             ('Approved by', approver.name),
+            ('Open timesheet', _app_url('/timesheet')),
         ],
         footer_note='This is an automated no-reply notification from AstraTSM.',
+    )
+
+
+def _send_late_entry_request_email(request_obj, recipients):
+    if not recipients:
+        return
+    email_no_reply(
+        recipients,
+        subject=f'Late timesheet approval needed: {request_obj.resource.user.name}',
+        heading='A late timesheet request needs review.',
+        intro='A resource requested permission to submit a timesheet entry older than 48 hours.',
+        details=[
+            ('Resource', request_obj.resource.user.name),
+            ('Date', request_obj.date.isoformat()),
+            ('Reason', request_obj.reason or 'No reason provided'),
+            ('Review link', _app_url('/timesheet?tab=approvals')),
+        ],
+        footer_note='This is an automated no-reply notification from AstraTSM. The link opens inside the authenticated application session.',
+    )
+
+
+def _send_late_entry_resolution_email(request_obj):
+    email_no_reply(
+        [request_obj.resource.user],
+        subject=f'Late timesheet request {request_obj.status}: {request_obj.date}',
+        heading=f'Your late timesheet request was {request_obj.status}.',
+        intro='A manager reviewed your request to submit an older timesheet entry.',
+        details=[
+            ('Date', request_obj.date.isoformat()),
+            ('Status', request_obj.status.title()),
+            ('Reviewed by', request_obj.resolved_by.name if request_obj.resolved_by else 'AstraTSM'),
+            ('Note', request_obj.admin_note or 'No note provided'),
+            ('Open timesheet', _app_url('/timesheet')),
+        ],
+        footer_note='This is an automated no-reply notification from AstraTSM. The link opens inside the authenticated application session.',
     )
 
 
@@ -217,6 +266,8 @@ class ResourceProfileViewSet(viewsets.ModelViewSet):
                 entry.date.isoformat(),
                 entry.project.name if entry.project else '',
                 entry.timeline.name if entry.timeline else 'Project-level log',
+                entry.start_time.strftime('%H:%M') if entry.start_time else '',
+                entry.end_time.strftime('%H:%M') if entry.end_time else '',
                 float(entry.hours),
                 'Approved' if entry.approved else 'Pending',
                 entry.approved_by.name if entry.approved_by else '',
@@ -229,13 +280,63 @@ class ResourceProfileViewSet(viewsets.ModelViewSet):
         return workbook_response(
             filename=filename,
             sheet_name='Timesheet',
-            headers=['Date', 'Project', 'Phase', 'Hours', 'Approval Status', 'Approved By', 'Approved At', 'Description'],
+            headers=['Date', 'Project', 'Phase', 'From', 'To', 'Hours', 'Approval Status', 'Approved By', 'Approved At', 'Description'],
             rows=rows,
         )
 
+    @action(detail=False, methods=['get'], permission_classes=[IsAuthenticated])
+    def my_dashboard(self, request):
+        """Lightweight resource self-dashboard: projects, clients, recent entries."""
+        user = request.user
+        try:
+            profile = user.resource_profile
+        except ResourceProfile.DoesNotExist:
+            return Response({'projects': [], 'clients': [], 'entries': [], 'stats': {}})
+
+        projects_qs = (
+            Project.objects
+            .select_related('client', 'manager')
+            .filter(status__in=ACTIVE_PROJECT_STATUSES)
+            .values('id', 'name', 'status', 'progress', 'start_date', 'end_date',
+                    'client__id', 'client__name', 'manager__name', 'hours')
+            .annotate(
+                submitted_hours=Coalesce(Sum('timeentries__hours'), Value(0), output_field=HOURS_OUTPUT),
+                remaining_hours=Greatest(F('hours') - Coalesce(Sum('timeentries__hours'), Value(0), output_field=HOURS_OUTPUT), Value(0), output_field=HOURS_OUTPUT),
+            )
+            .order_by('name')[:200]
+        )
+        projects = list(projects_qs)
+        clients = (
+            Project.objects
+            .filter(status__in=ACTIVE_PROJECT_STATUSES, client__isnull=False)
+            .select_related('client')
+            .values('client__id', 'client__name', 'client__industry')
+            .distinct()[:200]
+        )
+        entries = (
+            profile.timeentries
+            .select_related('project', 'project__client')
+            .order_by('-date', '-created_at')
+            .values('id', 'date', 'start_time', 'end_time', 'hours', 'description', 'approved', 'project__name', 'project__id', 'project__client__name')[:60]
+        )
+        total_hours = profile.timeentries.aggregate(t=Coalesce(Sum('hours'), Value(0), output_field=HOURS_OUTPUT))['t'] or 0
+        approved_hours = profile.timeentries.filter(approved=True).aggregate(t=Coalesce(Sum('hours'), Value(0), output_field=HOURS_OUTPUT))['t'] or 0
+
+        return Response({
+            'projects': projects,
+            'clients': list(clients),
+            'entries': list(entries),
+            'stats': {
+                'total_hours': float(total_hours),
+                'approved_hours': float(approved_hours),
+                'pending_hours': float(total_hours) - float(approved_hours),
+                'active_project_count': len(projects),
+            },
+        })
+
 
 class TimeEntryViewSet(viewsets.ModelViewSet):
-    queryset = TimeEntry.objects.select_related('resource__user', 'resource__manager', 'project__manager', 'timeline', 'approved_by')
+    queryset = TimeEntry.objects.select_related('resource__user', 'resource__manager', 'project__manager', 'project__client', 'timeline', 'approved_by')
     serializer_class = TimeEntrySerializer
     permission_classes = [IsAuthenticated]
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
@@ -246,13 +347,22 @@ class TimeEntryViewSet(viewsets.ModelViewSet):
         user = self.request.user
         qs = super().get_queryset()
         if user.role == User.Role.ADMIN:
-            return qs
-        if user.role == User.Role.MANAGER:
-            return qs.filter(Q(resource__manager=user) | Q(project__manager=user)).distinct()
-        try:
-            return qs.filter(resource=user.resource_profile)
-        except ResourceProfile.DoesNotExist as exc:
-            raise PermissionDenied('Your account does not have a resource profile.') from exc
+            pass  # full access
+        elif user.role == User.Role.MANAGER:
+            qs = qs.filter(Q(resource__manager=user) | Q(project__manager=user)).distinct()
+        else:
+            try:
+                qs = qs.filter(resource=user.resource_profile)
+            except ResourceProfile.DoesNotExist as exc:
+                raise PermissionDenied('Your account does not have a resource profile.') from exc
+        # Date range support: ?date_after=YYYY-MM-DD&date_before=YYYY-MM-DD
+        date_after = self.request.query_params.get('date_after')
+        date_before = self.request.query_params.get('date_before')
+        if date_after:
+            qs = qs.filter(date__gte=date_after)
+        if date_before:
+            qs = qs.filter(date__lte=date_before)
+        return qs
 
     def perform_create(self, serializer):
         user = self.request.user
@@ -280,7 +390,7 @@ class TimeEntryViewSet(viewsets.ModelViewSet):
             title='Work log submitted',
             message=f'Your {entry.hours}h entry for "{entry.project.name}" has been recorded and sent for review.',
             project=entry.project,
-            action_url='/timelines',
+            action_url='/timesheet',
         )
         entry.timeline = TimeEntry.objects.select_related('timeline').get(pk=entry.pk).timeline
         _send_timesheet_submission_email(entry)
@@ -300,11 +410,12 @@ class TimeEntryViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['patch'], permission_classes=[IsAuthenticated])
     def approve(self, request, pk=None):
         entry = self.get_object()
-        if request.user.role != User.Role.MANAGER:
-            return Response({'detail': 'Only managers can approve time entries.'}, status=status.HTTP_403_FORBIDDEN)
-        can_approve = entry.resource.manager_id == request.user.id or entry.project.manager_id == request.user.id
-        if not can_approve:
-            return Response({'detail': 'You can only approve entries for resources or projects assigned to you.'}, status=status.HTTP_403_FORBIDDEN)
+        if request.user.role not in (User.Role.MANAGER, User.Role.ADMIN):
+            return Response({'detail': 'Only managers or admins can approve time entries.'}, status=status.HTTP_403_FORBIDDEN)
+        if request.user.role == User.Role.MANAGER:
+            can_approve = entry.resource.manager_id == request.user.id or entry.project.manager_id == request.user.id
+            if not can_approve:
+                return Response({'detail': 'You can only approve entries for resources or projects assigned to you.'}, status=status.HTTP_403_FORBIDDEN)
         if entry.approved:
             return Response({'detail': 'Already approved.'}, status=status.HTTP_400_BAD_REQUEST)
         entry.approved = True
@@ -350,24 +461,40 @@ class TimesheetLateEntryApprovalViewSet(viewsets.ModelViewSet):
         if not hasattr(user, 'resource_profile'):
             raise PermissionDenied('Your account does not have a resource profile.')
         request_obj = serializer.save(resource=user.resource_profile, requested_by=user)
-        admins = list(User.objects.filter(role=User.Role.ADMIN, is_active=True))
-        if admins:
+        managers = []
+        if request_obj.resource.manager and request_obj.resource.manager.is_active:
+            managers.append(request_obj.resource.manager)
+        managers.extend(User.objects.filter(role=User.Role.ADMIN, is_active=True))
+        managers = list(dict.fromkeys(managers))
+        if managers:
             notify_project_team(
-                users=admins,
+                users=managers,
                 notif_type='update',
                 title=f'Late timesheet approval needed: {user.name}',
-                message=f'{user.name} requested late timesheet approval for {request_obj.date}.',
-                action_url='/approvals',
+                message=f'{user.name} requested approval to submit timesheet for {request_obj.date}.',
+                action_url='/timesheet?tab=approvals',
             )
+            _send_late_entry_request_email(request_obj, managers)
 
     def get_permissions(self):
         if self.action in ('update', 'partial_update', 'destroy', 'approve', 'reject'):
-            return [IsAdmin()]
+            return [IsAdminOrManager()]
         return [IsAuthenticated()]
 
-    @action(detail=True, methods=['post'], permission_classes=[IsAdmin])
+    def _can_resolve(self, request_obj):
+        user = self.request.user
+        if user.role == User.Role.ADMIN:
+            return True
+        return user.role == User.Role.MANAGER and (
+            request_obj.resource.manager_id == user.id
+            or request_obj.resource.user.assigned_projects.filter(manager=user).exists()
+        )
+
+    @action(detail=True, methods=['post'], permission_classes=[IsAdminOrManager])
     def approve(self, request, pk=None):
         req = self.get_object()
+        if not self._can_resolve(req):
+            return Response({'detail': 'You can only approve late entries for your resources.'}, status=status.HTTP_403_FORBIDDEN)
         if req.status != TimesheetLateEntryApproval.Status.PENDING:
             return Response({'detail': 'Already resolved.'}, status=status.HTTP_400_BAD_REQUEST)
         req.status = TimesheetLateEntryApproval.Status.APPROVED
@@ -380,13 +507,16 @@ class TimesheetLateEntryApprovalViewSet(viewsets.ModelViewSet):
             notif_type='update',
             title='Late timesheet request approved',
             message=f'You can now submit timesheet for {req.date}.',
-            action_url='/timelines',
+            action_url='/timesheet',
         )
+        _send_late_entry_resolution_email(req)
         return Response({'detail': 'Approved.'})
 
-    @action(detail=True, methods=['post'], permission_classes=[IsAdmin])
+    @action(detail=True, methods=['post'], permission_classes=[IsAdminOrManager])
     def reject(self, request, pk=None):
         req = self.get_object()
+        if not self._can_resolve(req):
+            return Response({'detail': 'You can only reject late entries for your resources.'}, status=status.HTTP_403_FORBIDDEN)
         if req.status != TimesheetLateEntryApproval.Status.PENDING:
             return Response({'detail': 'Already resolved.'}, status=status.HTTP_400_BAD_REQUEST)
         req.status = TimesheetLateEntryApproval.Status.REJECTED
@@ -399,6 +529,7 @@ class TimesheetLateEntryApprovalViewSet(viewsets.ModelViewSet):
             notif_type='update',
             title='Late timesheet request rejected',
             message=f'Your request for {req.date} was rejected.',
-            action_url='/timelines',
+            action_url='/timesheet',
         )
+        _send_late_entry_resolution_email(req)
         return Response({'detail': 'Rejected.'})

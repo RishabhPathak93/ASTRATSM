@@ -223,10 +223,8 @@ class ProjectViewSet(viewsets.ModelViewSet):
             base = base.prefetch_related('resources', 'updates', 'documents')
         if user.role == User.Role.ADMIN:
             qs = base.all()
-        elif user.role == User.Role.MANAGER:
-            qs = base.filter(manager=user)
-        elif user.role == User.Role.RESOURCE:
-            qs = base.filter(resources=user)
+        elif user.role in (User.Role.MANAGER, User.Role.RESOURCE):
+            qs = base.filter(status__in=['planning', 'in_progress', 'review', 'on_hold'])
         else:
             qs = base.none()
 

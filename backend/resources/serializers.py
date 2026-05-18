@@ -1,3 +1,6 @@
+from datetime import datetime, timedelta
+from decimal import Decimal
+
 from django.core.exceptions import ValidationError as DjangoValidationError
 from django.db import transaction
 from django.utils import timezone
@@ -105,6 +108,7 @@ class ResourceProfileSerializer(serializers.ModelSerializer):
 class TimeEntrySerializer(serializers.ModelSerializer):
     resource_name = serializers.CharField(source='resource.user.name', read_only=True)
     project_name = serializers.CharField(source='project.name', read_only=True)
+    project_client_name = serializers.CharField(source='project.client.name', read_only=True)
     timeline_name = serializers.CharField(source='timeline.name', read_only=True)
     resource_user = serializers.IntegerField(source='resource.user_id', read_only=True)
 
@@ -112,7 +116,7 @@ class TimeEntrySerializer(serializers.ModelSerializer):
         model = TimeEntry
         fields = [
             'id', 'resource', 'resource_user', 'resource_name', 'project', 'project_name', 'timeline', 'timeline_name',
-            'date', 'hours', 'description', 'approved', 'approved_by',
+            'project_client_name', 'date', 'start_time', 'end_time', 'hours', 'description', 'approved', 'approved_by',
             'approved_at', 'created_at',
         ]
         read_only_fields = ['id', 'approved', 'approved_by', 'approved_at', 'created_at']
@@ -140,15 +144,24 @@ class TimeEntrySerializer(serializers.ModelSerializer):
         project = attrs.get('project') or getattr(self.instance, 'project', None)
         timeline = attrs.get('timeline') if 'timeline' in attrs else getattr(self.instance, 'timeline', None)
         entry_date = attrs.get('date') or getattr(self.instance, 'date', None)
+        start_time = attrs.get('start_time') if 'start_time' in attrs else getattr(self.instance, 'start_time', None)
+        end_time = attrs.get('end_time') if 'end_time' in attrs else getattr(self.instance, 'end_time', None)
 
         if entry_date and entry_date > timezone.localdate():
             raise serializers.ValidationError({'date': 'Time entries cannot be logged in the future.'})
 
-        if resource and project:
-            is_project_resource = project.resources.filter(pk=resource.user_id).exists()
-            is_phase_assignee = project.timelines.filter(assignees__pk=resource.user_id).exists()
-            if not (is_project_resource or is_phase_assignee):
-                raise serializers.ValidationError({'project': 'This resource is not assigned to the selected project or any of its phases.'})
+        if start_time and end_time:
+            start_dt = datetime.combine(entry_date, start_time) if entry_date else None
+            end_dt = datetime.combine(entry_date, end_time) if entry_date else None
+            if start_dt and end_dt:
+                if end_dt <= start_dt:
+                    raise serializers.ValidationError({'end_time': 'End time must be after start time.'})
+                duration = Decimal(str((end_dt - start_dt).total_seconds() / 3600)).quantize(Decimal('0.01'))
+                if duration < Decimal('0.25'):
+                    raise serializers.ValidationError({'end_time': 'Minimum entry is 15 minutes.'})
+                if duration > Decimal('24'):
+                    raise serializers.ValidationError({'end_time': 'Cannot log more than 24 hours in a single entry.'})
+                attrs['hours'] = duration
 
         if timeline:
             if not project:
@@ -156,25 +169,24 @@ class TimeEntrySerializer(serializers.ModelSerializer):
                 attrs['project'] = project
             if timeline.project_id != project.id:
                 raise serializers.ValidationError({'timeline': 'Selected phase does not belong to the selected project.'})
-            if resource and not (timeline.assignees.filter(pk=resource.user_id).exists() or timeline.project.resources.filter(pk=resource.user_id).exists()):
-                raise serializers.ValidationError({'timeline': 'This resource is not assigned to the selected phase or its project.'})
 
         if user and user.is_authenticated and user.role == 'resource':
             if not hasattr(user, 'resource_profile'):
                 raise serializers.ValidationError('Your account does not have a resource profile.')
             if resource and resource.pk != user.resource_profile.pk:
                 raise serializers.ValidationError({'resource': 'You can only log time for yourself.'})
-            if timeline and not timeline.assignees.filter(pk=user.pk).exists() and not timeline.project.resources.filter(pk=user.pk).exists():
-                raise serializers.ValidationError({'timeline': 'You can only log time for phases assigned to you.'})
-            if entry_date and entry_date < timezone.localdate() and entry_date.weekday() < 5:
+            if entry_date and entry_date.weekday() < 5:
+                cutoff = timezone.now() - timedelta(hours=48)
+                entry_end = datetime.combine(entry_date, end_time or datetime.max.time())
+                entry_end = timezone.make_aware(entry_end, timezone.get_current_timezone())
                 approved_backfill = TimesheetLateEntryApproval.objects.filter(
                     resource=user.resource_profile,
                     date=entry_date,
                     status=TimesheetLateEntryApproval.Status.APPROVED,
                 ).exists()
-                if not approved_backfill:
+                if entry_end < cutoff and not approved_backfill:
                     raise serializers.ValidationError({
-                        'date': 'Late timesheet entry requires admin approval for this date.'
+                        'date': 'Entries older than 48 hours require manager approval for this date.'
                     })
 
         return attrs
@@ -216,8 +228,19 @@ class TimesheetLateEntryApprovalSerializer(serializers.ModelSerializer):
             resource = attrs['resource']
         if not resource:
             raise serializers.ValidationError({'resource': 'Resource is required.'})
-        if date and date >= timezone.localdate():
-            raise serializers.ValidationError({'date': 'Late entry approval is only for past dates.'})
-        if date and date.weekday() >= 5:
-            raise serializers.ValidationError({'date': 'Late entry approval is only required for weekdays.'})
+        if date:
+            entry_end = timezone.make_aware(
+                datetime.combine(date, datetime.max.time()),
+                timezone.get_current_timezone(),
+            )
+            if entry_end >= timezone.now() - timedelta(hours=48):
+                raise serializers.ValidationError({'date': 'Approval is only needed for entries older than 48 hours.'})
+            if date.weekday() >= 5:
+                raise serializers.ValidationError({'date': 'Late entry approval is only required for weekdays.'})
+            existing = TimesheetLateEntryApproval.objects.filter(resource=resource, date=date).order_by('-created_at').first()
+            if existing:
+                if existing.status == TimesheetLateEntryApproval.Status.PENDING:
+                    raise serializers.ValidationError({'date': 'A manager approval request is already pending for this date.'})
+                if existing.status == TimesheetLateEntryApproval.Status.APPROVED:
+                    raise serializers.ValidationError({'date': 'This date is already approved. You can submit the timesheet now.'})
         return attrs

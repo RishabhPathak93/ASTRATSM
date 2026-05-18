@@ -1,434 +1,224 @@
-ERROR 2026-03-18 16:38:13,434 exception 20316 1696 Invalid HTTP_HOST header: '192.168.29.103:8000'. You may need to add '192.168.29.103' to ALLOWED_HOSTS.
+ERROR 2026-05-12 09:25:41,809 exception 9004 22800 Invalid HTTP_HOST header: 'localhost:8000'. You may need to add 'localhost' to ALLOWED_HOSTS.
 Traceback (most recent call last):
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+  File "C:\Users\RISHABH\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
     response = get_response(request)
                ^^^^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\utils\deprecation.py", line 133, in __call__
+  File "C:\Users\RISHABH\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\utils\deprecation.py", line 133, in __call__
     response = self.process_request(request)
                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\middleware\common.py", line 48, in process_request
-    host = request.get_host()
-           ^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\http\request.py", line 150, in get_host
+  File "C:\Users\RISHABH\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\middleware\security.py", line 28, in process_request
+    host = self.redirect_host or request.get_host()
+                                 ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\http\request.py", line 150, in get_host
     raise DisallowedHost(msg)
-django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: '192.168.29.103:8000'. You may need to add '192.168.29.103' to ALLOWED_HOSTS.
-ERROR 2026-03-18 16:39:25,602 exception 20316 17284 Invalid HTTP_HOST header: '192.168.29.103:8000'. You may need to add '192.168.29.103' to ALLOWED_HOSTS.
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: 'localhost:8000'. You may need to add 'localhost' to ALLOWED_HOSTS.
+ERROR 2026-05-12 09:26:01,088 exception 9004 8140 Invalid HTTP_HOST header: 'localhost:8000'. You may need to add 'localhost' to ALLOWED_HOSTS.
 Traceback (most recent call last):
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+  File "C:\Users\RISHABH\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
     response = get_response(request)
                ^^^^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\utils\deprecation.py", line 133, in __call__
+  File "C:\Users\RISHABH\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\utils\deprecation.py", line 133, in __call__
     response = self.process_request(request)
                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\middleware\common.py", line 48, in process_request
-    host = request.get_host()
-           ^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\http\request.py", line 150, in get_host
+  File "C:\Users\RISHABH\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\middleware\security.py", line 28, in process_request
+    host = self.redirect_host or request.get_host()
+                                 ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\http\request.py", line 150, in get_host
     raise DisallowedHost(msg)
-django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: '192.168.29.103:8000'. You may need to add '192.168.29.103' to ALLOWED_HOSTS.
-ERROR 2026-03-18 16:39:28,953 exception 20316 8428 Invalid HTTP_HOST header: '192.168.29.103:8000'. You may need to add '192.168.29.103' to ALLOWED_HOSTS.
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: 'localhost:8000'. You may need to add 'localhost' to ALLOWED_HOSTS.
+ERROR 2026-05-12 09:26:01,752 exception 9004 8676 Invalid HTTP_HOST header: 'localhost:8000'. You may need to add 'localhost' to ALLOWED_HOSTS.
 Traceback (most recent call last):
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+  File "C:\Users\RISHABH\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
     response = get_response(request)
                ^^^^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\utils\deprecation.py", line 133, in __call__
+  File "C:\Users\RISHABH\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\utils\deprecation.py", line 133, in __call__
     response = self.process_request(request)
                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\middleware\common.py", line 48, in process_request
-    host = request.get_host()
-           ^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\http\request.py", line 150, in get_host
+  File "C:\Users\RISHABH\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\middleware\security.py", line 28, in process_request
+    host = self.redirect_host or request.get_host()
+                                 ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\http\request.py", line 150, in get_host
     raise DisallowedHost(msg)
-django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: '192.168.29.103:8000'. You may need to add '192.168.29.103' to ALLOWED_HOSTS.
-ERROR 2026-03-18 16:39:29,036 exception 20316 20040 Invalid HTTP_HOST header: '192.168.29.103:8000'. You may need to add '192.168.29.103' to ALLOWED_HOSTS.
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: 'localhost:8000'. You may need to add 'localhost' to ALLOWED_HOSTS.
+ERROR 2026-05-12 09:26:02,112 exception 9004 15472 Invalid HTTP_HOST header: 'localhost:8000'. You may need to add 'localhost' to ALLOWED_HOSTS.
 Traceback (most recent call last):
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+  File "C:\Users\RISHABH\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
     response = get_response(request)
                ^^^^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\utils\deprecation.py", line 133, in __call__
+  File "C:\Users\RISHABH\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\utils\deprecation.py", line 133, in __call__
     response = self.process_request(request)
                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\middleware\common.py", line 48, in process_request
-    host = request.get_host()
-           ^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\http\request.py", line 150, in get_host
+  File "C:\Users\RISHABH\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\middleware\security.py", line 28, in process_request
+    host = self.redirect_host or request.get_host()
+                                 ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\http\request.py", line 150, in get_host
     raise DisallowedHost(msg)
-django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: '192.168.29.103:8000'. You may need to add '192.168.29.103' to ALLOWED_HOSTS.
-ERROR 2026-03-18 17:04:24,319 exception 20316 19632 Invalid HTTP_HOST header: '192.168.29.103:8000'. You may need to add '192.168.29.103' to ALLOWED_HOSTS.
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: 'localhost:8000'. You may need to add 'localhost' to ALLOWED_HOSTS.
+ERROR 2026-05-12 09:26:02,473 exception 9004 16980 Invalid HTTP_HOST header: 'localhost:8000'. You may need to add 'localhost' to ALLOWED_HOSTS.
 Traceback (most recent call last):
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+  File "C:\Users\RISHABH\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
     response = get_response(request)
                ^^^^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\utils\deprecation.py", line 133, in __call__
+  File "C:\Users\RISHABH\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\utils\deprecation.py", line 133, in __call__
     response = self.process_request(request)
                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\middleware\common.py", line 48, in process_request
-    host = request.get_host()
-           ^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\http\request.py", line 150, in get_host
+  File "C:\Users\RISHABH\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\middleware\security.py", line 28, in process_request
+    host = self.redirect_host or request.get_host()
+                                 ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\http\request.py", line 150, in get_host
     raise DisallowedHost(msg)
-django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: '192.168.29.103:8000'. You may need to add '192.168.29.103' to ALLOWED_HOSTS.
-ERROR 2026-03-18 17:04:27,477 exception 20316 9540 Invalid HTTP_HOST header: '192.168.29.103:8000'. You may need to add '192.168.29.103' to ALLOWED_HOSTS.
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: 'localhost:8000'. You may need to add 'localhost' to ALLOWED_HOSTS.
+ERROR 2026-05-12 09:26:02,651 exception 9004 18604 Invalid HTTP_HOST header: 'localhost:8000'. You may need to add 'localhost' to ALLOWED_HOSTS.
 Traceback (most recent call last):
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+  File "C:\Users\RISHABH\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
     response = get_response(request)
                ^^^^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\utils\deprecation.py", line 133, in __call__
+  File "C:\Users\RISHABH\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\utils\deprecation.py", line 133, in __call__
     response = self.process_request(request)
                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\middleware\common.py", line 48, in process_request
-    host = request.get_host()
-           ^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\http\request.py", line 150, in get_host
+  File "C:\Users\RISHABH\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\middleware\security.py", line 28, in process_request
+    host = self.redirect_host or request.get_host()
+                                 ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\http\request.py", line 150, in get_host
     raise DisallowedHost(msg)
-django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: '192.168.29.103:8000'. You may need to add '192.168.29.103' to ALLOWED_HOSTS.
-ERROR 2026-03-18 17:04:27,544 exception 20316 1488 Invalid HTTP_HOST header: '192.168.29.103:8000'. You may need to add '192.168.29.103' to ALLOWED_HOSTS.
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: 'localhost:8000'. You may need to add 'localhost' to ALLOWED_HOSTS.
+ERROR 2026-05-12 09:26:03,113 exception 9004 25228 Invalid HTTP_HOST header: 'localhost:8000'. You may need to add 'localhost' to ALLOWED_HOSTS.
 Traceback (most recent call last):
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+  File "C:\Users\RISHABH\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
     response = get_response(request)
                ^^^^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\utils\deprecation.py", line 133, in __call__
+  File "C:\Users\RISHABH\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\utils\deprecation.py", line 133, in __call__
     response = self.process_request(request)
                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\middleware\common.py", line 48, in process_request
-    host = request.get_host()
-           ^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\http\request.py", line 150, in get_host
+  File "C:\Users\RISHABH\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\middleware\security.py", line 28, in process_request
+    host = self.redirect_host or request.get_host()
+                                 ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\http\request.py", line 150, in get_host
     raise DisallowedHost(msg)
-django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: '192.168.29.103:8000'. You may need to add '192.168.29.103' to ALLOWED_HOSTS.
-ERROR 2026-03-18 17:05:24,413 exception 19200 6660 Invalid HTTP_HOST header: '192.168.29.103:8000'. You may need to add '192.168.29.103' to ALLOWED_HOSTS.
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: 'localhost:8000'. You may need to add 'localhost' to ALLOWED_HOSTS.
+ERROR 2026-05-12 09:26:03,478 exception 9004 7268 Invalid HTTP_HOST header: 'localhost:8000'. You may need to add 'localhost' to ALLOWED_HOSTS.
 Traceback (most recent call last):
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+  File "C:\Users\RISHABH\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
     response = get_response(request)
                ^^^^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\utils\deprecation.py", line 133, in __call__
+  File "C:\Users\RISHABH\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\utils\deprecation.py", line 133, in __call__
     response = self.process_request(request)
                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\middleware\common.py", line 48, in process_request
-    host = request.get_host()
-           ^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\http\request.py", line 150, in get_host
+  File "C:\Users\RISHABH\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\middleware\security.py", line 28, in process_request
+    host = self.redirect_host or request.get_host()
+                                 ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\http\request.py", line 150, in get_host
     raise DisallowedHost(msg)
-django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: '192.168.29.103:8000'. You may need to add '192.168.29.103' to ALLOWED_HOSTS.
-ERROR 2026-03-18 17:05:32,058 exception 19200 19652 Invalid HTTP_HOST header: '192.168.29.103:8000'. You may need to add '192.168.29.103' to ALLOWED_HOSTS.
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: 'localhost:8000'. You may need to add 'localhost' to ALLOWED_HOSTS.
+ERROR 2026-05-12 09:26:03,669 exception 9004 24248 Invalid HTTP_HOST header: 'localhost:8000'. You may need to add 'localhost' to ALLOWED_HOSTS.
 Traceback (most recent call last):
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+  File "C:\Users\RISHABH\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
     response = get_response(request)
                ^^^^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\utils\deprecation.py", line 133, in __call__
+  File "C:\Users\RISHABH\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\utils\deprecation.py", line 133, in __call__
     response = self.process_request(request)
                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\middleware\common.py", line 48, in process_request
-    host = request.get_host()
-           ^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\http\request.py", line 150, in get_host
+  File "C:\Users\RISHABH\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\middleware\security.py", line 28, in process_request
+    host = self.redirect_host or request.get_host()
+                                 ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\http\request.py", line 150, in get_host
     raise DisallowedHost(msg)
-django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: '192.168.29.103:8000'. You may need to add '192.168.29.103' to ALLOWED_HOSTS.
-ERROR 2026-03-18 17:05:34,705 exception 19200 19612 Invalid HTTP_HOST header: '192.168.29.103:8000'. You may need to add '192.168.29.103' to ALLOWED_HOSTS.
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: 'localhost:8000'. You may need to add 'localhost' to ALLOWED_HOSTS.
+ERROR 2026-05-12 09:26:03,844 exception 9004 25664 Invalid HTTP_HOST header: 'localhost:8000'. You may need to add 'localhost' to ALLOWED_HOSTS.
 Traceback (most recent call last):
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+  File "C:\Users\RISHABH\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
     response = get_response(request)
                ^^^^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\utils\deprecation.py", line 133, in __call__
+  File "C:\Users\RISHABH\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\utils\deprecation.py", line 133, in __call__
     response = self.process_request(request)
                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\middleware\common.py", line 48, in process_request
-    host = request.get_host()
-           ^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\http\request.py", line 150, in get_host
+  File "C:\Users\RISHABH\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\middleware\security.py", line 28, in process_request
+    host = self.redirect_host or request.get_host()
+                                 ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\http\request.py", line 150, in get_host
     raise DisallowedHost(msg)
-django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: '192.168.29.103:8000'. You may need to add '192.168.29.103' to ALLOWED_HOSTS.
-ERROR 2026-03-18 17:05:34,848 exception 19200 12900 Invalid HTTP_HOST header: '192.168.29.103:8000'. You may need to add '192.168.29.103' to ALLOWED_HOSTS.
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: 'localhost:8000'. You may need to add 'localhost' to ALLOWED_HOSTS.
+ERROR 2026-05-12 09:28:43,997 exception 16020 8400 Invalid HTTP_HOST header: 'localhost:8000'. You may need to add 'localhost' to ALLOWED_HOSTS.
 Traceback (most recent call last):
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+  File "C:\Users\RISHABH\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
     response = get_response(request)
                ^^^^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\utils\deprecation.py", line 133, in __call__
+  File "C:\Users\RISHABH\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\utils\deprecation.py", line 133, in __call__
     response = self.process_request(request)
                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\middleware\common.py", line 48, in process_request
-    host = request.get_host()
-           ^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\http\request.py", line 150, in get_host
+  File "C:\Users\RISHABH\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\middleware\security.py", line 28, in process_request
+    host = self.redirect_host or request.get_host()
+                                 ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\http\request.py", line 150, in get_host
     raise DisallowedHost(msg)
-django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: '192.168.29.103:8000'. You may need to add '192.168.29.103' to ALLOWED_HOSTS.
-ERROR 2026-03-18 17:14:03,628 exception 19200 21040 Invalid HTTP_HOST header: '192.168.29.103:8000'. You may need to add '192.168.29.103' to ALLOWED_HOSTS.
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: 'localhost:8000'. You may need to add 'localhost' to ALLOWED_HOSTS.
+ERROR 2026-05-12 09:28:49,015 exception 16020 19172 Invalid HTTP_HOST header: 'localhost:8000'. You may need to add 'localhost' to ALLOWED_HOSTS.
 Traceback (most recent call last):
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+  File "C:\Users\RISHABH\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
     response = get_response(request)
                ^^^^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\utils\deprecation.py", line 133, in __call__
+  File "C:\Users\RISHABH\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\utils\deprecation.py", line 133, in __call__
     response = self.process_request(request)
                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\middleware\common.py", line 48, in process_request
-    host = request.get_host()
-           ^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\http\request.py", line 150, in get_host
+  File "C:\Users\RISHABH\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\middleware\security.py", line 28, in process_request
+    host = self.redirect_host or request.get_host()
+                                 ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\http\request.py", line 150, in get_host
     raise DisallowedHost(msg)
-django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: '192.168.29.103:8000'. You may need to add '192.168.29.103' to ALLOWED_HOSTS.
-ERROR 2026-03-18 17:14:03,641 exception 19200 21052 Invalid HTTP_HOST header: '192.168.29.103:8000'. You may need to add '192.168.29.103' to ALLOWED_HOSTS.
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: 'localhost:8000'. You may need to add 'localhost' to ALLOWED_HOSTS.
+ERROR 2026-05-12 09:28:53,127 exception 16020 23984 Invalid HTTP_HOST header: 'localhost:8000'. You may need to add 'localhost' to ALLOWED_HOSTS.
 Traceback (most recent call last):
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+  File "C:\Users\RISHABH\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
     response = get_response(request)
                ^^^^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\utils\deprecation.py", line 133, in __call__
+  File "C:\Users\RISHABH\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\utils\deprecation.py", line 133, in __call__
     response = self.process_request(request)
                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\middleware\common.py", line 48, in process_request
-    host = request.get_host()
-           ^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\http\request.py", line 150, in get_host
+  File "C:\Users\RISHABH\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\middleware\security.py", line 28, in process_request
+    host = self.redirect_host or request.get_host()
+                                 ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\http\request.py", line 150, in get_host
     raise DisallowedHost(msg)
-django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: '192.168.29.103:8000'. You may need to add '192.168.29.103' to ALLOWED_HOSTS.
-ERROR 2026-03-18 17:14:03,646 exception 19200 21056 Invalid HTTP_HOST header: '192.168.29.103:8000'. You may need to add '192.168.29.103' to ALLOWED_HOSTS.
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: 'localhost:8000'. You may need to add 'localhost' to ALLOWED_HOSTS.
+ERROR 2026-05-12 09:30:59,605 exception 16020 16340 Invalid HTTP_HOST header: 'localhost:8000'. You may need to add 'localhost' to ALLOWED_HOSTS.
 Traceback (most recent call last):
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+  File "C:\Users\RISHABH\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
     response = get_response(request)
                ^^^^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\utils\deprecation.py", line 133, in __call__
+  File "C:\Users\RISHABH\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\utils\deprecation.py", line 133, in __call__
     response = self.process_request(request)
                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\middleware\common.py", line 48, in process_request
-    host = request.get_host()
-           ^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\http\request.py", line 150, in get_host
+  File "C:\Users\RISHABH\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\middleware\security.py", line 28, in process_request
+    host = self.redirect_host or request.get_host()
+                                 ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\http\request.py", line 150, in get_host
     raise DisallowedHost(msg)
-django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: '192.168.29.103:8000'. You may need to add '192.168.29.103' to ALLOWED_HOSTS.
-ERROR 2026-03-18 17:14:03,683 exception 19200 21060 Invalid HTTP_HOST header: '192.168.29.103:8000'. You may need to add '192.168.29.103' to ALLOWED_HOSTS.
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: 'localhost:8000'. You may need to add 'localhost' to ALLOWED_HOSTS.
+ERROR 2026-05-12 09:31:33,077 exception 16020 2264 Invalid HTTP_HOST header: 'localhost:8000'. You may need to add 'localhost' to ALLOWED_HOSTS.
 Traceback (most recent call last):
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+  File "C:\Users\RISHABH\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
     response = get_response(request)
                ^^^^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\utils\deprecation.py", line 133, in __call__
+  File "C:\Users\RISHABH\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\utils\deprecation.py", line 133, in __call__
     response = self.process_request(request)
                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\middleware\common.py", line 48, in process_request
-    host = request.get_host()
-           ^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\http\request.py", line 150, in get_host
+  File "C:\Users\RISHABH\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\middleware\security.py", line 28, in process_request
+    host = self.redirect_host or request.get_host()
+                                 ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\http\request.py", line 150, in get_host
     raise DisallowedHost(msg)
-django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: '192.168.29.103:8000'. You may need to add '192.168.29.103' to ALLOWED_HOSTS.
-ERROR 2026-03-18 17:14:03,693 exception 19200 21064 Invalid HTTP_HOST header: '192.168.29.103:8000'. You may need to add '192.168.29.103' to ALLOWED_HOSTS.
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: 'localhost:8000'. You may need to add 'localhost' to ALLOWED_HOSTS.
+ERROR 2026-05-12 09:32:55,331 exception 16020 16456 Invalid HTTP_HOST header: 'localhost:8000'. You may need to add 'localhost' to ALLOWED_HOSTS.
 Traceback (most recent call last):
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+  File "C:\Users\RISHABH\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
     response = get_response(request)
                ^^^^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\utils\deprecation.py", line 133, in __call__
+  File "C:\Users\RISHABH\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\utils\deprecation.py", line 133, in __call__
     response = self.process_request(request)
                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\middleware\common.py", line 48, in process_request
-    host = request.get_host()
-           ^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\http\request.py", line 150, in get_host
+  File "C:\Users\RISHABH\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\middleware\security.py", line 28, in process_request
+    host = self.redirect_host or request.get_host()
+                                 ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\RISHABH\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\http\request.py", line 150, in get_host
     raise DisallowedHost(msg)
-django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: '192.168.29.103:8000'. You may need to add '192.168.29.103' to ALLOWED_HOSTS.
-ERROR 2026-03-18 17:14:03,700 exception 19200 21068 Invalid HTTP_HOST header: '192.168.29.103:8000'. You may need to add '192.168.29.103' to ALLOWED_HOSTS.
-Traceback (most recent call last):
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
-    response = get_response(request)
-               ^^^^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\utils\deprecation.py", line 133, in __call__
-    response = self.process_request(request)
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\middleware\common.py", line 48, in process_request
-    host = request.get_host()
-           ^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\http\request.py", line 150, in get_host
-    raise DisallowedHost(msg)
-django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: '192.168.29.103:8000'. You may need to add '192.168.29.103' to ALLOWED_HOSTS.
-ERROR 2026-03-18 17:14:03,714 exception 19200 21072 Invalid HTTP_HOST header: '192.168.29.103:8000'. You may need to add '192.168.29.103' to ALLOWED_HOSTS.
-Traceback (most recent call last):
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
-    response = get_response(request)
-               ^^^^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\utils\deprecation.py", line 133, in __call__
-    response = self.process_request(request)
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\middleware\common.py", line 48, in process_request
-    host = request.get_host()
-           ^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\http\request.py", line 150, in get_host
-    raise DisallowedHost(msg)
-django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: '192.168.29.103:8000'. You may need to add '192.168.29.103' to ALLOWED_HOSTS.
-ERROR 2026-03-18 17:14:03,762 exception 19200 21076 Invalid HTTP_HOST header: '192.168.29.103:8000'. You may need to add '192.168.29.103' to ALLOWED_HOSTS.
-Traceback (most recent call last):
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
-    response = get_response(request)
-               ^^^^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\utils\deprecation.py", line 133, in __call__
-    response = self.process_request(request)
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\middleware\common.py", line 48, in process_request
-    host = request.get_host()
-           ^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\http\request.py", line 150, in get_host
-    raise DisallowedHost(msg)
-django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: '192.168.29.103:8000'. You may need to add '192.168.29.103' to ALLOWED_HOSTS.
-ERROR 2026-03-18 17:14:04,731 exception 19200 21136 Invalid HTTP_HOST header: '192.168.29.103:8000'. You may need to add '192.168.29.103' to ALLOWED_HOSTS.
-Traceback (most recent call last):
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
-    response = get_response(request)
-               ^^^^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\utils\deprecation.py", line 133, in __call__
-    response = self.process_request(request)
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\middleware\common.py", line 48, in process_request
-    host = request.get_host()
-           ^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\http\request.py", line 150, in get_host
-    raise DisallowedHost(msg)
-django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: '192.168.29.103:8000'. You may need to add '192.168.29.103' to ALLOWED_HOSTS.
-ERROR 2026-03-18 17:14:04,735 exception 19200 21140 Invalid HTTP_HOST header: '192.168.29.103:8000'. You may need to add '192.168.29.103' to ALLOWED_HOSTS.
-Traceback (most recent call last):
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
-    response = get_response(request)
-               ^^^^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\utils\deprecation.py", line 133, in __call__
-    response = self.process_request(request)
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\middleware\common.py", line 48, in process_request
-    host = request.get_host()
-           ^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\http\request.py", line 150, in get_host
-    raise DisallowedHost(msg)
-django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: '192.168.29.103:8000'. You may need to add '192.168.29.103' to ALLOWED_HOSTS.
-ERROR 2026-03-18 17:14:19,795 exception 19200 3344 Invalid HTTP_HOST header: '192.168.29.103:8000'. You may need to add '192.168.29.103' to ALLOWED_HOSTS.
-Traceback (most recent call last):
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
-    response = get_response(request)
-               ^^^^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\utils\deprecation.py", line 133, in __call__
-    response = self.process_request(request)
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\middleware\common.py", line 48, in process_request
-    host = request.get_host()
-           ^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\http\request.py", line 150, in get_host
-    raise DisallowedHost(msg)
-django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: '192.168.29.103:8000'. You may need to add '192.168.29.103' to ALLOWED_HOSTS.
-ERROR 2026-03-18 17:14:20,890 exception 19200 21296 Invalid HTTP_HOST header: '192.168.29.103:8000'. You may need to add '192.168.29.103' to ALLOWED_HOSTS.
-Traceback (most recent call last):
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
-    response = get_response(request)
-               ^^^^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\utils\deprecation.py", line 133, in __call__
-    response = self.process_request(request)
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\middleware\common.py", line 48, in process_request
-    host = request.get_host()
-           ^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\http\request.py", line 150, in get_host
-    raise DisallowedHost(msg)
-django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: '192.168.29.103:8000'. You may need to add '192.168.29.103' to ALLOWED_HOSTS.
-ERROR 2026-03-18 17:14:35,025 exception 19200 19664 Invalid HTTP_HOST header: '192.168.29.103:8000'. You may need to add '192.168.29.103' to ALLOWED_HOSTS.
-Traceback (most recent call last):
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
-    response = get_response(request)
-               ^^^^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\utils\deprecation.py", line 133, in __call__
-    response = self.process_request(request)
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\middleware\common.py", line 48, in process_request
-    host = request.get_host()
-           ^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\http\request.py", line 150, in get_host
-    raise DisallowedHost(msg)
-django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: '192.168.29.103:8000'. You may need to add '192.168.29.103' to ALLOWED_HOSTS.
-ERROR 2026-03-18 17:14:36,022 exception 19200 21076 Invalid HTTP_HOST header: '192.168.29.103:8000'. You may need to add '192.168.29.103' to ALLOWED_HOSTS.
-Traceback (most recent call last):
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
-    response = get_response(request)
-               ^^^^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\utils\deprecation.py", line 133, in __call__
-    response = self.process_request(request)
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\middleware\common.py", line 48, in process_request
-    host = request.get_host()
-           ^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\http\request.py", line 150, in get_host
-    raise DisallowedHost(msg)
-django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: '192.168.29.103:8000'. You may need to add '192.168.29.103' to ALLOWED_HOSTS.
-ERROR 2026-03-18 17:14:36,069 exception 19200 19244 Invalid HTTP_HOST header: '192.168.29.103:8000'. You may need to add '192.168.29.103' to ALLOWED_HOSTS.
-Traceback (most recent call last):
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
-    response = get_response(request)
-               ^^^^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\utils\deprecation.py", line 133, in __call__
-    response = self.process_request(request)
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\middleware\common.py", line 48, in process_request
-    host = request.get_host()
-           ^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\http\request.py", line 150, in get_host
-    raise DisallowedHost(msg)
-django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: '192.168.29.103:8000'. You may need to add '192.168.29.103' to ALLOWED_HOSTS.
-ERROR 2026-03-18 17:14:37,078 exception 19200 20944 Invalid HTTP_HOST header: '192.168.29.103:8000'. You may need to add '192.168.29.103' to ALLOWED_HOSTS.
-Traceback (most recent call last):
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
-    response = get_response(request)
-               ^^^^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\utils\deprecation.py", line 133, in __call__
-    response = self.process_request(request)
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\middleware\common.py", line 48, in process_request
-    host = request.get_host()
-           ^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\http\request.py", line 150, in get_host
-    raise DisallowedHost(msg)
-django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: '192.168.29.103:8000'. You may need to add '192.168.29.103' to ALLOWED_HOSTS.
-ERROR 2026-03-18 17:14:52,213 exception 19200 21372 Invalid HTTP_HOST header: '192.168.29.103:8000'. You may need to add '192.168.29.103' to ALLOWED_HOSTS.
-Traceback (most recent call last):
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
-    response = get_response(request)
-               ^^^^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\utils\deprecation.py", line 133, in __call__
-    response = self.process_request(request)
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\middleware\common.py", line 48, in process_request
-    host = request.get_host()
-           ^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\http\request.py", line 150, in get_host
-    raise DisallowedHost(msg)
-django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: '192.168.29.103:8000'. You may need to add '192.168.29.103' to ALLOWED_HOSTS.
-ERROR 2026-03-18 17:14:53,292 exception 19200 21348 Invalid HTTP_HOST header: '192.168.29.103:8000'. You may need to add '192.168.29.103' to ALLOWED_HOSTS.
-Traceback (most recent call last):
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
-    response = get_response(request)
-               ^^^^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\utils\deprecation.py", line 133, in __call__
-    response = self.process_request(request)
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\middleware\common.py", line 48, in process_request
-    host = request.get_host()
-           ^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\http\request.py", line 150, in get_host
-    raise DisallowedHost(msg)
-django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: '192.168.29.103:8000'. You may need to add '192.168.29.103' to ALLOWED_HOSTS.
-ERROR 2026-03-23 16:45:22,894 exception 5552 13996 Invalid HTTP_HOST header: 'CHIKS-DESKTOP:8000'. You may need to add 'chiks-desktop' to ALLOWED_HOSTS.
-Traceback (most recent call last):
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
-    response = get_response(request)
-               ^^^^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\utils\deprecation.py", line 133, in __call__
-    response = self.process_request(request)
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\middleware\common.py", line 48, in process_request
-    host = request.get_host()
-           ^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\http\request.py", line 150, in get_host
-    raise DisallowedHost(msg)
-django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: 'CHIKS-DESKTOP:8000'. You may need to add 'chiks-desktop' to ALLOWED_HOSTS.
-ERROR 2026-03-23 16:45:23,324 exception 5552 9408 Invalid HTTP_HOST header: 'CHIKS-DESKTOP:8000'. You may need to add 'chiks-desktop' to ALLOWED_HOSTS.
-Traceback (most recent call last):
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
-    response = get_response(request)
-               ^^^^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\utils\deprecation.py", line 133, in __call__
-    response = self.process_request(request)
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\middleware\common.py", line 48, in process_request
-    host = request.get_host()
-           ^^^^^^^^^^^^^^^^^^
-  File "D:\work\nexus\nexus_prod\venv\Lib\site-packages\django\http\request.py", line 150, in get_host
-    raise DisallowedHost(msg)
-django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: 'CHIKS-DESKTOP:8000'. You may need to add 'chiks-desktop' to ALLOWED_HOSTS.
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: 'localhost:8000'. You may need to add 'localhost' to ALLOWED_HOSTS.
